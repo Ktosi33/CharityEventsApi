@@ -9,13 +9,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Configure DBContext
-builder.Services.AddDbContext<CharityEventsDbContextOld>(
+/* builder.Services.AddDbContext<CharityEventsDbContext>(
     option => option.UseMySql(
         builder.Configuration.GetConnectionString("CharityEventsConnectionString"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("CharityEventsConnectionString"))
         )
     );
-
+*/
 
 var app = builder.Build();
 

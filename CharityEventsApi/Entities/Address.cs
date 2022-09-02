@@ -7,7 +7,7 @@ namespace CharityEventsApi.Entities
     {
         public Address()
         {
-            PersonalData = new HashSet<PersonalDatum>();
+            PersonalData = new HashSet<PersonalData>();
         }
 
         public int IdAddress { get; set; }
@@ -17,6 +17,6 @@ namespace CharityEventsApi.Entities
         public int HouseNumber { get; set; }
         public int? FlatNumber { get; set; }
 
-        public virtual ICollection<PersonalDatum> PersonalData { get; set; }
+        public virtual ICollection<PersonalData> PersonalData { get; set; }
     }
 }

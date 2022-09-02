@@ -9,7 +9,7 @@ namespace CharityEventsApi.Entities
         {
             Charityevents = new HashSet<Charityevent>();
             Donations = new HashSet<Donation>();
-            PersonalData = new HashSet<PersonalDatum>();
+            PersonalData = new HashSet<PersonalData>();
             CharityEventIdCharityEvents = new HashSet<Charityevent>();
             RolesNames = new HashSet<Role>();
         }
@@ -21,7 +21,7 @@ namespace CharityEventsApi.Entities
 
         public virtual ICollection<Charityevent> Charityevents { get; set; }
         public virtual ICollection<Donation> Donations { get; set; }
-        public virtual ICollection<PersonalDatum> PersonalData { get; set; }
+        public virtual ICollection<PersonalData> PersonalData { get; set; }
 
         public virtual ICollection<Charityevent> CharityEventIdCharityEvents { get; set; }
         public virtual ICollection<Role> RolesNames { get; set; }
