@@ -1,0 +1,97 @@
+﻿using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Net;
+using CharityEventsApi.Entities;
+using CharityEventsApi;
+using CharityEventsApi.Models;
+
+namespace CharityEventsApi.Services.Account
+{
+    public class AccountService : IAccountService
+    {
+        private readonly CharityEventsDbContext dbContext;
+        private readonly IPasswordHasher<User> passwordHasher;
+        private readonly AuthenticationSettings authenticationSettings;
+
+        public AccountService(CharityEventsDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        {
+            this.dbContext = dbContext;
+            this.passwordHasher = passwordHasher;
+            this.authenticationSettings = authenticationSettings;
+        }
+       
+       
+        
+        public string GenerateJwt(LoginUserDto dto)
+        {
+            dto.Email = WebUtility.HtmlEncode(dto.Email);
+            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.Email);
+
+            if (user is null)
+            {
+               // throw new BadRequestException("Zły adres email lub hasło");
+            }
+            var result = passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
+            if (result == PasswordVerificationResult.Failed)
+            {
+               // throw new BadRequestException("Zły adres email lub hasło");
+            }
+            return writeToken(dto.Email);
+        }
+       
+        
+        public string writeToken(string email)
+        {
+            var user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Email == email);
+
+            if (user is null)
+            {
+                // throw new BadRequestException("Zły adres email");
+            }
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
+                new Claim(ClaimTypes.Email, user.Email.ToString()),
+                new Claim(ClaimTypes.Role, $"{user.RolesNames}")
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.Now.AddDays(Double.Parse(authenticationSettings.JwtExpireDays));
+
+            var token = new JwtSecurityToken(authenticationSettings.JwtIssuer,
+                authenticationSettings.JwtIssuer,
+                claims,
+                expires: expires,
+                signingCredentials: cred);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.WriteToken(token);
+        }
+          public void RegisterUser(RegisterUserDto dto)
+          {
+              var newUser = new User()
+              {
+                  Login = WebUtility.HtmlDecode(dto.Login),
+                  Email = WebUtility.HtmlEncode(dto.Email)
+                 
+              };
+            
+            var hashedPassword = passwordHasher.HashPassword(newUser, dto.Password);
+
+            newUser.Password = hashedPassword;
+
+            var VolunteerRole = dbContext.Roles.FirstOrDefault(r => r.Name == "Volunteer");
+            newUser.RolesNames.Add(VolunteerRole);
+            //VolunteerRole.UserIdUsers.Add(newUser);
+
+            dbContext.Users.Add(newUser);
+            dbContext.SaveChanges();
+          }
+      
+    }
+}

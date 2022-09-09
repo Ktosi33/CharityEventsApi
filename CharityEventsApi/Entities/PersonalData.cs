@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CharityEventsApi.Entities
 {
-    public partial class PersonalDatum
+    public partial class PersonalData
     {
         public int UserIdUser { get; set; }
         public string Name { get; set; } = null!;

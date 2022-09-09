@@ -21,7 +21,7 @@ namespace CharityEventsApi.Entities
         public virtual DbSet<Charityfundraising> Charityfundraisings { get; set; } = null!;
         public virtual DbSet<Donation> Donations { get; set; } = null!;
         public virtual DbSet<Location> Locations { get; set; } = null!;
-        public virtual DbSet<PersonalDatum> PersonalData { get; set; } = null!;
+        public virtual DbSet<PersonalData> PersonalData { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Volunteering> Volunteerings { get; set; } = null!;
@@ -251,7 +251,7 @@ namespace CharityEventsApi.Entities
                     .HasColumnName("town");
             });
 
-            modelBuilder.Entity<PersonalDatum>(entity =>
+            modelBuilder.Entity<PersonalData>(entity =>
             {
                 entity.HasKey(e => new { e.UserIdUser, e.AddressIdAddress })
                     .HasName("PRIMARY")
