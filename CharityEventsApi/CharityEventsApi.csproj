@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Middleware\" />
+    <Folder Include="Models\Validators\" />
   </ItemGroup>
 
 </Project>

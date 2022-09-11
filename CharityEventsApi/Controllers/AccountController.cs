@@ -6,6 +6,9 @@ using CharityEventsApi.Services.Account;
 
 namespace CharityEventsApi.Controllers
 {
+    [Route("/v1/[controller]")]
+    [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
@@ -30,7 +33,7 @@ namespace CharityEventsApi.Controllers
             return Ok(token);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Volunteer")]
         [HttpGet("isLogged")]
         public ActionResult isLogged()
         {

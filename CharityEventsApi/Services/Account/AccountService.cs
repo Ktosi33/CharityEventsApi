@@ -9,6 +9,7 @@ using System.Net;
 using CharityEventsApi.Entities;
 using CharityEventsApi;
 using CharityEventsApi.Models;
+using CharityEventsApi.Exceptions;
 
 namespace CharityEventsApi.Services.Account
 {
@@ -34,12 +35,12 @@ namespace CharityEventsApi.Services.Account
 
             if (user is null)
             {
-               // throw new BadRequestException("Zły adres email lub hasło");
+                throw new BadRequestException("Zły adres email lub hasło");
             }
             var result = passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-               // throw new BadRequestException("Zły adres email lub hasło");
+                throw new BadRequestException("Zły adres email lub hasło");
             }
             return writeToken(dto.Email);
         }
@@ -51,13 +52,13 @@ namespace CharityEventsApi.Services.Account
 
             if (user is null)
             {
-                // throw new BadRequestException("Zły adres email");
+                 throw new BadRequestException("Zły adres email");
             }
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, $"{user.RolesNames}")
+                new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)) )
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

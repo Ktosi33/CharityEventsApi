@@ -1,5 +1,6 @@
 using CharityEventsApi;
 using CharityEventsApi.Entities;
+using CharityEventsApi.Middleware;
 using CharityEventsApi.Services.Account;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,7 @@ builder.Services.AddSwaggerGen(c => {
         Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
         BearerFormat = "JWT",
-        In = ParameterLocation.Header + "Bearer ",
+        In = ParameterLocation.Header,
         Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 1safsfsdfdfd\"",
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement {
@@ -78,10 +79,22 @@ builder.Services.AddDbContext<CharityEventsDbContext>(
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("CharityEventsConnectionString"))
         )
     );
-
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
 var app = builder.Build();
+
+
+
+app.UseCors(x => x
+             .AllowAnyMethod()
+             .AllowAnyHeader()
+             .SetIsOriginAllowed(origin => true) // allow any origin
+             .AllowCredentials()); // allow credentials
+
+app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -90,7 +103,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseAuthentication();
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
