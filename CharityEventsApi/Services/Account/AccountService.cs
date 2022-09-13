@@ -25,13 +25,13 @@ namespace CharityEventsApi.Services.Account
             this.passwordHasher = passwordHasher;
             this.authenticationSettings = authenticationSettings;
         }
-       
-       
-        
+
+
+
         public string GenerateJwt(LoginUserDto dto)
         {
             dto.Email = WebUtility.HtmlEncode(dto.Email);
-            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.Email);
+            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.Email) ;
 
             if (user is null)
             {
@@ -87,6 +87,10 @@ namespace CharityEventsApi.Services.Account
             newUser.Password = hashedPassword;
 
             var VolunteerRole = dbContext.Roles.FirstOrDefault(r => r.Name == "Volunteer");
+            if(VolunteerRole == null)
+            {
+                throw new NotFoundException("Volunteer Role doesn't exsist in database");
+            }
             newUser.RolesNames.Add(VolunteerRole);
             //VolunteerRole.UserIdUsers.Add(newUser);
 

@@ -15,7 +15,8 @@ namespace CharityEventsApi.Entities
         public string FundTarget { get; set; } = null!;
         public decimal AmountOfMoneyToCollect { get; set; }
         public decimal AmountOfAlreadyCollectedMoney { get; set; }
-        public DateTime? EventDate { get; set; }
+        public DateTime CreatedEventDate { get; set; }
+        public DateTime? EndEventDate { get; set; }
 
         public virtual ICollection<Charityevent> Charityevents { get; set; }
         public virtual ICollection<Donation> Donations { get; set; }

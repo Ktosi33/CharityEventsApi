@@ -96,6 +96,10 @@ namespace CharityEventsApi.Entities
                     .HasMaxLength(2000)
                     .HasColumnName("description");
 
+                entity.Property(e => e.IsActive)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isActive");
+
                 entity.Property(e => e.OrganizerId)
                     .HasColumnType("int(11)")
                     .HasColumnName("organizer_id");
@@ -111,7 +115,6 @@ namespace CharityEventsApi.Entities
                 entity.HasOne(d => d.CharityFundraisingIdCharityFundraisingNavigation)
                     .WithMany(p => p.Charityevents)
                     .HasForeignKey(d => d.CharityFundraisingIdCharityFundraising)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_CharityEvent_CharityFundraising1");
 
                 entity.HasOne(d => d.Organizer)
@@ -123,7 +126,6 @@ namespace CharityEventsApi.Entities
                 entity.HasOne(d => d.VolunteeringIdVolunteeringNavigation)
                     .WithMany(p => p.Charityevents)
                     .HasForeignKey(d => d.VolunteeringIdVolunteering)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_CharityEvent_Volunteering1");
 
                 entity.HasMany(d => d.UserIdUsers)
@@ -167,9 +169,13 @@ namespace CharityEventsApi.Entities
                     .HasPrecision(10, 2)
                     .HasColumnName("amount_of_money_to_collect");
 
-                entity.Property(e => e.EventDate)
+                entity.Property(e => e.CreatedEventDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("eventDate");
+                    .HasColumnName("createdEventDate");
+
+                entity.Property(e => e.EndEventDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("endEventDate");
 
                 entity.Property(e => e.FundTarget)
                     .HasMaxLength(40)
@@ -235,7 +241,6 @@ namespace CharityEventsApi.Entities
 
                 entity.Property(e => e.IdLocation)
                     .HasColumnType("int(11)")
-                    .ValueGeneratedNever()
                     .HasColumnName("idLocation");
 
                 entity.Property(e => e.PostalCode)
@@ -257,7 +262,7 @@ namespace CharityEventsApi.Entities
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-                entity.ToTable("personal_data");
+                entity.ToTable("personal data");
 
                 entity.HasIndex(e => e.Email, "email_UNIQUE")
                     .IsUnique();
@@ -387,9 +392,13 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("int(11)")
                     .HasColumnName("amount_of_needed_volunteers");
 
-                entity.Property(e => e.EventDate)
+                entity.Property(e => e.CreatedEventDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("eventDate");
+                    .HasColumnName("createdEventDate");
+
+                entity.Property(e => e.EndEventDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("endEventDate");
 
                 entity.HasMany(d => d.LocationIdLocations)
                     .WithMany(p => p.VolunteeringIdVolunteerings)

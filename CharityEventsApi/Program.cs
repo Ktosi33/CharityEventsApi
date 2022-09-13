@@ -2,6 +2,7 @@ using CharityEventsApi;
 using CharityEventsApi.Entities;
 using CharityEventsApi.Middleware;
 using CharityEventsApi.Services.Account;
+using CharityEventsApi.Services.CharityEvent;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -82,7 +83,7 @@ builder.Services.AddDbContext<CharityEventsDbContext>(
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
-
+builder.Services.AddScoped<ICharityEventService, CharityEventService>();
 
 var app = builder.Build();
 
@@ -94,7 +95,7 @@ app.UseCors(x => x
              .SetIsOriginAllowed(origin => true) // allow any origin
              .AllowCredentials()); // allow credentials
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

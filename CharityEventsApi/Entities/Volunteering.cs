@@ -13,7 +13,8 @@ namespace CharityEventsApi.Entities
 
         public int IdVolunteering { get; set; }
         public int AmountOfNeededVolunteers { get; set; }
-        public DateTime EventDate { get; set; }
+        public DateTime CreatedEventDate { get; set; }
+        public DateTime? EndEventDate { get; set; }
 
         public virtual ICollection<Charityevent> Charityevents { get; set; }
 
