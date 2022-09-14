@@ -17,18 +17,28 @@ namespace CharityEventsApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("create")]
+        [HttpPost()]
         public ActionResult AddCharityEvent([FromBody] CharityEventDto charityEventDto)
         {
             charityEventService.AddCharityEvent(charityEventDto);
             return Ok();
         }
+
         [AllowAnonymous]
-        [HttpPost("addlocation")]
-        public ActionResult AddLocation([FromBody] AddLocationDto locationDto)
+        [HttpPut]
+        public ActionResult EditCharityEvent([FromBody] EditCharityEventDto charityEventDto)
         {
-            charityEventService.AddLocation(locationDto);
+            charityEventService.EditCharityEvent(charityEventDto);
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpPut("end/{charityEventId}")]
+        public ActionResult EndCharityEvent([FromRoute] int charityEventId)
+        {
+            charityEventService.EndCharityEvent(charityEventId);
+            return Ok();
+        }
+
     }
 }

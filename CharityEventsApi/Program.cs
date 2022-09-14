@@ -84,6 +84,8 @@ builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ICharityEventService, CharityEventService>();
+builder.Services.AddScoped<ICharityEventVolunteeringService, CharityEventVolunteeringService>();
+builder.Services.AddScoped<ICharityEventFundraisingService, CharityEventFundraisingService>();
 
 var app = builder.Build();
 
