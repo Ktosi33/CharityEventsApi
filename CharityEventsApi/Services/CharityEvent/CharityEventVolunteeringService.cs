@@ -8,21 +8,22 @@ namespace CharityEventsApi.Services.CharityEvent
     public class CharityEventVolunteeringService : ICharityEventVolunteeringService
     {
         private readonly CharityEventsDbContext dbContext;
+        private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
 
-        public CharityEventVolunteeringService(CharityEventsDbContext dbContext)
+        public CharityEventVolunteeringService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade)
         {
             this.dbContext = dbContext;
+            this.charityEventFactoryFacade = charityEventFactoryFacade;
         }
 
         public void AddLocation(AddLocationDto locationDto)
         {
-            CharityEventFactoryFacade charityEventFactoryFacade = new CharityEventFactoryFacade(dbContext);
             charityEventFactoryFacade.AddLocation(locationDto);
         }
 
-        public void EditLocation(EditLocationDto locationDto)
+        public void EditLocation(EditLocationDto locationDto, int locationId)
         {
-            var location = dbContext.Locations.FirstOrDefault(l => l.IdLocation == locationDto.LocationId);
+            var location = dbContext.Locations.FirstOrDefault(l => l.IdLocation == locationId);
             if (location == null)
             {
                 throw new NotFoundException("Location with given id doesn't exist");
@@ -34,9 +35,9 @@ namespace CharityEventsApi.Services.CharityEvent
 
         }
 
-        public void EditCharityEventVolunteering(EditCharityEventVolunteeringDto charityEventVolunteeringDto)
+        public void EditCharityEventVolunteering(EditCharityEventVolunteeringDto charityEventVolunteeringDto, int charityEventVolunteeringId)
         {
-            var charityevent = dbContext.Volunteerings.FirstOrDefault(v => v.IdVolunteering == charityEventVolunteeringDto.VolunteeringId);
+            var charityevent = dbContext.Volunteerings.FirstOrDefault(v => v.IdVolunteering == charityEventVolunteeringId);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
@@ -49,9 +50,9 @@ namespace CharityEventsApi.Services.CharityEvent
             dbContext.SaveChanges();
         }
 
-        public void EndCharityEventVolunteering(int CharityEventVolunteeringId)
+        public void EndCharityEventVolunteering(int charityEventVolunteeringId)
         {
-            var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == CharityEventVolunteeringId);
+            var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == charityEventVolunteeringId);
             if (volunteering == null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
@@ -79,8 +80,6 @@ namespace CharityEventsApi.Services.CharityEvent
                 }
             }
 
-
-          
             dbContext.SaveChanges();
 
         }

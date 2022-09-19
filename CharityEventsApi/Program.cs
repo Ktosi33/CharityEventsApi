@@ -86,6 +86,10 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ICharityEventService, CharityEventService>();
 builder.Services.AddScoped<ICharityEventVolunteeringService, CharityEventVolunteeringService>();
 builder.Services.AddScoped<ICharityEventFundraisingService, CharityEventFundraisingService>();
+builder.Services.AddTransient<ICharityEventFactory, CharityEventFactory>();
+builder.Services.AddTransient<ICharityEventFundraisingFactory, CharityEventFundraisingFactory>();
+builder.Services.AddTransient<ICharityEventVolunteeringFactory, CharityEventVolunteeringFactory>();
+builder.Services.AddTransient<ICharityEventFactoryFacade, CharityEventFactoryFacade>();
 
 var app = builder.Build();
 

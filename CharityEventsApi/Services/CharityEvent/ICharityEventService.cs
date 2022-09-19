@@ -4,8 +4,8 @@ namespace CharityEventsApi.Services.CharityEvent
 {
     public interface ICharityEventService
     {
-        public void AddCharityEvent(CharityEventDto charityEventDto);
-        public void EditCharityEvent(EditCharityEventDto charityEventDto);
-        public void EndCharityEvent(int CharityEventId);
+        public void AddCharityEvent(AddAllCharityEventsDto charityEventDto);
+        public void EditCharityEvent(EditCharityEventDto charityEventDto, int charityEventId);
+        public void EndCharityEvent(int charityEventId);
     }
 }

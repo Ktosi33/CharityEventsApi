@@ -14,9 +14,9 @@ namespace CharityEventsApi.Services.CharityEvent
         }
 
 
-        public void EditCharityEventFundraising(EditCharityEventFundraisingDto charityEventFundraisingDto)
+        public void EditCharityEventFundraising(EditCharityEventFundraisingDto charityEventFundraisingDto, int charityEventFundraisingId)
         {
-            var charityevent = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == charityEventFundraisingDto.FundraisingId);
+            var charityevent = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == charityEventFundraisingId);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");

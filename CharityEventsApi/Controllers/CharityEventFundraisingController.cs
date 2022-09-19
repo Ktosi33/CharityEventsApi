@@ -24,10 +24,10 @@ namespace CharityEventsApi.Controllers
        */
 
         [AllowAnonymous]
-        [HttpPut]
-        public ActionResult EditCharityEventVolunteering([FromBody] EditCharityEventFundraisingDto charityEventFundraisingDto)
+        [HttpPut("{charityEventFundraisingId}")]
+        public ActionResult EditCharityEventVolunteering([FromBody] EditCharityEventFundraisingDto charityEventFundraisingDto, [FromRoute] int charityEventFundraisingId)
         {
-            charityEventFundraisingService.EditCharityEventFundraising(charityEventFundraisingDto);
+            charityEventFundraisingService.EditCharityEventFundraising(charityEventFundraisingDto, charityEventFundraisingId);
             return Ok();
         }
         [AllowAnonymous]

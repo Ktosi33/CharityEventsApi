@@ -1,9 +1,8 @@
-﻿namespace CharityEventsApi.Models
+﻿namespace CharityEventsApi.Models.DataTransferObjects
 {
     public class LoginUserDto
     {
-        public string Login { get; set; }
-        public string Email { get; set; }
+        public string LoginOrEmail { get; set; }
         public string Password { get; set; }
         
     }

@@ -4,7 +4,7 @@ namespace CharityEventsApi.Services.CharityEvent
 {
     public interface ICharityEventFundraisingService
     {
-        public void EditCharityEventFundraising(EditCharityEventFundraisingDto charityEventFundraisingDto);
+        public void EditCharityEventFundraising(EditCharityEventFundraisingDto charityEventFundraisingDto, int charityEventFundraisingId);
         public void EndCharityEventFundraising(int CharityEventFundraisingId);
     }
 }

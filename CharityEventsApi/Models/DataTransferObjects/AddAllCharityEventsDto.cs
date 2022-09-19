@@ -1,6 +1,6 @@
 ﻿namespace CharityEventsApi.Models.DataTransferObjects
 {
-    public class CharityEventDto
+    public class AddAllCharityEventsDto
     {
         public bool isVolunteering { get; set; }
         public bool isFundraising { get; set; }

@@ -24,10 +24,10 @@ namespace CharityEventsApi.Controllers
        */
 
         [AllowAnonymous]
-        [HttpPut]
-        public ActionResult EditCharityEventVolunteering([FromBody] EditCharityEventVolunteeringDto charityEventVolunteeringDto)
+        [HttpPut("{charityEventVolunteeringId}")]
+        public ActionResult EditCharityEventVolunteering([FromBody] EditCharityEventVolunteeringDto charityEventVolunteeringDto,[FromRoute] int charityEventVolunteeringId)
         {
-            charityEventVolunteeringService.EditCharityEventVolunteering(charityEventVolunteeringDto);
+            charityEventVolunteeringService.EditCharityEventVolunteering(charityEventVolunteeringDto, charityEventVolunteeringId);
             return Ok();
         }
         [AllowAnonymous]
@@ -45,10 +45,10 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
         [AllowAnonymous]
-        [HttpPut("location/{id}")]
+        [HttpPut("location/{locationId}")]
         public ActionResult EditLocation([FromBody] EditLocationDto locationDto, [FromRoute] int locationId)
         {
-            charityEventVolunteeringService.EditLocation(locationDto);
+            charityEventVolunteeringService.EditLocation(locationDto, locationId);
             return Ok();
         }
 

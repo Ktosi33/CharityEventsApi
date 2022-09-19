@@ -5,14 +5,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.CharityEvent
 {
-    public class CharityEventFactoryFacade
+    public class CharityEventFactoryFacade : ICharityEventFactoryFacade
     {
         private readonly CharityEventsDbContext dbContext;
-        public CharityEventFactoryFacade(CharityEventsDbContext dbContext)
+        private readonly ICharityEventFundraisingFactory charityEventFundraisingFactory;
+        private readonly ICharityEventVolunteeringFactory charityEventVolunteeringFactory;
+        private readonly ICharityEventFactory charityEventFactory;
+
+        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, ICharityEventFundraisingFactory charityEventFundraisingFactory, ICharityEventVolunteeringFactory charityEventVolunteeringFactory, ICharityEventFactory charityEventFactory)
         {
             this.dbContext = dbContext;
+            this.charityEventFundraisingFactory = charityEventFundraisingFactory;
+            this.charityEventVolunteeringFactory = charityEventVolunteeringFactory;
+            this.charityEventFactory = charityEventFactory;
         }
-        public void AddCharityEvent(CharityEventDto charityEventDto)
+        public void AddCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
             {
@@ -21,8 +28,6 @@ namespace CharityEventsApi.Services.CharityEvent
                 {
                     throw new BadRequestException("Organizer ID can't match with any user");
                 }
-
-                CharityEventFactory charityEventFactory = new CharityEventFactory();
 
                 Charityevent charityevent = charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
                 dbContext.Charityevents.Add(charityevent);
@@ -42,9 +47,8 @@ namespace CharityEventsApi.Services.CharityEvent
             }
         }
       
-        public void AddCharityEventVolunteering(CharityEventDto charityEventDto, Charityevent charityEvent)
+        public void AddCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            CharityEventVolunteeringFactory charityEventVolunteeringFactory = new CharityEventVolunteeringFactory();
             Volunteering volunteering = charityEventVolunteeringFactory.CreateCharityEvent(charityEventDto);
             dbContext.Volunteerings.Add(volunteering);
             
@@ -53,9 +57,8 @@ namespace CharityEventsApi.Services.CharityEvent
             dbContext.SaveChanges();
         }
 
-        public void AddCharityEventFundraising(CharityEventDto charityEventDto, Charityevent charityEvent)
+        public void AddCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            CharityEventFundraisingFactory charityEventFundraisingFactory = new CharityEventFundraisingFactory();
             Charityfundraising charityfundraising = charityEventFundraisingFactory.CreateCharityEvent(charityEventDto);
             dbContext.Charityfundraisings.Add(charityfundraising);
             charityEvent.CharityFundraisingIdCharityFundraisingNavigation = charityfundraising;
@@ -64,7 +67,6 @@ namespace CharityEventsApi.Services.CharityEvent
         }
         public void AddLocation(AddLocationDto locationDto)
         {
-            CharityEventVolunteeringFactory charityEventVolunteeringFactory = new CharityEventVolunteeringFactory();
             var vol = dbContext.Volunteerings.FirstOrDefault(v => v.IdVolunteering == locationDto.idVolunteering);
             if(vol == null)
             {

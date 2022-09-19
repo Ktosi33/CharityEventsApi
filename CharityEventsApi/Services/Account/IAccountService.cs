@@ -1,4 +1,4 @@
-﻿using CharityEventsApi.Models;
+﻿using CharityEventsApi.Models.DataTransferObjects;
 
 namespace CharityEventsApi.Services.Account
 {

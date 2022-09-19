@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using System.Net;
 using CharityEventsApi.Entities;
 using CharityEventsApi;
-using CharityEventsApi.Models;
+using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Exceptions;
 
 namespace CharityEventsApi.Services.Account
@@ -30,30 +30,41 @@ namespace CharityEventsApi.Services.Account
 
         public string GenerateJwt(LoginUserDto dto)
         {
-            dto.Email = WebUtility.HtmlEncode(dto.Email);
-            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.Email) ;
+            //login cant have @
+           // mail have to have @
+            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.LoginOrEmail);
+            if(user == null)
+            { 
+             user = dbContext.Users.FirstOrDefault(u => u.Login == dto.LoginOrEmail);
+            }
 
             if (user is null)
             {
-                throw new BadRequestException("Zły adres email lub hasło");
+                throw new BadRequestException("Zły adres email, login lub hasło");
             }
             var result = passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Zły adres email lub hasło");
+                throw new BadRequestException("Zły adres email, login lub hasło");
             }
-            return writeToken(dto.Email);
+            return writeToken(dto.LoginOrEmail);
         }
        
         
-        public string writeToken(string email)
+        public string writeToken(string LoginOrEmail)
         {
-            var user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Email == email);
+           
+            var user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Email == LoginOrEmail);
+            if (user == null)
+            {
+                user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Login == LoginOrEmail);
+            }
 
             if (user is null)
             {
-                 throw new BadRequestException("Zły adres email");
+                throw new BadRequestException("Zły adres email, login lub hasło");
             }
+         
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),

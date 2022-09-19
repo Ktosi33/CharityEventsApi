@@ -3,10 +3,10 @@ using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Exceptions;
 namespace CharityEventsApi.Services.CharityEvent
 {
-    public class CharityEventFactory
+    public class CharityEventFactory : ICharityEventFactory
     {
 
-        public Charityevent CreateCharityEvent(CharityEventDto charityEventDto, User organizer)
+        public Charityevent CreateCharityEvent(AddAllCharityEventsDto charityEventDto, User organizer)
         {
             Charityevent charityevent = new Charityevent {
 
@@ -20,6 +20,21 @@ namespace CharityEventsApi.Services.CharityEvent
             return charityevent;
         }
 
-       
+        public Charityevent CreateCharityEvent(AddCharityEventDto charityEventDto, User organizer)
+        {
+            Charityevent charityevent = new Charityevent
+            {
+
+                Title = charityEventDto.Title,
+                Description = charityEventDto.Description == null ? "" : charityEventDto.Description,
+                OrganizerId = charityEventDto.OrganizerId,
+                IsActive = 1,
+                Organizer = organizer
+            };
+
+            return charityevent;
+        }
+
+
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace CharityEventsApi.Models
+﻿namespace CharityEventsApi.Models.DataTransferObjects
 {
     public class RegisterUserDto
     {

@@ -8,21 +8,22 @@ namespace CharityEventsApi.Services.CharityEvent
     public class CharityEventService : ICharityEventService
     {
         private readonly CharityEventsDbContext dbContext;
+        private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
 
-        public CharityEventService(CharityEventsDbContext dbContext)
+        public CharityEventService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade)
         {
             this.dbContext = dbContext;
+            this.charityEventFactoryFacade = charityEventFactoryFacade;
         }
 
-        public void AddCharityEvent(CharityEventDto charityEventDto)
+        public void AddCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
-           CharityEventFactoryFacade charityEventFactoryFacade = new CharityEventFactoryFacade(dbContext);
            charityEventFactoryFacade.AddCharityEvent(charityEventDto);
         }
 
-        public void EditCharityEvent(EditCharityEventDto charityEventDto)
+        public void EditCharityEvent(EditCharityEventDto charityEventDto, int charityEventId)
         {
-           var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventDto.CharityEventId);
+           var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if(charityevent == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
@@ -32,9 +33,9 @@ namespace CharityEventsApi.Services.CharityEvent
             dbContext.SaveChanges();
         }
      
-        public void EndCharityEvent(int CharityEventId)
+        public void EndCharityEvent(int charityEventId)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == CharityEventId);
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
