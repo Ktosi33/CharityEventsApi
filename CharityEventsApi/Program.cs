@@ -3,6 +3,7 @@ using CharityEventsApi.Entities;
 using CharityEventsApi.Middleware;
 using CharityEventsApi.Services.Account;
 using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.UserStatistics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -90,6 +91,7 @@ builder.Services.AddTransient<ICharityEventFactory, CharityEventFactory>();
 builder.Services.AddTransient<ICharityEventFundraisingFactory, CharityEventFundraisingFactory>();
 builder.Services.AddTransient<ICharityEventVolunteeringFactory, CharityEventVolunteeringFactory>();
 builder.Services.AddTransient<ICharityEventFactoryFacade, CharityEventFactoryFacade>();
+builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
 
 var app = builder.Build();
 
