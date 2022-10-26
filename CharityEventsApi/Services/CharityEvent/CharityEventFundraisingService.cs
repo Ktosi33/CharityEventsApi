@@ -37,6 +37,7 @@ namespace CharityEventsApi.Services.CharityEvent
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
             fundraising.EndEventDate = DateTime.Now;
+            fundraising.IsActive = 0;
             var charityevent = fundraising.Charityevents.FirstOrDefault();
             if (charityevent == null)
             {

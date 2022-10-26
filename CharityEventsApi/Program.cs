@@ -87,9 +87,9 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<ICharityEventService, CharityEventService>();
 builder.Services.AddScoped<ICharityEventVolunteeringService, CharityEventVolunteeringService>();
 builder.Services.AddScoped<ICharityEventFundraisingService, CharityEventFundraisingService>();
-builder.Services.AddTransient<ICharityEventFactory, CharityEventFactory>();
-builder.Services.AddTransient<ICharityEventFundraisingFactory, CharityEventFundraisingFactory>();
-builder.Services.AddTransient<ICharityEventVolunteeringFactory, CharityEventVolunteeringFactory>();
+builder.Services.AddTransient<CharityEventFactory>();
+builder.Services.AddTransient<CharityEventFundraisingFactory>();
+builder.Services.AddTransient<CharityEventVolunteeringFactory>();
 builder.Services.AddTransient<ICharityEventFactoryFacade, CharityEventFactoryFacade>();
 builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
 
@@ -112,7 +112,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseAuthentication();
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
