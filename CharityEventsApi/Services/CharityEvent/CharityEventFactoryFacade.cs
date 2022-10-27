@@ -8,11 +8,11 @@ namespace CharityEventsApi.Services.CharityEvent
     public class CharityEventFactoryFacade : ICharityEventFactoryFacade
     {
         private readonly CharityEventsDbContext dbContext;
-        private readonly ICharityEventFundraisingFactory charityEventFundraisingFactory;
-        private readonly ICharityEventVolunteeringFactory charityEventVolunteeringFactory;
-        private readonly ICharityEventFactory charityEventFactory;
+        private readonly CharityEventFundraisingFactory charityEventFundraisingFactory;
+        private readonly CharityEventVolunteeringFactory charityEventVolunteeringFactory;
+        private readonly CharityEventFactory charityEventFactory;
 
-        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, ICharityEventFundraisingFactory charityEventFundraisingFactory, ICharityEventVolunteeringFactory charityEventVolunteeringFactory, ICharityEventFactory charityEventFactory)
+        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, CharityEventFundraisingFactory charityEventFundraisingFactory, CharityEventVolunteeringFactory charityEventVolunteeringFactory, CharityEventFactory charityEventFactory)
         {
             this.dbContext = dbContext;
             this.charityEventFundraisingFactory = charityEventFundraisingFactory;

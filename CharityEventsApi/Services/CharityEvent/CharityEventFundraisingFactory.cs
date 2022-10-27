@@ -3,7 +3,7 @@ using CharityEventsApi.Models.DataTransferObjects;
 
 namespace CharityEventsApi.Services.CharityEvent
 {
-    public class CharityEventFundraisingFactory : ICharityEventFundraisingFactory
+    public class CharityEventFundraisingFactory 
     {
         public Charityfundraising CreateCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
@@ -11,7 +11,8 @@ namespace CharityEventsApi.Services.CharityEvent
             {
                 AmountOfMoneyToCollect = charityEventDto.AmountOfMoneyToCollect != null ? (decimal)charityEventDto.AmountOfMoneyToCollect : 0, //TODO: can make problems
                 FundTarget = charityEventDto.FundTarget != null ? charityEventDto.FundTarget : "",
-                CreatedEventDate = DateTime.Now
+                CreatedEventDate = DateTime.Now,
+                IsActive = 1
             };
 
             return charityfundraising;
@@ -22,7 +23,8 @@ namespace CharityEventsApi.Services.CharityEvent
             {
                 AmountOfMoneyToCollect = charityEventDto.AmountOfMoneyToCollect != null ? (decimal)charityEventDto.AmountOfMoneyToCollect : 0, //TODO: can make problems
                 FundTarget = charityEventDto.FundTarget != null ? charityEventDto.FundTarget : "",
-                CreatedEventDate = DateTime.Now
+                CreatedEventDate = DateTime.Now,
+                IsActive = 1
             };
 
             return charityfundraising;

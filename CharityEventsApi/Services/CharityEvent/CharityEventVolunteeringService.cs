@@ -58,6 +58,8 @@ namespace CharityEventsApi.Services.CharityEvent
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }
             volunteering.EndEventDate = DateTime.Now;
+            volunteering.IsActive = 0;
+
             var charityevent = volunteering.Charityevents.FirstOrDefault();
             if (charityevent == null)
             {

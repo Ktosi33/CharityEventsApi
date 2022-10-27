@@ -45,12 +45,16 @@ namespace CharityEventsApi.Services.CharityEvent
             if (charityevent.CharityFundraisingIdCharityFundraising != null)
             {
                 var cf = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == charityevent.CharityFundraisingIdCharityFundraising);
-                if(cf != null)
+                
+
+
+                if (cf != null)
                 { 
                     if(cf.EndEventDate == null)
                     { 
                      cf.EndEventDate = DateTime.Now;
                     }
+                    cf.IsActive = 0;
                 }
             }
             if (charityevent.VolunteeringIdVolunteering != null)
@@ -62,6 +66,7 @@ namespace CharityEventsApi.Services.CharityEvent
                     {
                         cv.EndEventDate = DateTime.Now;
                     }
+                    cv.IsActive = 0;
                 }
             }
 

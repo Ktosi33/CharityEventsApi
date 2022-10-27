@@ -127,27 +127,6 @@ namespace CharityEventsApi.Entities
                     .WithMany(p => p.Charityevents)
                     .HasForeignKey(d => d.VolunteeringIdVolunteering)
                     .HasConstraintName("fk_CharityEvent_Volunteering1");
-
-                entity.HasMany(d => d.UserIdUsers)
-                    .WithMany(p => p.CharityEventIdCharityEvents)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "CharityeventHasUser",
-                        l => l.HasOne<User>().WithMany().HasForeignKey("UserIdUser").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_CharityEvent_has_User_User1"),
-                        r => r.HasOne<Charityevent>().WithMany().HasForeignKey("CharityEventIdCharityEvent").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_CharityEvent_has_User_CharityEvent1"),
-                        j =>
-                        {
-                            j.HasKey("CharityEventIdCharityEvent", "UserIdUser").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-                            j.ToTable("charityevent_has_user");
-
-                            j.HasIndex(new[] { "CharityEventIdCharityEvent" }, "fk_CharityEvent_has_User_CharityEvent1_idx");
-
-                            j.HasIndex(new[] { "UserIdUser" }, "fk_CharityEvent_has_User_User1_idx");
-
-                            j.IndexerProperty<int>("CharityEventIdCharityEvent").HasColumnType("int(11)").HasColumnName("CharityEvent_idCharityEvent");
-
-                            j.IndexerProperty<int>("UserIdUser").HasColumnType("int(11)").HasColumnName("User_idUser");
-                        });
             });
 
             modelBuilder.Entity<Charityfundraising>(entity =>
@@ -180,6 +159,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.FundTarget)
                     .HasMaxLength(40)
                     .HasColumnName("fund_target");
+
+                entity.Property(e => e.IsActive)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isActive");
             });
 
             modelBuilder.Entity<Donation>(entity =>
@@ -375,6 +358,27 @@ namespace CharityEventsApi.Entities
 
                             j.IndexerProperty<string>("RolesName").HasMaxLength(40).HasColumnName("Roles_name");
                         });
+
+                entity.HasMany(d => d.VolunteeringIdVolunteerings)
+                    .WithMany(p => p.UserIdUsers)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "UserHasVolunteering",
+                        l => l.HasOne<Volunteering>().WithMany().HasForeignKey("VolunteeringIdVolunteering").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_User_has_Volunteering_Volunteering1"),
+                        r => r.HasOne<User>().WithMany().HasForeignKey("UserIdUser").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_User_has_Volunteering_User1"),
+                        j =>
+                        {
+                            j.HasKey("UserIdUser", "VolunteeringIdVolunteering").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+                            j.ToTable("user_has_volunteering");
+
+                            j.HasIndex(new[] { "UserIdUser" }, "fk_User_has_Volunteering_User1_idx");
+
+                            j.HasIndex(new[] { "VolunteeringIdVolunteering" }, "fk_User_has_Volunteering_Volunteering1_idx");
+
+                            j.IndexerProperty<int>("UserIdUser").HasColumnType("int(11)").HasColumnName("User_idUser");
+
+                            j.IndexerProperty<int>("VolunteeringIdVolunteering").HasColumnType("int(11)").HasColumnName("Volunteering_idVolunteering");
+                        });
             });
 
             modelBuilder.Entity<Volunteering>(entity =>
@@ -399,6 +403,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.EndEventDate)
                     .HasColumnType("datetime")
                     .HasColumnName("endEventDate");
+
+                entity.Property(e => e.IsActive)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isActive");
 
                 entity.HasMany(d => d.LocationIdLocations)
                     .WithMany(p => p.VolunteeringIdVolunteerings)
