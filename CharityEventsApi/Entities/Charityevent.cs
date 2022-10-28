@@ -12,6 +12,9 @@ namespace CharityEventsApi.Entities
         public int? VolunteeringIdVolunteering { get; set; }
         public int? CharityFundraisingIdCharityFundraising { get; set; }
         public int OrganizerId { get; set; }
+        public sbyte IsVerified { get; set; }
+        public DateTime CreatedEventDate { get; set; }
+        public DateTime? EndEventDate { get; set; }
 
         public virtual Charityfundraising? CharityFundraisingIdCharityFundraisingNavigation { get; set; }
         public virtual User Organizer { get; set; } = null!;

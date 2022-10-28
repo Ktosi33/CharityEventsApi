@@ -13,7 +13,8 @@ namespace CharityEventsApi.Services.CharityEvent
                 Title = charityEventDto.Title,
                 Description = charityEventDto.Description == null ? "" : charityEventDto.Description,
                 OrganizerId = charityEventDto.OrganizerId,
-                IsActive = 1,
+                IsActive = 0,
+                IsVerified = 0,
                 Organizer = organizer
             };
 
@@ -28,8 +29,10 @@ namespace CharityEventsApi.Services.CharityEvent
                 Title = charityEventDto.Title,
                 Description = charityEventDto.Description == null ? "" : charityEventDto.Description,
                 OrganizerId = charityEventDto.OrganizerId,
-                IsActive = 1,
-                Organizer = organizer
+                IsActive = 0,
+                IsVerified = 0,
+                Organizer = organizer,
+                CreatedEventDate = DateTime.Now
             };
 
             return charityevent;
