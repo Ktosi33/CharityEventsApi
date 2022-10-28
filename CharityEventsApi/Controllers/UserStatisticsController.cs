@@ -14,11 +14,17 @@ namespace CharityEventsApi.Controllers
         {
             this.userStatisticsService = userStatisticsService;
         }
-
-        [HttpGet("{userId}")]
+        
+        [HttpGet("donations/{userId}")]
         public ActionResult getDonationByUserId([FromRoute] int userId)
         {
-            return Ok(userStatisticsService.getStatisticByUserId(userId));
+            return Ok(userStatisticsService.getDonationStatisticByUserId(userId));
+        }
+
+        [HttpGet("volunteering/{userId}")]
+        public ActionResult getVolunteeringByUserId([FromRoute] int userId)
+        {
+            return Ok(userStatisticsService.getVolunteeringStatisticsByUserId(userId));
         }
     }
 }

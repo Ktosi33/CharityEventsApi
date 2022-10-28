@@ -3,6 +3,7 @@ using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEvent;
 using CharityEventsApi.Exceptions;
 
+
 namespace CharityEventsApi.Services.UserStatistics
 {
     public class UserStatisticsService: IUserStatisticsService
@@ -15,7 +16,7 @@ namespace CharityEventsApi.Services.UserStatistics
             this.dbContext = dbContext;
         }
 
-        public List<DonationDto> getStatisticByUserId(int id)
+        public List<DonationDto> getDonationStatisticByUserId(int id)
         {
             List < DonationDto > donations = new List<DonationDto>();
             var donation = dbContext.Donations.Where(d => d.UserIdUser == id);
@@ -34,5 +35,31 @@ namespace CharityEventsApi.Services.UserStatistics
 
             return donations;
         }
+
+        public List<VolunteeringDto> getVolunteeringStatisticsByUserId(int id)
+        {
+            List<VolunteeringDto> volunteerings = new List<VolunteeringDto>();
+            var volunteering = dbContext.Volunteerings.Where(v => v.UserIdUsers.Any(u => u.IdUser == id));
+            
+            if (volunteering is null)
+            {
+                throw new NotFoundException("Nie znaleziono akcji wolontariackiej");
+            }
+
+            foreach (Volunteering v in volunteering)
+            {
+                volunteerings.Add(new VolunteeringDto
+                {
+                    IdVolunteering = v.IdVolunteering,
+                    AmountOfNeededVolunteers = v.AmountOfNeededVolunteers,
+                    CreatedEventDate = v.CreatedEventDate,
+                    EndEventDate = v.EndEventDate,
+                    IsActive = v.IsActive
+                });
+            }
+            return volunteerings;
+        }
+
+
     }
 }
