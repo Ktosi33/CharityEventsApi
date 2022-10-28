@@ -7,6 +7,7 @@
         public string? Description { get; set; }
         public int? VolunteeringId { get; set; }
         public int? FundraisingId { get; set; }
+        public sbyte isVerified { get; set; }
 
 
     }

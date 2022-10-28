@@ -79,7 +79,8 @@ namespace CharityEventsApi.Services.CharityEvent
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
                 FundTarget = c.FundTarget,
-                IsActive = c.IsActive
+                IsActive = c.IsActive,
+                isVerified = c.IsVerified
             };
         }
 

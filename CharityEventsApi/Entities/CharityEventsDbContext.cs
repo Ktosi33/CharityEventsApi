@@ -36,8 +36,8 @@ namespace CharityEventsApi.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseCollation("utf8mb4_general_ci")
-                .HasCharSet("utf8mb4");
+            modelBuilder.UseCollation("utf8_general_ci")
+                .HasCharSet("utf8");
 
             modelBuilder.Entity<Address>(entity =>
             {
@@ -92,13 +92,25 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("int(11)")
                     .HasColumnName("CharityFundraising_idCharityFundraising");
 
+                entity.Property(e => e.CreatedEventDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("createdEventDate");
+
                 entity.Property(e => e.Description)
                     .HasMaxLength(2000)
                     .HasColumnName("description");
 
+                entity.Property(e => e.EndEventDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("endEventDate");
+
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
+
+                entity.Property(e => e.IsVerified)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isVerified");
 
                 entity.Property(e => e.OrganizerId)
                     .HasColumnType("int(11)")
@@ -163,6 +175,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
+
+                entity.Property(e => e.IsVerified)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isVerified");
             });
 
             modelBuilder.Entity<Donation>(entity =>
@@ -245,7 +261,7 @@ namespace CharityEventsApi.Entities
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-                entity.ToTable("personal data");
+                entity.ToTable("personal_data");
 
                 entity.HasIndex(e => e.Email, "email_UNIQUE")
                     .IsUnique();
@@ -407,6 +423,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
+
+                entity.Property(e => e.IsVerified)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isVerified");
 
                 entity.HasMany(d => d.LocationIdLocations)
                     .WithMany(p => p.VolunteeringIdVolunteerings)

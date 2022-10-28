@@ -99,7 +99,8 @@ namespace CharityEventsApi.Services.CharityEvent
                 AmountOfNeededVolunteers = c.AmountOfNeededVolunteers,
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
-                IsActive = c.IsActive
+                IsActive = c.IsActive,
+                isVerified = c.IsVerified
             };
         }
 

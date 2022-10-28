@@ -17,6 +17,7 @@ namespace CharityEventsApi.Entities
         public DateTime CreatedEventDate { get; set; }
         public DateTime? EndEventDate { get; set; }
         public sbyte IsActive { get; set; }
+        public sbyte IsVerified { get; set; }
 
         public virtual ICollection<Charityevent> Charityevents { get; set; }
 

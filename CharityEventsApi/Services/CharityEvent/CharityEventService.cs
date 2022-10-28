@@ -88,7 +88,8 @@ namespace CharityEventsApi.Services.CharityEvent
                 IsActive = c.IsActive,
                 Title = c.Title,
                 VolunteeringId = c?.VolunteeringIdVolunteering,
-                FundraisingId = c?.CharityFundraisingIdCharityFundraising
+                FundraisingId = c?.CharityFundraisingIdCharityFundraising,
+                isVerified = c.IsVerified
             };
         }
       
