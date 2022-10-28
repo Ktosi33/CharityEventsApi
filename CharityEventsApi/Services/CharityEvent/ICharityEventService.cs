@@ -7,5 +7,6 @@ namespace CharityEventsApi.Services.CharityEvent
         public void AddCharityEvent(AddAllCharityEventsDto charityEventDto);
         public void EditCharityEvent(EditCharityEventDto charityEventDto, int charityEventId);
         public void EndCharityEvent(int charityEventId);
+        public GetCharityEventDto GetCharityEventById(int id);
     }
 }

@@ -8,5 +8,6 @@ namespace CharityEventsApi.Services.CharityEvent
         public void EditLocation(EditLocationDto locationDto, int locationId);
         public void EditCharityEventVolunteering(EditCharityEventVolunteeringDto charityEventVolunteeringDto, int charityEventVolunteeringId);
         public void EndCharityEventVolunteering(int charityEventVolunteeringId);
+        public GetCharityEventVolunteeringDto GetCharityEventVolunteeringById(int id);
     }
 }

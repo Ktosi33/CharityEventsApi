@@ -73,6 +73,24 @@ namespace CharityEventsApi.Services.CharityEvent
             dbContext.SaveChanges();
 
         }
+
+        public GetCharityEventDto GetCharityEventById(int id)
+        {
+            var c = dbContext.Charityevents.FirstOrDefault(c => c.IdCharityEvent == id);
+            if(c is null)
+            {
+                throw new NotFoundException("Given id doesn't exist");
+            }
+           
+
+            return new GetCharityEventDto { 
+                Description = c.Description,
+                IsActive = c.IsActive,
+                Title = c.Title,
+                VolunteeringId = c?.VolunteeringIdVolunteering,
+                FundraisingId = c?.CharityFundraisingIdCharityFundraising
+            };
+        }
       
 
     }
