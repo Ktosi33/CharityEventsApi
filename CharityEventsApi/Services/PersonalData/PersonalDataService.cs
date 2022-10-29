@@ -1,6 +1,7 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
+using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.PersonalData
 {
@@ -13,22 +14,31 @@ namespace CharityEventsApi.Services.PersonalData
             this.dbContext = dbContext;
         }
         
-        public GetPersonalDataDto getPersonalDataById(int id)
+        public GetPersonalDataWithAddressDto getPersonalDataById(int id)
         {
-            var d = dbContext.PersonalData.FirstOrDefault(d => d.UserIdUser == id);
+            var d = dbContext
+                .PersonalData
+                .Include(d => d.AddressIdAddressNavigation)
+                .FirstOrDefault(d => d.UserIdUser == id);
+                
             if (d is null)
             {
                 throw new NotFoundException("PersonalData for this user id doesn't exist");
             }
 
 
-            return new GetPersonalDataDto
+            return new GetPersonalDataWithAddressDto
             {
                 Name = d.Name,
                 Surname = d.Surname,
                 Email = d.Email,
                 PhoneNumber = d.PhoneNumber,
-                AddressIdAddress = d.AddressIdAddress
+                Town = d.AddressIdAddressNavigation.Town,
+                PostalCode = d.AddressIdAddressNavigation.PostalCode,
+                Street = d.AddressIdAddressNavigation.Street,
+                HouseNumber = d.AddressIdAddressNavigation.HouseNumber,
+                FlatNumber = d.AddressIdAddressNavigation.FlatNumber
+                
             };
         }
             
