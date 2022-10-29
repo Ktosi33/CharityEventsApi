@@ -54,7 +54,8 @@ namespace CharityEventsApi.Services.UserStatistics
                     AmountOfNeededVolunteers = v.AmountOfNeededVolunteers,
                     CreatedEventDate = v.CreatedEventDate,
                     EndEventDate = v.EndEventDate,
-                    IsActive = v.IsActive
+                    IsActive = v.IsActive,
+                    IsVerified = v.IsVerified
                 });
             }
             return volunteerings;

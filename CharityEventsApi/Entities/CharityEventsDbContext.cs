@@ -261,7 +261,7 @@ namespace CharityEventsApi.Entities
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-                entity.ToTable("personal_data");
+                entity.ToTable("personal data");
 
                 entity.HasIndex(e => e.Email, "email_UNIQUE")
                     .IsUnique();
