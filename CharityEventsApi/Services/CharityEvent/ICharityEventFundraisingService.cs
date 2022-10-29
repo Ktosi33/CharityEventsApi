@@ -6,5 +6,6 @@ namespace CharityEventsApi.Services.CharityEvent
     {
         public void EditCharityEventFundraising(EditCharityEventFundraisingDto charityEventFundraisingDto, int charityEventFundraisingId);
         public void EndCharityEventFundraising(int CharityEventFundraisingId);
+        public GetCharityFundrasingDto GetCharityEventFundraisingById(int id);
     }
 }

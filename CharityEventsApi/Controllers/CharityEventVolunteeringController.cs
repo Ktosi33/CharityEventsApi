@@ -51,6 +51,12 @@ namespace CharityEventsApi.Controllers
             charityEventVolunteeringService.EditLocation(locationDto, locationId);
             return Ok();
         }
+        [AllowAnonymous]
+        [HttpGet("{charityEventVolunteeringId}")]
+        public ActionResult GetCharityEventById([FromRoute] int charityEventVolunteeringId)
+        {
+            return Ok(charityEventVolunteeringService.GetCharityEventVolunteeringById(charityEventVolunteeringId));
+        }
 
     }
 }

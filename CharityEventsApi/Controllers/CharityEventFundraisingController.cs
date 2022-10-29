@@ -37,6 +37,13 @@ namespace CharityEventsApi.Controllers
             charityEventFundraisingService.EndCharityEventFundraising(charityEventFundraisingId);
             return Ok();
         }
+        [AllowAnonymous]
+        [HttpGet("{charityEventFundraisingId}")]
+        public ActionResult GetCharityEventFundraisingById([FromRoute] int charityEventFundraisingId)
+        {
+            return Ok(charityEventFundraisingService.GetCharityEventFundraisingById(charityEventFundraisingId));
+        }
        
+
     }
 }
