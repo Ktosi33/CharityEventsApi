@@ -1,4 +1,6 @@
-﻿using CharityEventsApi.Services.PersonalData;
+﻿using CharityEventsApi.Models.DataTransferObjects;
+using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.PersonalData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +18,18 @@ namespace CharityEventsApi.Controllers
             this.personalDataService = personalDataService;
         }
 
+
+        [AllowAnonymous]
+        [HttpPost("{userId}")]
+        public ActionResult AddAllPersonalData([FromBody] AddAllPersonalDataDto personalDataDto, [FromRoute] int userId)
+        {
+            personalDataService.addAllPersonalData(personalDataDto, userId);
+            return Ok();
+        }
+
         [AllowAnonymous]
         [HttpGet("{userId}")]
-        public ActionResult GetPersonalDataById([FromRoute] int userId)
+        public ActionResult GetAllPersonalDataById([FromRoute] int userId)
         {
             return Ok(personalDataService.getPersonalDataById(userId));
         }

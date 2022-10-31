@@ -94,6 +94,10 @@ builder.Services.AddTransient<CharityEventVolunteeringFactory>();
 builder.Services.AddTransient<ICharityEventFactoryFacade, CharityEventFactoryFacade>();
 builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
+builder.Services.AddTransient<PersonalDataFactory>();
+builder.Services.AddTransient<PersonalDataAddressFactory>();
+builder.Services.AddTransient<IPersonalDataFactoryFacade, PersonalDataFactoryFacade>();
+
 
 var app = builder.Build();
 

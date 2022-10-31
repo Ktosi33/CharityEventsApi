@@ -4,6 +4,7 @@ namespace CharityEventsApi.Services.PersonalData
 {
     public interface IPersonalDataService
     {
-        public GetPersonalDataWithAddressDto getPersonalDataById(int id);
+        public GetAllPersonalDataDto getPersonalDataById(int id);
+        public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId);
     }
 }

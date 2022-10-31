@@ -8,13 +8,20 @@ namespace CharityEventsApi.Services.PersonalData
     public class PersonalDataService: IPersonalDataService
     {
         private readonly CharityEventsDbContext dbContext;
+        private readonly IPersonalDataFactoryFacade personalDataFactoryFacade;
 
-        public PersonalDataService(CharityEventsDbContext dbContext)
+        public PersonalDataService(CharityEventsDbContext dbContext, IPersonalDataFactoryFacade personalDataFactoryFacade)
         {
             this.dbContext = dbContext;
+            this.personalDataFactoryFacade = personalDataFactoryFacade;
+        }
+
+        public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId)
+        {
+            personalDataFactoryFacade.addPersonalData(personalDataDto, userId);
         }
         
-        public GetPersonalDataWithAddressDto getPersonalDataById(int id)
+        public GetAllPersonalDataDto getPersonalDataById(int id)
         {
             var d = dbContext
                 .PersonalData
@@ -27,7 +34,7 @@ namespace CharityEventsApi.Services.PersonalData
             }
 
 
-            return new GetPersonalDataWithAddressDto
+            return new GetAllPersonalDataDto
             {
                 Name = d.Name,
                 Surname = d.Surname,
