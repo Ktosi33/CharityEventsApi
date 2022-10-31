@@ -6,5 +6,6 @@ namespace CharityEventsApi.Services.PersonalData
     {
         public GetAllPersonalDataDto getPersonalDataById(int id);
         public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId);
+        public void editAllPersonalData(EditAllPesonalDataDto personalDataDto, int idPersonalData);
     }
 }

@@ -18,7 +18,34 @@ namespace CharityEventsApi.Services.PersonalData
 
         public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId)
         {
-            personalDataFactoryFacade.addPersonalData(personalDataDto, userId);
+            if((dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == userId)) == null)
+                personalDataFactoryFacade.addPersonalData(personalDataDto, userId);
+            else
+                throw new Exception("User with the given id has data");        
+        }
+
+        public void editAllPersonalData(EditAllPesonalDataDto personalDataDto, int idPersonalData)
+        {
+            var personalData = dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == idPersonalData);
+            if (personalData == null)
+                throw new NotFoundException("Personal data with given id doesn't exist");
+         
+            var address = dbContext.Addresses.FirstOrDefault(a => a.IdAddress == personalData.AddressIdAddress);
+            if (address == null)
+                throw new NotFoundException("Address with given id doesn't exist");
+
+            personalData.Surname = personalDataDto.Surname;
+            personalData.PhoneNumber = personalDataDto.PhoneNumber;
+            personalData.Email = personalDataDto.Email;
+            personalData.Name = personalDataDto.Name;
+            address.Street = personalDataDto.Street;
+            address.HouseNumber = personalDataDto.HouseNumber;
+            address.FlatNumber = personalDataDto.FlatNumber;
+            address.PostalCode = personalDataDto.PostalCode;
+            address.Town = personalDataDto.Town;
+
+            dbContext.SaveChanges();
+
         }
         
         public GetAllPersonalDataDto getPersonalDataById(int id)
@@ -29,9 +56,7 @@ namespace CharityEventsApi.Services.PersonalData
                 .FirstOrDefault(d => d.UserIdUser == id);
                 
             if (d is null)
-            {
                 throw new NotFoundException("PersonalData for this user id doesn't exist");
-            }
 
 
             return new GetAllPersonalDataDto

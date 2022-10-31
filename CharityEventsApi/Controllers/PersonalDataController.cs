@@ -28,6 +28,14 @@ namespace CharityEventsApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPut("{userId}")]
+        public ActionResult EditAllPersonalData([FromBody] EditAllPesonalDataDto personalDataDto, [FromRoute] int userId)
+        {
+            personalDataService.editAllPersonalData(personalDataDto, userId);
+            return Ok();
+        }
+
+        [AllowAnonymous]
         [HttpGet("{userId}")]
         public ActionResult GetAllPersonalDataById([FromRoute] int userId)
         {
