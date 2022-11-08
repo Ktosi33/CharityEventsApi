@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharityEventsApi", "CharityEventsApi\CharityEventsApi.csproj", "{8A624E65-F444-4431-A4D6-C0024B62DD55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharityEventsApi", "CharityEventsApi\CharityEventsApi.csproj", "{8A624E65-F444-4431-A4D6-C0024B62DD55}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CharityEventsApi.Tests.Integration", "CharityEventsApi.Tests.Integration\CharityEventsApi.Tests.Integration.csproj", "{386CF121-235E-489B-87DD-3AF9DB53460D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CharityEventsApi.Tests.Unit", "CharityEventsApi.Tests.Unit\CharityEventsApi.Tests.Unit.csproj", "{A4358A99-0C08-4B00-BF92-3E1B37EC698B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{8A624E65-F444-4431-A4D6-C0024B62DD55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A624E65-F444-4431-A4D6-C0024B62DD55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A624E65-F444-4431-A4D6-C0024B62DD55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{386CF121-235E-489B-87DD-3AF9DB53460D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{386CF121-235E-489B-87DD-3AF9DB53460D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{386CF121-235E-489B-87DD-3AF9DB53460D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{386CF121-235E-489B-87DD-3AF9DB53460D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4358A99-0C08-4B00-BF92-3E1B37EC698B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4358A99-0C08-4B00-BF92-3E1B37EC698B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4358A99-0C08-4B00-BF92-3E1B37EC698B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4358A99-0C08-4B00-BF92-3E1B37EC698B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

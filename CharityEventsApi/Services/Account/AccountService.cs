@@ -26,7 +26,10 @@ namespace CharityEventsApi.Services.Account
             this.authenticationSettings = authenticationSettings;
         }
 
+        public void getInfoAboutCurrentUser()
+        {
 
+        }
 
         public string GenerateJwt(LoginUserDto dto)
         {
@@ -90,7 +93,6 @@ namespace CharityEventsApi.Services.Account
               {
                   Login = WebUtility.HtmlDecode(dto.Login),
                   Email = WebUtility.HtmlEncode(dto.Email)
-                 
               };
             
             var hashedPassword = passwordHasher.HashPassword(newUser, dto.Password);

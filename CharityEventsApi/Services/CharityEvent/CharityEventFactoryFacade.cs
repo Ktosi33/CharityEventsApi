@@ -28,7 +28,7 @@ namespace CharityEventsApi.Services.CharityEvent
                 {
                     throw new BadRequestException("Organizer ID can't match with any user");
                 }
-
+           
                 Charityevent charityevent = charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
                 dbContext.Charityevents.Add(charityevent);
                 dbContext.SaveChanges();
