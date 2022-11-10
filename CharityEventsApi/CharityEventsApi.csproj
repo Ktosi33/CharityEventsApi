@@ -26,5 +26,8 @@
   <ItemGroup>
     <Folder Include="Models\Validators\" />
   </ItemGroup>
-
+	
+	<ItemGroup>
+		<InternalsVisibleTo Include="CharityEventsApi.Tests.Integration" />
+	</ItemGroup>
 </Project>

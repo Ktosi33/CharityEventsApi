@@ -83,6 +83,6 @@ namespace CharityEventsApi.Services.CharityEvent
                 isVerified = c.IsVerified
             };
         }
-
+        
     }
 }

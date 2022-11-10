@@ -12,7 +12,8 @@ namespace CharityEventsApi.Services.CharityEvent
                 AmountOfMoneyToCollect = charityEventDto.AmountOfMoneyToCollect != null ? (decimal)charityEventDto.AmountOfMoneyToCollect : 0, //TODO: can make problems
                 FundTarget = charityEventDto.FundTarget != null ? charityEventDto.FundTarget : "",
                 CreatedEventDate = DateTime.Now,
-                IsActive = 1 //TODO: change to 0, add verify
+                IsActive = 0,
+                IsVerified = 0
             };
 
             return charityfundraising;
