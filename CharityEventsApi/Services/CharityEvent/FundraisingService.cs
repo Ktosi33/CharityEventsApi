@@ -8,11 +8,16 @@ namespace CharityEventsApi.Services.CharityEvent
     {
         private readonly CharityEventsDbContext dbContext;
         private readonly FundraisingFactory charityEventFundraisingFactory;
+        private readonly FundraisingVerification fundraisingVerification;
+        private readonly FundraisingActivation fundraisingActivation;
 
-        public FundraisingService(CharityEventsDbContext dbContext, FundraisingFactory charityEventFundraisingFactory)
+        public FundraisingService(CharityEventsDbContext dbContext, FundraisingFactory charityEventFundraisingFactory, 
+            FundraisingVerification fundraisingVerification, FundraisingActivation fundraisingActivation)
         {
             this.dbContext = dbContext;
             this.charityEventFundraisingFactory = charityEventFundraisingFactory;
+            this.fundraisingVerification = fundraisingVerification;
+            this.fundraisingActivation = fundraisingActivation;
         }
 
         public void Add(AddCharityEventFundraisingDto dto, int charityEventId)
@@ -43,118 +48,14 @@ namespace CharityEventsApi.Services.CharityEvent
         }
         public void SetActive(int FundraisingId, bool isActive)
         {
-            if (isActive)
-            {
-                active(FundraisingId);
-            }
-            else if (!isActive)
-            {
-                disactive(FundraisingId);
-            }
-            else
-            {
-                throw new BadRequestException("Bad query");
-            }
+            fundraisingActivation.SetActive(FundraisingId, isActive);
         }
         public void SetVerify(int FundraisingId, bool isVerified) 
         {
-            if (isVerified)
-            {
-                verify(FundraisingId); //TODO: Verify can only admin
-            }
-            else if (!isVerified)
-            {
-                unverify(FundraisingId);
-            }
-            else
-            {
-                throw new BadRequestException("Bad query");
-            }
+            fundraisingVerification.SetVerify(FundraisingId, isVerified);
         }
-        private void active(int FundraisingId)
-        {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising == null)
-            {
-                throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
-            }
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventFundraising doesn't have charity event.");
-            }
-           
-            if(charityevent.IsActive == 0 || charityevent.IsVerified == 0 || fundraising.IsVerified == 0)
-            {
-                throw new BadRequestException("You cant active fundraising while charity event isn't active or verified");
-            }
-            fundraising.IsActive = 1;
-            dbContext.SaveChanges();
-        }
-        private void verify(int FundraisingId)
-        {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising == null)
-            {
-                throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
-            }
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventFundraising doesn't have charity event.");
-            }
-            if (charityevent.IsVerified == 0 )
-            {
-                throw new BadRequestException("Firstly verify charityevent");
-            }
-            fundraising.IsVerified = 1;
-            dbContext.SaveChanges();
-        }
-        private void unverify(int FundraisingId)
-        {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising == null)
-            {
-                throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
-            }
-            disactive(FundraisingId);
-            fundraising.IsVerified = 0;
-            dbContext.SaveChanges();
-        }
-        private void disactive(int FundraisingId)
-        {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising == null)
-            {
-                throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
-            }
-            fundraising.EndEventDate = DateTime.Now;
-            fundraising.IsActive = 0;
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventFundraising dont have charity event.");
-            }
-
-            if (charityevent.VolunteeringIdVolunteering == null)
-            {
-                charityevent.IsActive = 0;
-            }
-            else
-            {
-                var cv = dbContext.Volunteerings.FirstOrDefault(cv => cv.IdVolunteering == charityevent.VolunteeringIdVolunteering);
-                if (cv != null)
-                {
-                    if (cv.EndEventDate != null)
-                    {
-                        charityevent.IsActive = 0;
-                    }
-                }
-            }
-
-          
-            dbContext.SaveChanges();
-        }
+       
+      
         public GetCharityFundrasingDto GetById(int id)
         {
             var c = dbContext.Charityfundraisings.FirstOrDefault(c => c.IdCharityFundraising == id);

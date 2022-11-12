@@ -151,5 +151,29 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+        [Theory]
+        [InlineData("true", "true")]
+        [InlineData("true", "false")]
+        public async Task setActiveVerifyCharityEvents_VerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
+        {
+            //act
+            var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        }
+
+        [Theory]
+        [InlineData("false", "true")]
+        [InlineData("asd", "asd")]
+        [InlineData("null", "null")]
+        public async Task setActiveVerifyCharityEvents_VerifyAndActive_ReturnsBadRequestResult(string isVerified, string isActive)
+        {
+            //act
+            var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
+
+            //assert
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        }
     }
 }
