@@ -16,12 +16,12 @@ namespace CharityEventsApi.Services.CharityEvent
             this.charityEventFactoryFacade = charityEventFactoryFacade;
         }
 
-        public void AddCharityEvent(AddAllCharityEventsDto charityEventDto)
+        public void Add(AddAllCharityEventsDto charityEventDto)
         {
            charityEventFactoryFacade.AddCharityEvent(charityEventDto);
         }
 
-        public void EditCharityEvent(EditCharityEventDto charityEventDto, int charityEventId)
+        public void Edit(EditCharityEventDto charityEventDto, int charityEventId)
         {
            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if(charityevent == null)
@@ -32,8 +32,75 @@ namespace CharityEventsApi.Services.CharityEvent
             charityevent.Description = charityEventDto.Description;
             dbContext.SaveChanges();
         }
-     
-        public void EndCharityEvent(int charityEventId)
+
+        public void Active(int charityEventId)
+        {
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            if (charityevent == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+
+            if ( charityevent.IsVerified == 0)
+            {
+                throw new BadRequestException("You cant active charity event while event isn't active or verified");
+            }
+            charityevent.IsActive = 1;
+            dbContext.SaveChanges();
+        }
+
+        public void SetActive(int chariyEventId, bool isActive)
+        {
+            if (isActive)
+            {
+                Active(chariyEventId);
+            }
+            else if (!isActive)
+            {
+                Disactive(chariyEventId);
+            }
+            else
+            {
+                throw new BadRequestException("Bad query");
+            }
+        }
+        public void SetVerify(int chariyEventId, bool isVerified)
+        {
+            if (isVerified)
+            {
+                verify(chariyEventId);
+            }
+            else if (!isVerified)
+            {
+                unverify(chariyEventId);
+            }
+            else
+            {
+                throw new BadRequestException("Bad query");
+            }
+        }
+        private void verify(int charityEventId)
+        {
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            if (charityevent == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+            charityevent.IsVerified = 1;
+            dbContext.SaveChanges();
+        }
+        private void unverify(int charityEventId)
+        {
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            if (charityevent == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+            Disactive(charityEventId);
+            charityevent.IsVerified = 0;
+            dbContext.SaveChanges();
+        }
+        public void Disactive(int charityEventId)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent == null)

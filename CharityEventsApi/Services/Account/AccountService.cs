@@ -26,11 +26,7 @@ namespace CharityEventsApi.Services.Account
             this.authenticationSettings = authenticationSettings;
         }
 
-        public void getInfoAboutCurrentUser()
-        {
-
-        }
-
+ 
         public string GenerateJwt(LoginUserDto dto)
         {
             //login cant have @
@@ -72,7 +68,7 @@ namespace CharityEventsApi.Services.Account
             {
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)) )
+                new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)))
             };
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -91,8 +87,8 @@ namespace CharityEventsApi.Services.Account
           {
               var newUser = new User()
               {
-                  Login = WebUtility.HtmlDecode(dto.Login),
-                  Email = WebUtility.HtmlEncode(dto.Email)
+                  Login = dto.Login,
+                  Email = dto.Email
               };
             
             var hashedPassword = passwordHasher.HashPassword(newUser, dto.Password);

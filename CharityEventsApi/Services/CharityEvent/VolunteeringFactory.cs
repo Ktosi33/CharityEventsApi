@@ -3,7 +3,7 @@ using CharityEventsApi.Models.DataTransferObjects;
 
 namespace CharityEventsApi.Services.CharityEvent
 {
-    public class CharityEventVolunteeringFactory 
+    public class VolunteeringFactory 
     {
 
         public Volunteering CreateCharityEvent(AddAllCharityEventsDto charityEventDto)

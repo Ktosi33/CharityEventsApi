@@ -8,15 +8,15 @@ namespace CharityEventsApi.Services.CharityEvent
     public class CharityEventFactoryFacade : ICharityEventFactoryFacade
     {
         private readonly CharityEventsDbContext dbContext;
-        private readonly CharityEventFundraisingFactory charityEventFundraisingFactory;
-        private readonly CharityEventVolunteeringFactory charityEventVolunteeringFactory;
+        private readonly FundraisingFactory FundraisingFactory;
+        private readonly VolunteeringFactory VolunteeringFactory;
         private readonly CharityEventFactory charityEventFactory;
 
-        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, CharityEventFundraisingFactory charityEventFundraisingFactory, CharityEventVolunteeringFactory charityEventVolunteeringFactory, CharityEventFactory charityEventFactory)
+        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, FundraisingFactory FundraisingFactory, VolunteeringFactory VolunteeringFactory, CharityEventFactory charityEventFactory)
         {
             this.dbContext = dbContext;
-            this.charityEventFundraisingFactory = charityEventFundraisingFactory;
-            this.charityEventVolunteeringFactory = charityEventVolunteeringFactory;
+            this.FundraisingFactory = FundraisingFactory;
+            this.VolunteeringFactory = VolunteeringFactory;
             this.charityEventFactory = charityEventFactory;
         }
         public void AddCharityEvent(AddAllCharityEventsDto charityEventDto)
@@ -49,7 +49,7 @@ namespace CharityEventsApi.Services.CharityEvent
       
         public void AddCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            Volunteering volunteering = charityEventVolunteeringFactory.CreateCharityEvent(charityEventDto);
+            Volunteering volunteering = VolunteeringFactory.CreateCharityEvent(charityEventDto);
             dbContext.Volunteerings.Add(volunteering);
             
             charityEvent.VolunteeringIdVolunteeringNavigation = volunteering;
@@ -59,7 +59,7 @@ namespace CharityEventsApi.Services.CharityEvent
 
         public void AddCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            Charityfundraising charityfundraising = charityEventFundraisingFactory.CreateCharityEvent(charityEventDto);
+            Charityfundraising charityfundraising = FundraisingFactory.CreateCharityEvent(charityEventDto);
             dbContext.Charityfundraisings.Add(charityfundraising);
             charityEvent.CharityFundraisingIdCharityFundraisingNavigation = charityfundraising;
             charityEvent.CharityFundraisingIdCharityFundraising = charityfundraising.IdCharityFundraising;
@@ -72,7 +72,7 @@ namespace CharityEventsApi.Services.CharityEvent
             {
                 throw new BadRequestException("Volunteering ID doesnt exist");
             }
-            var newLocation = charityEventVolunteeringFactory.newLocation(locationDto, vol);
+            var newLocation = VolunteeringFactory.newLocation(locationDto, vol);
             vol.LocationIdLocations.Add(newLocation);
             dbContext.Locations.Add(newLocation);
             dbContext.SaveChanges();

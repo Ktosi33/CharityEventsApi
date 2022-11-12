@@ -20,7 +20,7 @@ namespace CharityEventsApi.Controllers
         [HttpPost()]
         public ActionResult AddCharityEvent([FromBody] AddAllCharityEventsDto charityEventDto)
         {
-            charityEventService.AddCharityEvent(charityEventDto);
+            charityEventService.Add(charityEventDto);
             return Ok();
         }
 
@@ -28,17 +28,25 @@ namespace CharityEventsApi.Controllers
         [HttpPut("{charityEventId}")]
         public ActionResult EditCharityEvent([FromBody] EditCharityEventDto charityEventDto, [FromRoute] int charityEventId)
         {
-            charityEventService.EditCharityEvent(charityEventDto, charityEventId);
+            charityEventService.Edit(charityEventDto, charityEventId);
             return Ok();
         }
-
+      
         [AllowAnonymous]
-        [HttpPut("end/{charityEventId}")]
-        public ActionResult EndCharityEvent([FromRoute] int charityEventId)
+        [HttpPatch("{charityEventId}")]
+        public ActionResult SetDataCharityEvent([FromRoute] int charityEventId, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
-            charityEventService.EndCharityEvent(charityEventId);
+            if (isVerified != null)
+            {
+                charityEventService.SetVerify(charityEventId, (bool)isVerified);
+            }
+            if (isActive != null)
+            {
+                charityEventService.SetActive(charityEventId, (bool)isActive);
+            }
             return Ok();
         }
+       
         [AllowAnonymous]
         [HttpGet("{charityEventId}")]
         public ActionResult GetCharityEventById([FromRoute] int charityEventId)

@@ -9,10 +9,10 @@ namespace CharityEventsApi.Controllers
     [Authorize]
     public class CharityEventVolunteeringController : ControllerBase
     {
-        private readonly ICharityEventVolunteeringService charityEventVolunteeringService;
-        public CharityEventVolunteeringController(ICharityEventVolunteeringService charityEventVolunteeringService)
+        private readonly IVolunteeringService VolunteeringService;
+        public CharityEventVolunteeringController(IVolunteeringService VolunteeringService)
         {
-            this.charityEventVolunteeringService = charityEventVolunteeringService;
+            this.VolunteeringService = VolunteeringService;
         }
        /* [AllowAnonymous]
         [HttpPost()]
@@ -24,38 +24,45 @@ namespace CharityEventsApi.Controllers
        */
 
         [AllowAnonymous]
-        [HttpPut("{charityEventVolunteeringId}")]
-        public ActionResult EditCharityEventVolunteering([FromBody] EditCharityEventVolunteeringDto charityEventVolunteeringDto,[FromRoute] int charityEventVolunteeringId)
+        [HttpPut("{VolunteeringId}")]
+        public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int VolunteeringId)
         {
-            charityEventVolunteeringService.EditCharityEventVolunteering(charityEventVolunteeringDto, charityEventVolunteeringId);
+            VolunteeringService.Edit(VolunteeringDto, VolunteeringId);
             return Ok();
         }
         [AllowAnonymous]
-        [HttpPut("end/{charityEventVolunteeringId}")]
-        public ActionResult EndCharityEvent([FromRoute] int charityEventVolunteeringId)
+        [HttpPatch("{VolunteeringId}")]
+        public ActionResult SetDataVolunteering([FromRoute] int VolunteeringId, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
-            charityEventVolunteeringService.EndCharityEventVolunteering(charityEventVolunteeringId);
+            if (isVerified != null)
+            {
+                VolunteeringService.SetVerify(VolunteeringId, (bool)isVerified);
+            }
+            if (isActive != null)
+            {
+                VolunteeringService.SetActive(VolunteeringId, (bool)isActive);
+            }
             return Ok();
         }
         [AllowAnonymous]
         [HttpPost("location")]
         public ActionResult AddLocation([FromBody] AddLocationDto locationDto)
         {
-            charityEventVolunteeringService.AddLocation(locationDto);
+            VolunteeringService.AddLocation(locationDto);
             return Ok();
         }
         [AllowAnonymous]
         [HttpPut("location/{locationId}")]
         public ActionResult EditLocation([FromBody] EditLocationDto locationDto, [FromRoute] int locationId)
         {
-            charityEventVolunteeringService.EditLocation(locationDto, locationId);
+            VolunteeringService.EditLocation(locationDto, locationId);
             return Ok();
         }
         [AllowAnonymous]
-        [HttpGet("{charityEventVolunteeringId}")]
-        public ActionResult GetCharityEventById([FromRoute] int charityEventVolunteeringId)
+        [HttpGet("{VolunteeringId}")]
+        public ActionResult GetCharityEventById([FromRoute] int VolunteeringId)
         {
-            return Ok(charityEventVolunteeringService.GetCharityEventVolunteeringById(charityEventVolunteeringId));
+            return Ok(VolunteeringService.GetById(VolunteeringId));
         }
 
     }

@@ -42,7 +42,7 @@ namespace CharityEventsApi.Middleware
                 else
                 {
                     await context.Response.WriteAsJsonAsync(new { message = ex.Message });  //for devolopment
-                    //await context.Response.WriteAsJsonAsync(new { message = "Internal error, status code 500" });
+                    //await context.Response.WriteAsJsonAsync(new { message = "Internal error, status code 500" }); //for production
                 }
             }
 

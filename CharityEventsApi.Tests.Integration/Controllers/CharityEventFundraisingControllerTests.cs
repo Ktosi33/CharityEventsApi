@@ -52,10 +52,10 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task EndFundraising_CreateNewAndEndHim_ReturnsOkResult()
+        public async Task DisactiveFundraising_CreateNewAndDisactiveHim_ReturnsOkResult()
         {
             //act
-            var response = await client.PutAsync("/v1/CharityEventFundraising/end/1", null);
+            var response = await client.PatchAsync("/v1/CharityEventFundraising/1?isActive=false", null);
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);

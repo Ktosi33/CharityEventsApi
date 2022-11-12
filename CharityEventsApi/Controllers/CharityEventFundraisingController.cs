@@ -9,10 +9,10 @@ namespace CharityEventsApi.Controllers
     [Authorize]
     public class CharityEventFundraisingController : ControllerBase
     {
-        private readonly ICharityEventFundraisingService charityEventFundraisingService;
-        public CharityEventFundraisingController(ICharityEventFundraisingService charityEventFundraisingService)
+        private readonly IFundraisingService FundraisingService;
+        public CharityEventFundraisingController(IFundraisingService FundraisingService)
         {
-            this.charityEventFundraisingService = charityEventFundraisingService;
+            this.FundraisingService = FundraisingService;
         }
         /* [AllowAnonymous]
        [HttpPost()]
@@ -24,24 +24,31 @@ namespace CharityEventsApi.Controllers
        */
 
         [AllowAnonymous]
-        [HttpPut("{charityEventFundraisingId}")]
-        public ActionResult EditCharityEventVolunteering([FromBody] EditCharityEventFundraisingDto charityEventFundraisingDto, [FromRoute] int charityEventFundraisingId)
+        [HttpPut("{FundraisingId}")]
+        public ActionResult EditFundraising([FromBody] EditCharityEventFundraisingDto FundraisingDto, [FromRoute] int FundraisingId)
         {
-            charityEventFundraisingService.EditCharityEventFundraising(charityEventFundraisingDto, charityEventFundraisingId);
+            FundraisingService.Edit(FundraisingDto, FundraisingId);
             return Ok();
         }
         [AllowAnonymous]
-        [HttpPut("end/{charityEventFundraisingId}")]
-        public ActionResult EndCharityEvent([FromRoute] int charityEventFundraisingId)
+        [HttpPatch("{FundraisingId}")]
+        public ActionResult SetDataFundraising([FromRoute] int FundraisingId, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
-            charityEventFundraisingService.EndCharityEventFundraising(charityEventFundraisingId);
+            if (isVerified != null)
+            {
+                FundraisingService.SetVerify(FundraisingId, (bool)isVerified);
+            }
+            if (isActive != null)
+            {
+                FundraisingService.SetActive(FundraisingId, (bool)isActive);
+            }
             return Ok();
         }
         [AllowAnonymous]
-        [HttpGet("{charityEventFundraisingId}")]
-        public ActionResult GetCharityEventFundraisingById([FromRoute] int charityEventFundraisingId)
+        [HttpGet("{FundraisingId}")]
+        public ActionResult GetCharityEventFundraisingById([FromRoute] int FundraisingId)
         {
-            return Ok(charityEventFundraisingService.GetCharityEventFundraisingById(charityEventFundraisingId));
+            return Ok(FundraisingService.GetById(FundraisingId));
         }
        
 
