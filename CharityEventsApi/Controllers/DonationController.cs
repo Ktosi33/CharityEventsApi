@@ -1,6 +1,6 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
-using CharityEventsApi.Services.Donation;
-using CharityEventsApi.Services.PersonalData;
+using CharityEventsApi.Services.DonationService;
+using CharityEventsApi.Services.PersonalDataService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +22,7 @@ namespace CharityEventsApi.Controllers
 
         [AllowAnonymous]
         [HttpPost()]
-        public ActionResult AddAllPersonalData([FromBody] AddDonationDto addDonationDto)
+        public ActionResult AddDonation([FromBody] AddDonationDto addDonationDto)
         {
             donationService.addDonation(addDonationDto);
             return Ok();
@@ -30,7 +30,7 @@ namespace CharityEventsApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("{donationId}")]
-        public ActionResult GetAllPersonalDataById([FromRoute] int donationId)
+        public ActionResult GetDonationById([FromRoute] int donationId)
         {
             return Ok(donationService.getDonationById(donationId));
         }

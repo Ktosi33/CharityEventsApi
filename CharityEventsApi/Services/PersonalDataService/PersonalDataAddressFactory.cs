@@ -1,7 +1,7 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Models.DataTransferObjects;
 
-namespace CharityEventsApi.Services.PersonalData
+namespace CharityEventsApi.Services.PersonalDataService
 {
     public class PersonalDataAddressFactory
     {

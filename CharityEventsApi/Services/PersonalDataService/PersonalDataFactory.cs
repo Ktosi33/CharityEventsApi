@@ -1,13 +1,13 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Entities;
 
-namespace CharityEventsApi.Services.PersonalData
+namespace CharityEventsApi.Services.PersonalDataService
 {
     public class PersonalDataFactory
     {
-        public Entities.PersonalData createPersonalData(AddAllPersonalDataDto addAllPersonalDataDto, int addressId, int userId)
+        public PersonalData createPersonalData(AddAllPersonalDataDto addAllPersonalDataDto, int addressId, int userId)
         {
-            Entities.PersonalData personalData = new Entities.PersonalData
+            PersonalData personalData = new PersonalData
             {
                 Email = addAllPersonalDataDto.Email,
                 Name = addAllPersonalDataDto.Name,

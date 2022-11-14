@@ -3,7 +3,7 @@ using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace CharityEventsApi.Services.Donation
+namespace CharityEventsApi.Services.DonationService
 {
     public class DonationService: IDonationService
     {
@@ -17,7 +17,7 @@ namespace CharityEventsApi.Services.Donation
 
         public void addDonation(AddDonationDto addDonationDto)
         {
-            var donation = new Entities.Donation
+            var donation = new Donation
             {
                 AmountOfDonation = addDonationDto.AmountOfDonation,
                 CharityFundraisingIdCharityFundraising = addDonationDto.CharityFundraisingIdCharityFundraising,
