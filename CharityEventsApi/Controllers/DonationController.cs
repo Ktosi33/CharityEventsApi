@@ -27,5 +27,12 @@ namespace CharityEventsApi.Controllers
             donationService.addDonation(addDonationDto);
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpGet("{donationId}")]
+        public ActionResult GetAllPersonalDataById([FromRoute] int donationId)
+        {
+            return Ok(donationService.getDonationById(donationId));
+        }
     }
 }
