@@ -26,7 +26,7 @@ namespace CharityEventsApi.Services.UserStatistics
                 throw new NotFoundException("Nie znaleziono donacji"); 
             }
 
-            foreach (Donation d in donation)
+            foreach (Entities.Donation d in donation)
             {
                 donations.Add(new DonationDto { IdDonations = d.IdDonations, AmountOfDonation = d.AmountOfDonation, 
                 CharityFundraisingIdCharityFundraising = d.CharityFundraisingIdCharityFundraising, 

@@ -3,6 +3,7 @@ using CharityEventsApi.Entities;
 using CharityEventsApi.Middleware;
 using CharityEventsApi.Services.Account;
 using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.Donation;
 using CharityEventsApi.Services.PersonalData;
 using CharityEventsApi.Services.UserStatistics;
 using Microsoft.AspNetCore.Identity;
@@ -97,6 +98,7 @@ builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddTransient<PersonalDataFactory>();
 builder.Services.AddTransient<PersonalDataAddressFactory>();
 builder.Services.AddTransient<IPersonalDataFactoryFacade, PersonalDataFactoryFacade>();
+builder.Services.AddScoped<IDonationService, DonationService>();
 
 
 var app = builder.Build();
