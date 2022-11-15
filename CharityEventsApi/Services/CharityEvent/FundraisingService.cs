@@ -10,14 +10,16 @@ namespace CharityEventsApi.Services.CharityEvent
         private readonly FundraisingFactory charityEventFundraisingFactory;
         private readonly FundraisingVerification fundraisingVerification;
         private readonly FundraisingActivation fundraisingActivation;
+        private readonly CharityEventVerification charityEventVerification;
 
         public FundraisingService(CharityEventsDbContext dbContext, FundraisingFactory charityEventFundraisingFactory, 
-            FundraisingVerification fundraisingVerification, FundraisingActivation fundraisingActivation)
+            FundraisingVerification fundraisingVerification, FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification)
         {
             this.dbContext = dbContext;
             this.charityEventFundraisingFactory = charityEventFundraisingFactory;
             this.fundraisingVerification = fundraisingVerification;
             this.fundraisingActivation = fundraisingActivation;
+            this.charityEventVerification = charityEventVerification;
         }
 
         public void Add(AddCharityEventFundraisingDto dto, int charityEventId)
@@ -27,10 +29,15 @@ namespace CharityEventsApi.Services.CharityEvent
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
+            if (charityevent.CharityFundraisingIdCharityFundraising is not null)
+            {
+                throw new BadRequestException("Can't add charity event fundraising, because another one already exists in this charity event");
+            }
             Charityfundraising cf =  charityEventFundraisingFactory.CreateCharityEvent(dto);
             dbContext.Charityfundraisings.Add(cf);
+            charityEventVerification.SetVerify(charityEventId, false);
+            charityevent.CharityFundraisingIdCharityFundraising = cf.IdCharityFundraising;
             dbContext.SaveChanges();
-
         }
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
         {

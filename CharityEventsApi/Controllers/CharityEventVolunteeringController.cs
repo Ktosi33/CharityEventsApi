@@ -14,14 +14,14 @@ namespace CharityEventsApi.Controllers
         {
             this.VolunteeringService = VolunteeringService;
         }
-       /* [AllowAnonymous]
-        [HttpPost()]
-        public ActionResult AddCharityEventVolunteering([FromBody] CharityEventDto charityEventDto)
+        [AllowAnonymous]
+        [HttpPost("{charityeventId}")]
+        public ActionResult AddCharityEventVolunteering([FromBody] AddCharityEventVolunteeringDto charityEventDto, [FromRoute] int charityeventId)
         {
-            charityEventVolunteeringService.AddCharityEvent(charityEventDto);
+            VolunteeringService.Add(charityEventDto, charityeventId);
             return Ok();
         } 
-       */
+      
 
         [AllowAnonymous]
         [HttpPut("{VolunteeringId}")]

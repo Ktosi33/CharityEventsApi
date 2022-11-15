@@ -12,15 +12,17 @@ namespace CharityEventsApi.Services.CharityEvent
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
         private readonly VolunteeringActivation volunteeringActication;
         private readonly VolunteeringVerification volunteeringVerification;
+        private readonly CharityEventVerification charityEventVerification;
 
         public VolunteeringService(CharityEventsDbContext dbContext, VolunteeringFactory charityEventVolunteeringFactory, ICharityEventFactoryFacade charityEventFactoryFacade,
-            VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification)
+            VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification, CharityEventVerification charityEventVerification)
         {
             this.dbContext = dbContext;
             this.charityEventVolunteeringFactory = charityEventVolunteeringFactory;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.volunteeringActication = volunteeringActication;
             this.volunteeringVerification = volunteeringVerification;
+            this.charityEventVerification = charityEventVerification;
         }
         [Obsolete("AddLocation is deprecated, please use location controller instead")]
         public void AddLocation(AddLocationDto locationDto)
@@ -49,8 +51,14 @@ namespace CharityEventsApi.Services.CharityEvent
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
+            if(charityevent.VolunteeringIdVolunteering is not null)
+            {
+                throw new BadRequestException("Can't add charity event volunteering, because another one already exists in this charity event");
+            }
             Volunteering cv = charityEventVolunteeringFactory.CreateCharityEvent(dto);
             dbContext.Volunteerings.Add(cv);
+            charityEventVerification.SetVerify(charityEventId, false);
+            charityevent.VolunteeringIdVolunteering = cv.IdVolunteering;
             dbContext.SaveChanges();
         }
         public void SetActive(int VolunteeringId, bool isActive)
@@ -76,7 +84,6 @@ namespace CharityEventsApi.Services.CharityEvent
             dbContext.SaveChanges();
         }
       
-
         public GetCharityEventVolunteeringDto GetById(int id)
         {
             var c = dbContext.Volunteerings.FirstOrDefault(c => c.IdVolunteering == id);

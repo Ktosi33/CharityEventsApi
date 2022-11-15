@@ -66,6 +66,7 @@ namespace CharityEventsApi.Services.Account
          
             var claims = new List<Claim>()
             {
+                new Claim("Id", user.IdUser.ToString()),
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
                 new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)))

@@ -25,7 +25,14 @@ namespace CharityEventsApi.Services.CharityEvent
         {
            charityEventFactoryFacade.AddCharityEvent(charityEventDto);
         }
-
+        public void getAll()
+        {
+            var charityevent = dbContext.Charityevents;
+            if (charityevent == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+        }
         public void Edit(EditCharityEventDto charityEventDto, int charityEventId)
         {
            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);

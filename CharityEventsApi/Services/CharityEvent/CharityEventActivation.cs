@@ -41,7 +41,6 @@ namespace CharityEventsApi.Services.CharityEvent
                 var cf = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == charityevent.CharityFundraisingIdCharityFundraising);
 
 
-
                 if (cf != null)
                 {
                     if (cf.EndEventDate == null)

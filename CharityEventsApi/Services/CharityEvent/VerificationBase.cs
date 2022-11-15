@@ -4,22 +4,22 @@ namespace CharityEventsApi.Services.CharityEvent
 {
     public abstract class VerificationBase
     {
-        public void SetVerify(int Id, bool isVerified)
+        public void SetVerify(int id, bool isVerified)
         {
             if (isVerified)
             {
-                verify(Id);
+                verify(id);
             }
             else if (!isVerified)
             {
-                unverify(Id);
+                unverify(id);
             }
             else
             {
                 throw new BadRequestException("Bad query");
             }
         }
-        protected abstract void verify(int Id);
-        protected abstract void unverify(int Id);
+        protected abstract void verify(int id);
+        protected abstract void unverify(int id);
     }
 }

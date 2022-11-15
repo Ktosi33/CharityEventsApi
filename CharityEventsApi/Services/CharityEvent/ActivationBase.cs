@@ -4,22 +4,22 @@ namespace CharityEventsApi.Services.CharityEvent
 {
     public abstract class ActivationBase 
     {
-        public void SetActive(int Id, bool isActive)
+        public void SetActive(int id, bool isActive)
         {
             if (isActive)
             {
-                active(Id);
+                active(id);
             }
             else if (!isActive)
             {
-                disactive(Id);
+                disactive(id);
             }
             else
             {
                 throw new BadRequestException("Bad query");
             }
         }
-        protected abstract void disactive(int Id);
-        protected abstract void active(int Id);
+        protected abstract void disactive(int id);
+        protected abstract void active(int id);
     }
 }
