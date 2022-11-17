@@ -1,7 +1,10 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json.Bson;
+using System.Linq;
 
 namespace CharityEventsApi.Services.LocationService
 {
@@ -49,5 +52,32 @@ namespace CharityEventsApi.Services.LocationService
             dbContext.SaveChanges();
         }
 
+        public void deleteLocation(int locationId)
+        {
+            
+            var location = dbContext.Locations.FirstOrDefault(l => l.IdLocation == locationId);
+
+            if (location == null)
+                throw new NotFoundException("Location with given id doesn't exist");
+
+            dbContext.Locations.Remove(location);
+            dbContext.SaveChanges();                 
+        }
+
+        public GetLocationDto getLocationById(int locationId)
+        {
+            var location = dbContext.Locations.FirstOrDefault(l => l.IdLocation == locationId);
+
+            if (location is null)
+                throw new NotFoundException("Location about this id does not exist");
+
+
+            return new GetLocationDto
+            {
+                PostalCode = location.PostalCode,
+                Street = location.Street,
+                Town = location.Town
+            };
+        }
     }
 }

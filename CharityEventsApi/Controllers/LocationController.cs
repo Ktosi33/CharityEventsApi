@@ -36,5 +36,19 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
+        [HttpDelete("{locationId}")]
+        public ActionResult DeleteLocation([FromRoute] int locationId)
+        {
+            locationService.deleteLocation(locationId);
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{locationId}")]
+        public ActionResult GetLocationById([FromRoute] int locationId)
+        {
+            return Ok(locationService.getLocationById(locationId));
+        }
     }
 }
