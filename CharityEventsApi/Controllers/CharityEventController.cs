@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CharityEventsApi.Models.DataTransferObjects;
-using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.CharityEventService;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CharityEventsApi.Controllers

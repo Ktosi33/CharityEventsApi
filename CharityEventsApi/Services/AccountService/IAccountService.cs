@@ -1,6 +1,6 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
 
-namespace CharityEventsApi.Services.Account
+namespace CharityEventsApi.Services.AccountService
 {
     public interface IAccountService
     {

@@ -1,6 +1,6 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
 
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.VolunteeringService
 {
     public interface IVolunteeringService
     {

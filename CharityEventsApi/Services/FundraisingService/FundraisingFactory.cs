@@ -1,7 +1,7 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Models.DataTransferObjects;
 
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.FundraisingService
 {
     public class FundraisingFactory 
     {

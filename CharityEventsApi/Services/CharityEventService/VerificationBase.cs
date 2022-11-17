@@ -1,6 +1,6 @@
 ﻿using CharityEventsApi.Exceptions;
 
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.CharityEventService
 {
     public abstract class VerificationBase
     {

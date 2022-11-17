@@ -1,8 +1,9 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
+using CharityEventsApi.Services.CharityEventService;
 using Microsoft.EntityFrameworkCore;
 
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.FundraisingService
 {
     public class FundraisingActivation : ActivationBase
     {

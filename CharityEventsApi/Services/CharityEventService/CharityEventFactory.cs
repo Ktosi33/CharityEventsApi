@@ -1,7 +1,7 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Exceptions;
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.CharityEventService
 {
     public class CharityEventFactory
     {

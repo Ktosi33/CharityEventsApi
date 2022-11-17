@@ -1,12 +1,14 @@
 using CharityEventsApi;
 using CharityEventsApi.Entities;
 using CharityEventsApi.Middleware;
-using CharityEventsApi.Services.Account;
-using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.AccountService;
+using CharityEventsApi.Services.CharityEventService;
+using CharityEventsApi.Services.FundraisingService;
 using CharityEventsApi.Services.DonationService;
 using CharityEventsApi.Services.LocationService;
 using CharityEventsApi.Services.PersonalDataService;
 using CharityEventsApi.Services.UserStatistics;
+using CharityEventsApi.Services.VolunteeringService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -116,8 +118,9 @@ var app = builder.Build();
 app.UseCors(x => x
              .AllowAnyMethod()
              .AllowAnyHeader()
-             .SetIsOriginAllowed(origin => true) // allow any origin
-             .AllowCredentials()); // allow credentials
+             .AllowAnyOrigin()
+             .SetIsOriginAllowed(origin => true)); // allow any origin
+
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
 

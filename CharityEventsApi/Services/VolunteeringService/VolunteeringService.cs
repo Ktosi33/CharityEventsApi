@@ -1,9 +1,10 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
+using CharityEventsApi.Services.CharityEventService;
 using Microsoft.EntityFrameworkCore;
 
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.VolunteeringService
 {
     public class VolunteeringService : IVolunteeringService
     {

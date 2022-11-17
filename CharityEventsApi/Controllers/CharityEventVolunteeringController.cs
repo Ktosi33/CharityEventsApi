@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using CharityEventsApi.Models.DataTransferObjects;
-using CharityEventsApi.Services.CharityEvent;
 using Microsoft.AspNetCore.Authorization;
+using CharityEventsApi.Services.VolunteeringService;
+
 namespace CharityEventsApi.Controllers
 {
     [Route("/v1/[controller]")]
