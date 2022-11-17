@@ -1,5 +1,5 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
-using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.DonationService;
 using CharityEventsApi.Services.LocationService;
 using Microsoft.AspNetCore.Authorization;
