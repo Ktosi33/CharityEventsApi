@@ -1,6 +1,6 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Models.DataTransferObjects;
-using CharityEventsApi.Services.CharityEvent;
+using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Exceptions;
 
 

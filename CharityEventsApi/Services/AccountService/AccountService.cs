@@ -11,7 +11,7 @@ using CharityEventsApi;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Exceptions;
 
-namespace CharityEventsApi.Services.Account
+namespace CharityEventsApi.Services.AccountService
 {
     public class AccountService : IAccountService
     {

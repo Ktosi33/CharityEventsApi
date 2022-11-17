@@ -1,9 +1,11 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
+using CharityEventsApi.Services.FundraisingService;
+using CharityEventsApi.Services.VolunteeringService;
 using Microsoft.EntityFrameworkCore;
 
-namespace CharityEventsApi.Services.CharityEvent
+namespace CharityEventsApi.Services.CharityEventService
 {
     public class CharityEventFactoryFacade : ICharityEventFactoryFacade
     {
