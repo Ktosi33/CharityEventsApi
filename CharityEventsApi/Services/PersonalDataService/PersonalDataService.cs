@@ -3,7 +3,7 @@ using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using Microsoft.EntityFrameworkCore;
 
-namespace CharityEventsApi.Services.PersonalData
+namespace CharityEventsApi.Services.PersonalDataService
 {
     public class PersonalDataService: IPersonalDataService
     {

@@ -1,9 +1,11 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
 
-namespace CharityEventsApi.Services.PersonalData
+namespace CharityEventsApi.Services.PersonalDataService
 {
     public interface IPersonalDataFactoryFacade
     {
         public void addPersonalData(AddAllPersonalDataDto addAllPersonalDataDto, int userId);
+
+     
     }
 }

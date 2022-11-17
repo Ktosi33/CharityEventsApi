@@ -1,6 +1,6 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEvent;
-using CharityEventsApi.Services.PersonalData;
+using CharityEventsApi.Services.PersonalDataService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
