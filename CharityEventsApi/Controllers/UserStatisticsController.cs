@@ -26,5 +26,11 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(userStatisticsService.getVolunteeringStatisticsByUserId(userId));
         }
+
+        [HttpGet("{userId}")]
+        public ActionResult getUserStatisticsByUserId([FromRoute] int userId)
+        {
+            return Ok(userStatisticsService.getUserStatisticsByUserId(userId));
+        }
     }
 }
