@@ -15,8 +15,10 @@ namespace CharityEventsApi.Entities
         public sbyte IsVerified { get; set; }
         public DateTime CreatedEventDate { get; set; }
         public DateTime? EndEventDate { get; set; }
+        public int ImageIdImages { get; set; }
 
         public virtual Charityfundraising? CharityFundraisingIdCharityFundraisingNavigation { get; set; }
+        public virtual Image ImageIdImagesNavigation { get; set; } = null!;
         public virtual User Organizer { get; set; } = null!;
         public virtual Volunteering? VolunteeringIdVolunteeringNavigation { get; set; }
     }
