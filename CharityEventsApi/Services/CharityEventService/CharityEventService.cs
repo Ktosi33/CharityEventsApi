@@ -29,6 +29,7 @@ namespace CharityEventsApi.Services.CharityEventService
         {
             var charityevents = dbContext.Charityevents.Select(ce => new GetCharityEventDto
                 { 
+                Id = ce.IdCharityEvent,
                 IsActive = ce.IsActive,
                 Description = ce.Description,
                 FundraisingId = ce.CharityFundraisingIdCharityFundraising,
@@ -76,7 +77,8 @@ namespace CharityEventsApi.Services.CharityEventService
                 throw new NotFoundException("Given id doesn't exist");
             }
 
-            return new GetCharityEventDto { 
+            return new GetCharityEventDto {
+                Id = c.IdCharityEvent,
                 Description = c.Description,
                 IsActive = c.IsActive,
                 Title = c.Title,

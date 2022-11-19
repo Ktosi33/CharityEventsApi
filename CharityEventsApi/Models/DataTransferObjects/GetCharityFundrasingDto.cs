@@ -2,8 +2,8 @@
 {
     public class GetCharityFundrasingDto
     {
-        //charityeventfundrasing
-        public string FundTarget { get; set; } = null!;
+        public int Id { get; set; }
+        public string FundTarget { get; set; }
         public decimal AmountOfMoneyToCollect { get; set; }
         public decimal AmountOfAlreadyCollectedMoney { get; set; }
         public DateTime CreatedEventDate { get; set; }

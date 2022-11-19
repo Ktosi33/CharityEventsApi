@@ -96,6 +96,7 @@ namespace CharityEventsApi.Services.VolunteeringService
 
             return new GetCharityEventVolunteeringDto
             {
+                Id = c.IdVolunteering,
                 AmountOfNeededVolunteers = c.AmountOfNeededVolunteers,
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
@@ -107,6 +108,7 @@ namespace CharityEventsApi.Services.VolunteeringService
         {
             var volunteerings = dbContext.Volunteerings.Select(c => new GetCharityEventVolunteeringDto
             {
+                Id = c.IdVolunteering,
                 AmountOfNeededVolunteers = c.AmountOfNeededVolunteers,
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,

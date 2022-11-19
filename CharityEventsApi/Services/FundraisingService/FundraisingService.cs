@@ -75,6 +75,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return new GetCharityFundrasingDto
             {
+                Id = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
                 AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
                 CreatedEventDate = c.CreatedEventDate,
@@ -88,6 +89,7 @@ namespace CharityEventsApi.Services.FundraisingService
         {
             var fundraisings = dbContext.Charityfundraisings.Select(c => new GetCharityFundrasingDto
             {
+                Id = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
                 AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
                 CreatedEventDate = c.CreatedEventDate,
