@@ -11,5 +11,6 @@ namespace CharityEventsApi.Services.VolunteeringService
         public void SetActive(int VolunteeringId, bool isActive);
         public void SetVerify(int VolunteeringId, bool isVerified);
         public GetCharityEventVolunteeringDto GetById(int id);
+        public IEnumerable<GetCharityEventVolunteeringDto> GetAll();
     }
 }

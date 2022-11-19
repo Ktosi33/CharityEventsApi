@@ -25,14 +25,25 @@ namespace CharityEventsApi.Services.CharityEventService
         {
            charityEventFactoryFacade.AddCharityEvent(charityEventDto);
         }
-        public void getAll()
+        public IEnumerable<GetCharityEventDto> GetAll()
         {
-            var charityevent = dbContext.Charityevents;
-            if (charityevent == null)
+            var charityevents = dbContext.Charityevents.Select(ce => new GetCharityEventDto
+                { 
+                IsActive = ce.IsActive,
+                Description = ce.Description,
+                FundraisingId = ce.CharityFundraisingIdCharityFundraising,
+                isVerified = ce.IsVerified,
+                Title = ce.Title,
+                VolunteeringId = ce.VolunteeringIdVolunteering
+             }
+            );
+            if (charityevents == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }
+            return charityevents;
         }
+
         public void Edit(EditCharityEventDto charityEventDto, int charityEventId)
         {
            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
@@ -42,6 +53,7 @@ namespace CharityEventsApi.Services.CharityEventService
             }
             charityevent.Title = charityEventDto.Title;
             charityevent.Description = charityEventDto.Description;
+            charityevent.ImageIdImages = (int)charityEventDto.ImageId;
             dbContext.SaveChanges();
         }
 

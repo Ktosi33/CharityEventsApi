@@ -132,16 +132,17 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
         [Theory]
-        [InlineData("NewTitle", "Desc", 1)]
-        [InlineData("NewTitlea", null, 1)]
-        public async Task EditCharityEvents_FromEditCharityEventDto_ReturnsOkResult(string title, string description, int organizerId)
+        [InlineData("NewTitle", "Desc", 1,1)]
+        [InlineData("NewTitlea", null, 1,1)]
+        public async Task EditCharityEvents_FromEditCharityEventDto_ReturnsOkResult(string title, string description, int organizerId, int imageId)
         {
             //arange
             EditCharityEventDto dto = new EditCharityEventDto
             {
                 Title = title,
                 Description = description,
-                OrganizerId = organizerId
+                OrganizerId = organizerId,
+                ImageId = imageId
             };
             var load = new StringContent(JsonConvert.SerializeObject(dto), UnicodeEncoding.UTF8, "application/json");
 

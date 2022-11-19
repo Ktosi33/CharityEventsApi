@@ -50,7 +50,13 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                     dbContext.Volunteerings.Add(cv);
                     dbContext.SaveChanges();
                 }
-            }
+                if (!dbContext.Images.Any(i => i.IdImages == 1))
+                {
+                    var img = new Image { IdImages = 1, Path = "aaa" };
+                    dbContext.Images.Add(img);
+                    dbContext.SaveChanges();
+                }
+                }
         }
     }
 }

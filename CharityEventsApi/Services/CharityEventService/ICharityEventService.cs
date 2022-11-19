@@ -1,4 +1,5 @@
-﻿using CharityEventsApi.Models.DataTransferObjects;
+﻿using CharityEventsApi.Entities;
+using CharityEventsApi.Models.DataTransferObjects;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
@@ -9,5 +10,6 @@ namespace CharityEventsApi.Services.CharityEventService
         public GetCharityEventDto GetCharityEventById(int id);
         public void SetActive(int chariyEventId, bool isActive);
         public void SetVerify(int chariyEventId, bool isVerified);
+        public IEnumerable<GetCharityEventDto> GetAll();
     }
 }

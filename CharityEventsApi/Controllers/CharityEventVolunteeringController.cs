@@ -65,6 +65,11 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(VolunteeringService.GetById(VolunteeringId));
         }
-
+        [AllowAnonymous]
+        [HttpGet()]
+        public ActionResult GetFundraisings()
+        {
+            return Ok(VolunteeringService.GetAll());
+        }
     }
 }

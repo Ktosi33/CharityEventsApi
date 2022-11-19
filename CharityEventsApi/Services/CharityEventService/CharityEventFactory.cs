@@ -15,7 +15,9 @@ namespace CharityEventsApi.Services.CharityEventService
                 OrganizerId = charityEventDto.OrganizerId,
                 IsActive = 0,
                 IsVerified = 0,
-                Organizer = organizer
+                Organizer = organizer,
+                ImageIdImages = charityEventDto.ImageId,
+                CreatedEventDate = DateTime.Now
             };
 
             return charityevent;
@@ -32,7 +34,8 @@ namespace CharityEventsApi.Services.CharityEventService
                 IsActive = 0,
                 IsVerified = 0,
                 Organizer = organizer,
-                CreatedEventDate = DateTime.Now
+                CreatedEventDate = DateTime.Now,
+                ImageIdImages = charityEventDto.ImageId
             };
 
             return charityevent;

@@ -84,6 +84,25 @@ namespace CharityEventsApi.Services.FundraisingService
                 isVerified = c.IsVerified
             };
         }
-        
+        public IEnumerable<GetCharityFundrasingDto> GetAll()
+        {
+            var fundraisings = dbContext.Charityfundraisings.Select(c => new GetCharityFundrasingDto
+            {
+                AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
+                AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
+                CreatedEventDate = c.CreatedEventDate,
+                EndEventDate = c.EndEventDate,
+                FundTarget = c.FundTarget,
+                IsActive = c.IsActive,
+                isVerified = c.IsVerified
+            }
+            );
+            if (fundraisings == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+            return fundraisings;
+        }
+
     }
 }

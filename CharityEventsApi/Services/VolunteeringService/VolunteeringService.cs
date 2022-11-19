@@ -103,6 +103,23 @@ namespace CharityEventsApi.Services.VolunteeringService
                 isVerified = c.IsVerified
             };
         }
+        public IEnumerable<GetCharityEventVolunteeringDto> GetAll()
+        {
+            var volunteerings = dbContext.Volunteerings.Select(c => new GetCharityEventVolunteeringDto
+            {
+                AmountOfNeededVolunteers = c.AmountOfNeededVolunteers,
+                CreatedEventDate = c.CreatedEventDate,
+                EndEventDate = c.EndEventDate,
+                IsActive = c.IsActive,
+                isVerified = c.IsVerified
+            }
+            );
+            if (volunteerings == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+            return volunteerings;
+        }
 
     }
 }
