@@ -64,7 +64,8 @@ namespace CharityEventsApi.Services.SearchService
                     CreatedEventDate = charityEvent.VolunteeringIdVolunteeringNavigation.CreatedEventDate,
                     EndEventDate = charityEvent.VolunteeringIdVolunteeringNavigation.EndEventDate,
                     IsActive = charityEvent.VolunteeringIdVolunteeringNavigation.IsActive,
-                    isVerified = charityEvent.VolunteeringIdVolunteeringNavigation.IsVerified
+                    isVerified = charityEvent.VolunteeringIdVolunteeringNavigation.IsVerified,
+                    Id = charityEvent.VolunteeringIdVolunteeringNavigation.IdVolunteering
                 };
             }
 
@@ -78,7 +79,8 @@ namespace CharityEventsApi.Services.SearchService
                     EndEventDate = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.EndEventDate,
                     FundTarget = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.FundTarget,
                     IsActive = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IsActive,
-                    isVerified = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified
+                    isVerified = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified,
+                    Id = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IdCharityFundraising
                 };
             }
 
