@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using CharityEventsApi.Services.SearchService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -109,6 +110,7 @@ builder.Services.AddTransient<PersonalDataAddressFactory>();
 builder.Services.AddTransient<IPersonalDataFactoryFacade, PersonalDataFactoryFacade>();
 builder.Services.AddScoped<IDonationService, DonationService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 
 var app = builder.Build();
