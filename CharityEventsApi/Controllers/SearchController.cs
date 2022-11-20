@@ -29,7 +29,7 @@ namespace CharityEventsApi.Controllers
 
         [AllowAnonymous]
         [HttpGet("{charityEventId}")]
-        public ActionResult GetAllPersonalDataById([FromRoute] int charityEventId)
+        public ActionResult GetCharityEventDetailsById([FromRoute] int charityEventId)
         {
             return Ok(searchService.GetCharityEventsById(charityEventId));
         }
