@@ -22,18 +22,18 @@ namespace CharityEventsApi.Controllers
 
         [AllowAnonymous]
         [HttpGet()]
-        public ActionResult GetCharityEventsDetails()
+        public ActionResult GetCharityEventsDetails([FromQuery] bool? isVerified, [FromQuery] bool? isActive,
+            [FromQuery] bool? isFundraising, [FromQuery] bool? fundraisingIsActive, [FromQuery] bool? fundraisingIsVerified, [FromQuery] bool? isVolunteering, [FromQuery] bool? volunteeringIsActive,
+            [FromQuery] bool? volunteeringIsVerified)
         {
-            return Ok(searchService.GetCharityEvents());
+            return Ok(searchService.GetCharityEvents(isVerified, isActive, isFundraising, isVolunteering, volunteeringIsActive, fundraisingIsActive, volunteeringIsVerified, fundraisingIsVerified));
         }
-
+        
         [AllowAnonymous]
         [HttpGet("{charityEventId}")]
         public ActionResult GetCharityEventDetailsById([FromRoute] int charityEventId)
         {
             return Ok(searchService.GetCharityEventsById(charityEventId));
         }
-
-
     }
 }

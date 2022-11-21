@@ -18,17 +18,25 @@ namespace CharityEventsApi.Services.SearchService
             this.dbContext = dbContext;
         }
 
-        public IEnumerable<GetAllDetailsCharityEventDto> GetCharityEvents()
+        public IEnumerable<GetAllDetailsCharityEventDto> GetCharityEvents(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
+           bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified)
         {
             var charityEvents = dbContext.Charityevents
+                .Where(c => c.IsVerified == Convert.ToSByte(isVerified))
+                .Where(c => c.IsActive == Convert.ToSByte(isActive))
+                .Where(c => isFundraising == null || c.CharityFundraisingIdCharityFundraising.Equals(null) == !isFundraising)
+                .Where(c => isVolunteering == null || c.VolunteeringIdVolunteering.Equals(null) == !isVolunteering)
+                .Where(c => c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
+                .Where(c => c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
+                .Where(c => c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
+                .Where(c => c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified))
                 .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
                 .Include(c => c.VolunteeringIdVolunteeringNavigation);
 
             var charityEventsDetails = new List<GetAllDetailsCharityEventDto>();
 
-            foreach(Charityevent charityEvent in charityEvents)
+            foreach (Charityevent charityEvent in charityEvents)
                 charityEventsDetails.Add(getDetails(charityEvent));
-            
 
             return charityEventsDetails;
         }
