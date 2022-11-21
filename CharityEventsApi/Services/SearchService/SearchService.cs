@@ -22,8 +22,8 @@ namespace CharityEventsApi.Services.SearchService
            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified)
         {
             var charityEvents = dbContext.Charityevents
-                .Where(c => c.IsVerified == Convert.ToSByte(isVerified))
-                .Where(c => c.IsActive == Convert.ToSByte(isActive))
+                .Where(c => isVerified == null || c.IsVerified == Convert.ToSByte(isVerified))
+                .Where(c => isActive == null || c.IsActive == Convert.ToSByte(isActive))
                 .Where(c => isFundraising == null || c.CharityFundraisingIdCharityFundraising.Equals(null) == !isFundraising)
                 .Where(c => isVolunteering == null || c.VolunteeringIdVolunteering.Equals(null) == !isVolunteering)
                 .Where(c => c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
