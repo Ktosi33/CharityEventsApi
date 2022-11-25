@@ -77,5 +77,25 @@ namespace CharityEventsApi.Services.VolunteerService
 
             return getVolunteerDto;
         }
+
+        public void deleteVolunteer(DeleteVolunteerDto deleteVolunteerDto)
+        {
+            var volunteer = dbContext.Users.FirstOrDefault(u => u.IdUser == deleteVolunteerDto.IdUser);
+            var volunteering = dbContext.Volunteerings
+                .Include(v => v.UserIdUsers)
+                .FirstOrDefault(v => v.IdVolunteering == deleteVolunteerDto.IdVolunteering);
+
+            if (volunteer == null)
+                throw new NotFoundException("User about this id does not exist");
+
+            if (volunteering == null)
+                throw new NotFoundException("Volunteering about this id does not exist");
+
+            if (!volunteering.UserIdUsers.Contains(volunteer))
+                throw new Exception("This volunteer is not assigned to this action");
+
+            volunteering.UserIdUsers.Remove(volunteer);
+            dbContext.SaveChanges();
+        }
     }
 }

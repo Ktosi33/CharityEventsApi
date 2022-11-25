@@ -33,5 +33,13 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(volunteerService.getVolunteersByVolunteeringId(volunteeringId));
         }
+
+        [AllowAnonymous]
+        [HttpDelete()]
+        public ActionResult DeleteVolunteer([FromBody] DeleteVolunteerDto deleteVolunteerDto)
+        {
+            volunteerService.deleteVolunteer(deleteVolunteerDto);
+            return Ok();
+        }
     }
 }
