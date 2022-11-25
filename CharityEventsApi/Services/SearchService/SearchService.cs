@@ -22,21 +22,24 @@ namespace CharityEventsApi.Services.SearchService
            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified)
         {
             var charityEvents = dbContext.Charityevents
+                .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
+                .Include(c => c.VolunteeringIdVolunteeringNavigation)
                 .Where(c => isVerified == null || c.IsVerified == Convert.ToSByte(isVerified))
                 .Where(c => isActive == null || c.IsActive == Convert.ToSByte(isActive))
                 .Where(c => isFundraising == null || c.CharityFundraisingIdCharityFundraising.Equals(null) == !isFundraising)
                 .Where(c => isVolunteering == null || c.VolunteeringIdVolunteering.Equals(null) == !isVolunteering)
-                .Where(c => c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
-                .Where(c => c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
-                .Where(c => c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
-                .Where(c => c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified))
-                .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
-                .Include(c => c.VolunteeringIdVolunteeringNavigation);
+                .Where(c => volunteeringIsActive == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
+                .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
+                .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
+                .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified));
+                
 
             var charityEventsDetails = new List<GetAllDetailsCharityEventDto>();
 
             foreach (Charityevent charityEvent in charityEvents)
                 charityEventsDetails.Add(getDetails(charityEvent));
+
+            charityEventsDetails.Reverse();
 
             return charityEventsDetails;
         }
