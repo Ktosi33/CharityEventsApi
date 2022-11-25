@@ -26,6 +26,9 @@ namespace CharityEventsApi.Services.VolunteerService
 
             if (volunteering != null)
             {
+                if (volunteering.IsVerified == 0 || volunteering.IsActive == 0)
+                    throw new Exception("Action must be verified and active");
+
                 if (volunteering.UserIdUsers.Contains(volunteer))
                     throw new Exception("This volunteer has already been assigned to this action");
 
