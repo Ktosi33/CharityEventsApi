@@ -26,5 +26,12 @@ namespace CharityEventsApi.Controllers
             volunteerService.addVolunteer(addVolunteerDto);
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpGet("{volunteeringId}")]
+        public ActionResult GetVolunteers([FromRoute] int volunteeringId)
+        {
+            return Ok(volunteerService.getVolunteersByVolunteeringId(volunteeringId));
+        }
     }
 }
