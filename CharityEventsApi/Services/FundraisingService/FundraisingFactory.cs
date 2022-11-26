@@ -1,5 +1,6 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Models.DataTransferObjects;
+using CharityEventsApi.Services.ImageService;
 
 namespace CharityEventsApi.Services.FundraisingService
 {
@@ -18,7 +19,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return charityfundraising;
         }
-        public Charityfundraising CreateCharityEvent(AddCharityEventFundraisingDto charityEventDto)
+        public async Task<Charityfundraising> CreateCharityEvent(AddCharityEventFundraisingDto charityEventDto)
         {
             Charityfundraising charityfundraising = new Charityfundraising
             {
@@ -26,7 +27,8 @@ namespace CharityEventsApi.Services.FundraisingService
                 FundTarget = charityEventDto.FundTarget != null ? charityEventDto.FundTarget : "",
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
-                IsVerified = 0
+                IsVerified = 0,                
+
             };
 
             return charityfundraising;

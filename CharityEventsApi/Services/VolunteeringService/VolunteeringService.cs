@@ -2,6 +2,7 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
+using CharityEventsApi.Services.ImageService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.VolunteeringService
@@ -14,9 +15,12 @@ namespace CharityEventsApi.Services.VolunteeringService
         private readonly VolunteeringActivation volunteeringActication;
         private readonly VolunteeringVerification volunteeringVerification;
         private readonly CharityEventVerification charityEventVerification;
+        private readonly IImageService imageService;
 
-        public VolunteeringService(CharityEventsDbContext dbContext, VolunteeringFactory charityEventVolunteeringFactory, ICharityEventFactoryFacade charityEventFactoryFacade,
-            VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification, CharityEventVerification charityEventVerification)
+        public VolunteeringService(CharityEventsDbContext dbContext, VolunteeringFactory charityEventVolunteeringFactory, 
+            ICharityEventFactoryFacade charityEventFactoryFacade, VolunteeringActivation volunteeringActication, 
+            VolunteeringVerification volunteeringVerification, CharityEventVerification charityEventVerification,
+            IImageService imageService)
         {
             this.dbContext = dbContext;
             this.charityEventVolunteeringFactory = charityEventVolunteeringFactory;
@@ -24,6 +28,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             this.volunteeringActication = volunteeringActication;
             this.volunteeringVerification = volunteeringVerification;
             this.charityEventVerification = charityEventVerification;
+            this.imageService = imageService;
         }
         [Obsolete("AddLocation is deprecated, please use location controller instead")]
         public void AddLocation(AddLocationDto locationDto)
@@ -45,9 +50,51 @@ namespace CharityEventsApi.Services.VolunteeringService
             dbContext.SaveChanges();
 
         }
-        public void Add(AddCharityEventVolunteeringDto dto, int charityEventId)
+        public async Task AddOneImage(IFormFile image, int idVolunteering)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == charityEventId);
+            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                var cv = await dbContext.Volunteerings.FirstOrDefaultAsync(v => v.IdVolunteering == idVolunteering);
+                if (cv is null)
+                {
+                    throw new NotFoundException("Charity event with given id doesn't exist");
+                }
+                int imageId = await imageService.SaveImageAsync(image);
+                var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
+                if (img is null)
+                {
+                    throw new BadRequestException("something went wrong");
+                }
+                cv.ImageIdImages.Add(img);
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+        }
+        public async Task DeleteImage(int idImage, int idVolunteering)
+        {
+            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                var cv = await dbContext.Volunteerings.FirstOrDefaultAsync(v => v.IdVolunteering == idVolunteering);
+                if (cv is null)
+                {
+                    throw new NotFoundException("Charity event with given id doesn't exist");
+                }
+                var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
+                if (image is null)
+                {
+                    throw new NotFoundException("Image with given id doesn't exist");
+                }
+
+                cv.ImageIdImages.Remove(image);
+                await imageService.DeleteImageByObjectAsync(image);
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+        }
+        public async Task Add(AddCharityEventVolunteeringDto dto)
+        {
+            var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
             if (charityevent is null)
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
@@ -56,11 +103,9 @@ namespace CharityEventsApi.Services.VolunteeringService
             {
                 throw new BadRequestException("Can't add charity event volunteering, because another one already exists in this charity event");
             }
-            Volunteering cv = charityEventVolunteeringFactory.CreateCharityEvent(dto);
-            dbContext.Volunteerings.Add(cv);
-            charityEventVerification.SetVerify(charityEventId, false);
-            charityevent.VolunteeringIdVolunteering = cv.IdVolunteering;
-            dbContext.SaveChanges();
+            await charityEventFactoryFacade.AddCharityEventVolunteering(dto, charityevent);
+
+            charityEventVerification.SetVerify(dto.CharityEventId, false);
         }
         public void SetActive(int VolunteeringId, bool isActive)
         {
@@ -77,7 +122,6 @@ namespace CharityEventsApi.Services.VolunteeringService
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }
-            //TODO: maybe throw warning in same way
             if (VolunteeringDto.AmountOfNeededVolunteers != null)
             {
                 charityevent.AmountOfNeededVolunteers = (int)VolunteeringDto.AmountOfNeededVolunteers;

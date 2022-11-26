@@ -2,70 +2,108 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.FundraisingService;
+using CharityEventsApi.Services.ImageService;
 using CharityEventsApi.Services.VolunteeringService;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
     public class CharityEventFactoryFacade : ICharityEventFactoryFacade
     {
         private readonly CharityEventsDbContext dbContext;
-        private readonly FundraisingFactory FundraisingFactory;
-        private readonly VolunteeringFactory VolunteeringFactory;
+        private readonly FundraisingFactory fundraisingFactory;
+        private readonly VolunteeringFactory volunteeringFactory;
         private readonly CharityEventFactory charityEventFactory;
+        private readonly IImageService imageService;
 
-        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, FundraisingFactory FundraisingFactory, VolunteeringFactory VolunteeringFactory, CharityEventFactory charityEventFactory)
+        public CharityEventFactoryFacade(CharityEventsDbContext dbContext, FundraisingFactory fundraisingFactory,
+            VolunteeringFactory volunteeringFactory, CharityEventFactory charityEventFactory, IImageService imageService)
         {
             this.dbContext = dbContext;
-            this.FundraisingFactory = FundraisingFactory;
-            this.VolunteeringFactory = VolunteeringFactory;
+            this.fundraisingFactory = fundraisingFactory;
+            this.volunteeringFactory = volunteeringFactory;
             this.charityEventFactory = charityEventFactory;
+            this.imageService = imageService;
         }
-        public void AddCharityEvent(AddAllCharityEventsDto charityEventDto)
+        public async Task AddCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
             {
-                var organizer = dbContext.Users.FirstOrDefault(u => u.IdUser == charityEventDto.OrganizerId);
+                var organizer = await dbContext.Users.FirstOrDefaultAsync(u => u.IdUser == charityEventDto.OrganizerId);
                 if (organizer is null)
                 {
                     throw new BadRequestException("Organizer ID can't match with any user");
                 }
            
-                Charityevent charityevent = charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
-                dbContext.Charityevents.Add(charityevent);
-                dbContext.SaveChanges();
+                Charityevent charityevent = await charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
+                charityevent.ImageIdImages = await imageService.SaveImageAsync(charityEventDto.ImageCharityEvent);
+
+            
+                await dbContext.Charityevents.AddAsync(charityevent);
+                await dbContext.SaveChangesAsync();
 
                 if (charityEventDto.isFundraising)
                 {
-                    AddCharityEventFundraising(charityEventDto, charityevent);
+                   await addCharityEventFundraising(charityEventDto, charityevent);
                 }
 
                 if (charityEventDto.isVolunteering)
                 {
-                    AddCharityEventVolunteering(charityEventDto, charityevent);
+                   await addCharityEventVolunteering(charityEventDto, charityevent);
                 }
 
-                transaction.Commit();
-            }
+             await transaction.CommitAsync();
+          }
         }
-      
-        public void AddCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
+        
+        private async Task addCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            Volunteering volunteering = VolunteeringFactory.CreateCharityEvent(charityEventDto);
-            dbContext.Volunteerings.Add(volunteering);
-            
+            List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesFundraising);
+            Volunteering volunteering = volunteeringFactory.CreateCharityEvent(charityEventDto);
+            volunteering.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+            await dbContext.Volunteerings.AddAsync(volunteering);
             charityEvent.VolunteeringIdVolunteeringNavigation = volunteering;
             charityEvent.VolunteeringIdVolunteering = volunteering.IdVolunteering;
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
-
-        public void AddCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
+        public async Task AddCharityEventVolunteering(AddCharityEventVolunteeringDto charityEventDto, Charityevent charityevent)
         {
-            Charityfundraising charityfundraising = FundraisingFactory.CreateCharityEvent(charityEventDto);
-            dbContext.Charityfundraisings.Add(charityfundraising);
+            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                List<int> ids = await imageService.SaveImagesAsync(charityEventDto.Images);
+                Volunteering cv = volunteeringFactory.CreateCharityEvent(charityEventDto);
+                cv.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+                await dbContext.Volunteerings.AddAsync(cv);
+                await dbContext.SaveChangesAsync();
+                charityevent.VolunteeringIdVolunteering = cv.IdVolunteering;
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+        }
+        private async Task addCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
+        {
+            List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesFundraising);            
+            Charityfundraising charityfundraising = fundraisingFactory.CreateCharityEvent(charityEventDto);
+            charityfundraising.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+            await dbContext.Charityfundraisings.AddAsync(charityfundraising);
             charityEvent.CharityFundraisingIdCharityFundraisingNavigation = charityfundraising;
             charityEvent.CharityFundraisingIdCharityFundraising = charityfundraising.IdCharityFundraising;
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
+        }
+        public async Task AddCharityEventFundraising(AddCharityEventFundraisingDto charityEventDto, Charityevent charityEvent)
+        {
+            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                List<int> ids = await imageService.SaveImagesAsync(charityEventDto.Images);
+                Charityfundraising cf = await fundraisingFactory.CreateCharityEvent(charityEventDto);
+                cf.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+                await dbContext.Charityfundraisings.AddAsync(cf);
+                await dbContext.SaveChangesAsync();
+                charityEvent.CharityFundraisingIdCharityFundraising = cf.IdCharityFundraising;
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
         }
         public void AddLocation(AddLocationDto locationDto)
         {
@@ -74,7 +112,7 @@ namespace CharityEventsApi.Services.CharityEventService
             {
                 throw new BadRequestException("Volunteering ID doesnt exist");
             }
-            var newLocation = VolunteeringFactory.newLocation(locationDto, vol);
+            var newLocation = volunteeringFactory.newLocation(locationDto, vol);
             vol.LocationIdLocations.Add(newLocation);
             dbContext.Locations.Add(newLocation);
             dbContext.SaveChanges();

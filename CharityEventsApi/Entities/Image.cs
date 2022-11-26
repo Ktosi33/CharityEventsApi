@@ -14,6 +14,7 @@ namespace CharityEventsApi.Entities
 
         public int IdImages { get; set; }
         public string Path { get; set; } = null!;
+        public string ContentType { get; set; } = null!;
 
         public virtual ICollection<Charityevent> Charityevents { get; set; }
 
