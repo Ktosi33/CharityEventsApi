@@ -5,8 +5,8 @@ namespace CharityEventsApi.Services.VolunteeringService
     public interface IVolunteeringService
     {
         public Task Add(AddCharityEventVolunteeringDto dto);
-        public Task AddOneImage(IFormFile image, int idVolunteering);
-        public Task DeleteImage(int idImage, int idFundraising);
+       // public Task AddOneImage(IFormFile image, int idVolunteering);
+      //  public Task DeleteImage(int idImage, int idFundraising);
         public void AddLocation(AddLocationDto locationDto);
         public void EditLocation(EditLocationDto locationDto, int locationId);
         public void Edit(EditCharityEventVolunteeringDto VolunteeringDto, int VolunteeringId);

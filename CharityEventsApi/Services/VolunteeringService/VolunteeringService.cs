@@ -50,6 +50,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             dbContext.SaveChanges();
 
         }
+        /*
         public async Task AddOneImage(IFormFile image, int idVolunteering)
         {
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
@@ -92,6 +93,7 @@ namespace CharityEventsApi.Services.VolunteeringService
                 await transaction.CommitAsync();
             }
         }
+        */
         public async Task Add(AddCharityEventVolunteeringDto dto)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);

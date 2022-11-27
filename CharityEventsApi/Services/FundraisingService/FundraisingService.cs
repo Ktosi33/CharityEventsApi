@@ -2,7 +2,6 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
-using CharityEventsApi.Services.ImageService;
 using Microsoft.EntityFrameworkCore;
 namespace CharityEventsApi.Services.FundraisingService
 {
@@ -14,12 +13,10 @@ namespace CharityEventsApi.Services.FundraisingService
         private readonly FundraisingActivation fundraisingActivation;
         private readonly CharityEventVerification charityEventVerification;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
-        private readonly IImageService imageService;
 
         public FundraisingService(CharityEventsDbContext dbContext, FundraisingFactory charityEventFundraisingFactory, 
             FundraisingVerification fundraisingVerification, FundraisingActivation fundraisingActivation,
-            CharityEventVerification charityEventVerification, ICharityEventFactoryFacade charityEventFactoryFacade,
-            IImageService imageService)
+            CharityEventVerification charityEventVerification, ICharityEventFactoryFacade charityEventFactoryFacade)
         {
             this.dbContext = dbContext;
             this.charityEventFundraisingFactory = charityEventFundraisingFactory;
@@ -27,7 +24,6 @@ namespace CharityEventsApi.Services.FundraisingService
             this.fundraisingActivation = fundraisingActivation;
             this.charityEventVerification = charityEventVerification;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
-            this.imageService = imageService;
         }
 
         public async Task Add(AddCharityEventFundraisingDto dto)
@@ -45,6 +41,7 @@ namespace CharityEventsApi.Services.FundraisingService
             await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
             charityEventVerification.SetVerify(dto.CharityEventId, false);
         }
+        /*
         public async Task AddOneImage(IFormFile image, int fundraisingId)
         {
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
@@ -87,6 +84,7 @@ namespace CharityEventsApi.Services.FundraisingService
                 await transaction.CommitAsync();
             }
         }
+        */
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
         {
             var charityevent = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);

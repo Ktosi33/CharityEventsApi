@@ -7,6 +7,5 @@ namespace CharityEventsApi.Models.DataTransferObjects
         public int CharityEventId { get; set; }
         public string FundTarget { get; set; }
         public decimal AmountOfMoneyToCollect { get; set; }
-        public List<IFormFile> Images { get; set; }
     }
 }

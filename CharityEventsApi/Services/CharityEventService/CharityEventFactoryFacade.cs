@@ -39,7 +39,9 @@ namespace CharityEventsApi.Services.CharityEventService
                 Charityevent charityevent = await charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
                 charityevent.ImageIdImages = await imageService.SaveImageAsync(charityEventDto.ImageCharityEvent);
 
-            
+                List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesCharityEvent);
+                charityevent.ImageIdImages1 = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+
                 await dbContext.Charityevents.AddAsync(charityevent);
                 await dbContext.SaveChangesAsync();
 
@@ -52,55 +54,54 @@ namespace CharityEventsApi.Services.CharityEventService
                 {
                    await addCharityEventVolunteering(charityEventDto, charityevent);
                 }
-
+              
              await transaction.CommitAsync();
           }
         }
         
         private async Task addCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesFundraising);
+          //  List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesFundraising);
             Volunteering volunteering = volunteeringFactory.CreateCharityEvent(charityEventDto);
-            volunteering.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+         //   volunteering.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
             await dbContext.Volunteerings.AddAsync(volunteering);
             charityEvent.VolunteeringIdVolunteeringNavigation = volunteering;
-            charityEvent.VolunteeringIdVolunteering = volunteering.IdVolunteering;
+            //charityEvent.VolunteeringIdVolunteering = volunteering.IdVolunteering;
             await dbContext.SaveChangesAsync();
         }
         public async Task AddCharityEventVolunteering(AddCharityEventVolunteeringDto charityEventDto, Charityevent charityevent)
         {
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
             {
-                List<int> ids = await imageService.SaveImagesAsync(charityEventDto.Images);
+               // List<int> ids = await imageService.SaveImagesAsync(charityEventDto.Images);
                 Volunteering cv = volunteeringFactory.CreateCharityEvent(charityEventDto);
-                cv.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+              //  cv.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
                 await dbContext.Volunteerings.AddAsync(cv);
-                await dbContext.SaveChangesAsync();
-                charityevent.VolunteeringIdVolunteering = cv.IdVolunteering;
+                charityevent.VolunteeringIdVolunteeringNavigation = cv;
                 await dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
         }
         private async Task addCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
         {
-            List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesFundraising);            
+         //   List<int> ids = await imageService.SaveImagesAsync(charityEventDto.ImagesFundraising);            
             Charityfundraising charityfundraising = fundraisingFactory.CreateCharityEvent(charityEventDto);
-            charityfundraising.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+           // charityfundraising.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
             await dbContext.Charityfundraisings.AddAsync(charityfundraising);
             charityEvent.CharityFundraisingIdCharityFundraisingNavigation = charityfundraising;
-            charityEvent.CharityFundraisingIdCharityFundraising = charityfundraising.IdCharityFundraising;
+            //charityEvent.CharityFundraisingIdCharityFundraising = charityfundraising.IdCharityFundraising;
             await dbContext.SaveChangesAsync();
         }
         public async Task AddCharityEventFundraising(AddCharityEventFundraisingDto charityEventDto, Charityevent charityEvent)
         {
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
             {
-                List<int> ids = await imageService.SaveImagesAsync(charityEventDto.Images);
+              //  List<int> ids = await imageService.SaveImagesAsync(charityEventDto.Images);
                 Charityfundraising cf = await fundraisingFactory.CreateCharityEvent(charityEventDto);
-                cf.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+               // cf.ImageIdImages = dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
                 await dbContext.Charityfundraisings.AddAsync(cf);
-                await dbContext.SaveChangesAsync();
-                charityEvent.CharityFundraisingIdCharityFundraising = cf.IdCharityFundraising;
+               // await dbContext.SaveChangesAsync();
+                charityEvent.CharityFundraisingIdCharityFundraisingNavigation = cf;
                 await dbContext.SaveChangesAsync();
                 await transaction.CommitAsync();
             }

@@ -22,7 +22,7 @@ namespace CharityEventsApi.Controllers
             await VolunteeringService.Add(charityEventDto);
             return Ok();
         }
-
+        /*
         [AllowAnonymous]
         [HttpPost("image/{idVolunteering}")]
         public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idVolunteering)
@@ -37,6 +37,7 @@ namespace CharityEventsApi.Controllers
             await VolunteeringService.DeleteImage(idImage, idVolunteering);
             return Ok();
         }
+        */
         [AllowAnonymous]
         [HttpPut("{idVolunteering}")]
         public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int idVolunteering)

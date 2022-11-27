@@ -4,6 +4,5 @@
     {
         public int CharityEventId { get; set; }
         public int AmountOfNeededVolunteers { get; set; }
-        public List<IFormFile> Images { get; set; }
     }
 }

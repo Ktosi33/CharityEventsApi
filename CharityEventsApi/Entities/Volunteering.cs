@@ -8,7 +8,6 @@ namespace CharityEventsApi.Entities
         public Volunteering()
         {
             Charityevents = new HashSet<Charityevent>();
-            ImageIdImages = new HashSet<Image>();
             LocationIdLocations = new HashSet<Location>();
             UserIdUsers = new HashSet<User>();
         }
@@ -23,7 +22,6 @@ namespace CharityEventsApi.Entities
 
         public virtual ICollection<Charityevent> Charityevents { get; set; }
 
-        public virtual ICollection<Image> ImageIdImages { get; set; }
         public virtual ICollection<Location> LocationIdLocations { get; set; }
         public virtual ICollection<User> UserIdUsers { get; set; }
     }

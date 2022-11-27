@@ -152,6 +152,27 @@ namespace CharityEventsApi.Entities
                     .WithMany(p => p.Charityevents)
                     .HasForeignKey(d => d.VolunteeringIdVolunteering)
                     .HasConstraintName("fk_CharityEvent_Volunteering1");
+
+                entity.HasMany(d => d.ImageIdImages1)
+                    .WithMany(p => p.CharityEventIdCharityEvents)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "CharityeventHasImage",
+                        l => l.HasOne<Image>().WithMany().HasForeignKey("ImageIdImages").HasConstraintName("fk_CharityEvent_has_Image_Image1"),
+                        r => r.HasOne<Charityevent>().WithMany().HasForeignKey("CharityEventIdCharityEvent").HasConstraintName("fk_CharityEvent_has_Image_CharityEvent1"),
+                        j =>
+                        {
+                            j.HasKey("CharityEventIdCharityEvent", "ImageIdImages").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+                            j.ToTable("charityevent_has_image");
+
+                            j.HasIndex(new[] { "CharityEventIdCharityEvent" }, "fk_CharityEvent_has_Image_CharityEvent1_idx");
+
+                            j.HasIndex(new[] { "ImageIdImages" }, "fk_CharityEvent_has_Image_Image1_idx");
+
+                            j.IndexerProperty<int>("CharityEventIdCharityEvent").HasColumnType("int(11)").HasColumnName("CharityEvent_idCharityEvent");
+
+                            j.IndexerProperty<int>("ImageIdImages").HasColumnType("int(11)").HasColumnName("Image_idImages");
+                        });
             });
 
             modelBuilder.Entity<Charityfundraising>(entity =>
@@ -192,27 +213,6 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isVerified");
-
-                entity.HasMany(d => d.ImageIdImages)
-                    .WithMany(p => p.CharityFundraisingIdCharityFundraisings)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "CharityfundraisingHasImage",
-                        l => l.HasOne<Image>().WithMany().HasForeignKey("ImageIdImages").HasConstraintName("fk_CharityFundraising_has_Image_Image1"),
-                        r => r.HasOne<Charityfundraising>().WithMany().HasForeignKey("CharityFundraisingIdCharityFundraising").HasConstraintName("fk_CharityFundraising_has_Image_CharityFundraising1"),
-                        j =>
-                        {
-                            j.HasKey("CharityFundraisingIdCharityFundraising", "ImageIdImages").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-                            j.ToTable("charityfundraising_has_image");
-
-                            j.HasIndex(new[] { "CharityFundraisingIdCharityFundraising" }, "fk_CharityFundraising_has_Image_CharityFundraising1_idx");
-
-                            j.HasIndex(new[] { "ImageIdImages" }, "fk_CharityFundraising_has_Image_Image1_idx");
-
-                            j.IndexerProperty<int>("CharityFundraisingIdCharityFundraising").HasColumnType("int(11)").HasColumnName("CharityFundraising_idCharityFundraising");
-
-                            j.IndexerProperty<int>("ImageIdImages").HasColumnType("int(11)").HasColumnName("Image_idImages");
-                        });
             });
 
             modelBuilder.Entity<Donation>(entity =>
@@ -483,25 +483,6 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isVerified");
-
-                entity.HasMany(d => d.ImageIdImages)
-                    .WithMany(p => p.VolunteeringIdVolunteerings)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "VolunteeringHasImage",
-                        l => l.HasOne<Image>().WithMany().HasForeignKey("ImageIdImages").HasConstraintName("fk_Volunteering_has_Image_Image1"),
-                        r => r.HasOne<Volunteering>().WithMany().HasForeignKey("VolunteeringIdVolunteering").HasConstraintName("fk_Volunteering_has_Image_Volunteering1"),
-                        j =>
-                        {
-                            j.HasKey("VolunteeringIdVolunteering", "ImageIdImages").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-
-                            j.ToTable("volunteering_has_image");
-
-                            j.HasIndex(new[] { "ImageIdImages" }, "fk_Volunteering_has_Image_Image1_idx");
-
-                            j.IndexerProperty<int>("VolunteeringIdVolunteering").HasColumnType("int(11)").HasColumnName("Volunteering_idVolunteering");
-
-                            j.IndexerProperty<int>("ImageIdImages").HasColumnType("int(11)").HasColumnName("Image_idImages");
-                        });
 
                 entity.HasMany(d => d.LocationIdLocations)
                     .WithMany(p => p.VolunteeringIdVolunteerings)

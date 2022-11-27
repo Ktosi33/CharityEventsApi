@@ -29,6 +29,50 @@ namespace CharityEventsApi.Services.CharityEventService
         {
           await charityEventFactoryFacade.AddCharityEvent(charityEventDto);
         }
+        
+        public async Task AddOneImage(IFormFile image, int idCharityEvent)
+        {
+            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
+                if (ce is null)
+                {
+                    throw new NotFoundException("Charity event with given id doesn't exist");
+                }
+                int imageId = await imageService.SaveImageAsync(image);
+                var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
+                if (img is null)
+                {
+                    throw new BadRequestException("something went wrong");
+                }
+               // ce.ImageIdImages.Add(img);
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+        }
+        public async Task DeleteImage(int idImage, int idCharityEvent)
+        {
+            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            {
+                var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
+                if (ce is null)
+                {
+                    throw new NotFoundException("Charity event with given id doesn't exist");
+                }
+                var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
+                if (image is null)
+                {
+                    throw new NotFoundException("Image with given id doesn't exist");
+                }
+
+                ce.ImageIdImages1.Remove(image);
+                await imageService.DeleteImageByObjectAsync(image);
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+        }
+       
         public IEnumerable<GetCharityEventDto> GetAll()
         {
             var charityevents = dbContext.Charityevents.Select(ce => new GetCharityEventDto

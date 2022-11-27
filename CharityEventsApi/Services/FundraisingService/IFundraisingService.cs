@@ -10,7 +10,7 @@ namespace CharityEventsApi.Services.FundraisingService
         public void SetActive(int FundraisingId, bool isActive);
         public void SetVerify(int FundraisingId, bool isVerified);
         public IEnumerable<GetCharityFundrasingDto> GetAll();
-        public Task AddOneImage(IFormFile image, int fundraisingId);
-        public Task DeleteImage(int idImage, int idFundraising);
+       // public Task AddOneImage(IFormFile image, int fundraisingId);
+       // public Task DeleteImage(int idImage, int idFundraising);
     }
 }
