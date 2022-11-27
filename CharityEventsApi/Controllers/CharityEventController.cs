@@ -2,6 +2,7 @@
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
 using Microsoft.AspNetCore.Authorization;
+using CharityEventsApi.Services.ImageService;
 
 namespace CharityEventsApi.Controllers
 {
@@ -11,47 +12,98 @@ namespace CharityEventsApi.Controllers
     public class CharityEventController : ControllerBase
     {
         private readonly ICharityEventService charityEventService;
-        public CharityEventController(ICharityEventService charityEventService)
+        private readonly IImageService imageService;
+        public CharityEventController(ICharityEventService charityEventService, IImageService imageService)
         {
             this.charityEventService = charityEventService;
+            this.imageService = imageService;
         }
 
         [AllowAnonymous]
         [HttpPost()]
-        public ActionResult AddCharityEvent([FromBody] AddAllCharityEventsDto charityEventDto)
+        public async Task<ActionResult> AddCharityEvent([FromForm] AddAllCharityEventsDto charityEventDto)
         {
-            charityEventService.Add(charityEventDto);
+           await charityEventService.Add(charityEventDto);
+            return Ok();
+        }
+        [AllowAnonymous]
+        [HttpPost("image/{idCharityEvent}")]
+        public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
+        {
+            await charityEventService.AddOneImage(image, idCharityEvent);
+            return Ok();
+        }
+        [AllowAnonymous]
+        [HttpDelete("image")]
+        public async Task<ActionResult> DeleteImageAsync([FromQuery] int idImage, [FromQuery] int idCharityEvent)
+        {
+            await charityEventService.DeleteImage(idImage, idCharityEvent);
             return Ok();
         }
 
         [AllowAnonymous]
-        [HttpPut("{charityEventId}")]
-        public ActionResult EditCharityEvent([FromBody] EditCharityEventDto charityEventDto, [FromRoute] int charityEventId)
+        [HttpPut("{idCharityEvent}")]
+        public ActionResult EditCharityEvent([FromBody] EditCharityEventDto charityEventDto, [FromRoute] int idCharityEvent)
         {
-            charityEventService.Edit(charityEventDto, charityEventId);
+            charityEventService.Edit(charityEventDto, idCharityEvent);
             return Ok();
         }
-      
         [AllowAnonymous]
-        [HttpPatch("{charityEventId}")]
-        public ActionResult SetDataCharityEvent([FromRoute] int charityEventId, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        [HttpPut("image/{idCharityEvent}")]
+        public async Task<ActionResult> ChangeImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
+        {
+            await charityEventService.ChangeImage(image, idCharityEvent);
+            return Ok();
+        }
+        /*
+        [AllowAnonymous]
+        [HttpPost("/images")]
+        public async Task<ActionResult> AddImages(List<IFormFile> files)
+        {
+            await imageService.SaveImagesAsync(files);
+            return Ok();
+        }
+        [AllowAnonymous]
+        [HttpPost("/image")]
+        public async Task<ActionResult> AddImage(IFormFile file)
+        {
+            await imageService.SaveImageAsync(file);
+            return Ok();
+        }
+        [AllowAnonymous]
+        [HttpGet("/image/{id}")]
+        public async Task<ActionResult> GetImageById(int id)
+        {
+            return Ok(await imageService.GetImageAsync(id));
+        }
+
+        [AllowAnonymous]
+        [HttpPut("/image")]
+        public async Task<ActionResult> GetImages([FromBody]List<int> ids)
+        {
+            return Ok(imageService.GetImagesInRangeAsync(ids));
+        }
+        */
+        [AllowAnonymous]
+        [HttpPatch("{idCharityEvent}")]
+        public ActionResult SetDataCharityEvent([FromRoute] int idCharityEvent, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
             if (isVerified != null)
             {
-                charityEventService.SetVerify(charityEventId, (bool)isVerified);
+                charityEventService.SetVerify(idCharityEvent, (bool)isVerified);
             }
             if (isActive != null)
             {
-                charityEventService.SetActive(charityEventId, (bool)isActive);
+                charityEventService.SetActive(idCharityEvent, (bool)isActive);
             }
             return Ok();
         }
        
         [AllowAnonymous]
-        [HttpGet("{charityEventId}")]
-        public ActionResult GetCharityEventById([FromRoute] int charityEventId)
+        [HttpGet("{idCharityEvent}")]
+        public ActionResult GetCharityEventById([FromRoute] int idCharityEvent)
         {
-            return Ok(charityEventService.GetCharityEventById(charityEventId));
+            return Ok(charityEventService.GetCharityEventById(idCharityEvent));
         }
         [AllowAnonymous]
         [HttpGet()]

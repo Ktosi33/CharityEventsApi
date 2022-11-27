@@ -16,32 +16,46 @@ namespace CharityEventsApi.Controllers
             this.VolunteeringService = VolunteeringService;
         }
         [AllowAnonymous]
-        [HttpPost("{charityeventId}")]
-        public ActionResult AddCharityEventVolunteering([FromBody] AddCharityEventVolunteeringDto charityEventDto, [FromRoute] int charityeventId)
+        [HttpPost()]
+        public async Task<ActionResult> AddCharityEventVolunteeringAsync([FromForm] AddCharityEventVolunteeringDto charityEventDto)
         {
-            VolunteeringService.Add(charityEventDto, charityeventId);
+            await VolunteeringService.Add(charityEventDto);
             return Ok();
-        } 
-      
-
+        }
+        /*
         [AllowAnonymous]
-        [HttpPut("{VolunteeringId}")]
-        public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int VolunteeringId)
+        [HttpPost("image/{idVolunteering}")]
+        public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idVolunteering)
         {
-            VolunteeringService.Edit(VolunteeringDto, VolunteeringId);
+            await VolunteeringService.AddOneImage(image, idVolunteering);
             return Ok();
         }
         [AllowAnonymous]
-        [HttpPatch("{VolunteeringId}")]
-        public ActionResult SetDataVolunteering([FromRoute] int VolunteeringId, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        [HttpDelete("image")]
+        public async Task<ActionResult> DeleteImageAsync([FromQuery] int idImage, [FromQuery] int idVolunteering)
+        {
+            await VolunteeringService.DeleteImage(idImage, idVolunteering);
+            return Ok();
+        }
+        */
+        [AllowAnonymous]
+        [HttpPut("{idVolunteering}")]
+        public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int idVolunteering)
+        {
+            VolunteeringService.Edit(VolunteeringDto, idVolunteering);
+            return Ok();
+        }
+        [AllowAnonymous]
+        [HttpPatch("{idVolunteering}")]
+        public ActionResult SetDataVolunteering([FromRoute] int idVolunteering, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
             if (isVerified != null)
             {
-                VolunteeringService.SetVerify(VolunteeringId, (bool)isVerified);
+                VolunteeringService.SetVerify(idVolunteering, (bool)isVerified);
             }
             if (isActive != null)
             {
-                VolunteeringService.SetActive(VolunteeringId, (bool)isActive);
+                VolunteeringService.SetActive(idVolunteering, (bool)isActive);
             }
             return Ok();
         }
@@ -61,9 +75,9 @@ namespace CharityEventsApi.Controllers
         }
         [AllowAnonymous]
         [HttpGet("{VolunteeringId}")]
-        public ActionResult GetCharityEventById([FromRoute] int VolunteeringId)
+        public ActionResult GetCharityEventById([FromRoute] int idVolunteering)
         {
-            return Ok(VolunteeringService.GetById(VolunteeringId));
+            return Ok(VolunteeringService.GetById(idVolunteering));
         }
         [AllowAnonymous]
         [HttpGet()]

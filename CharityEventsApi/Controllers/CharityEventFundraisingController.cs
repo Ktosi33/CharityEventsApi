@@ -2,6 +2,7 @@
 using CharityEventsApi.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Authorization;
 using CharityEventsApi.Services.FundraisingService;
+using CharityEventsApi.Services.ImageService;
 
 namespace CharityEventsApi.Controllers
 {
@@ -11,45 +12,62 @@ namespace CharityEventsApi.Controllers
     public class CharityEventFundraisingController : ControllerBase
     {
         private readonly IFundraisingService FundraisingService;
-        public CharityEventFundraisingController(IFundraisingService FundraisingService)
+        private readonly IImageService imageService;
+
+        public CharityEventFundraisingController(IFundraisingService FundraisingService, IImageService imageService)
         {
             this.FundraisingService = FundraisingService;
+            this.imageService = imageService;
         }
         [AllowAnonymous]
-        [HttpPost("{charityeventId}")]
-        public ActionResult AddCharityEventFundraising([FromBody] AddCharityEventFundraisingDto charityEventDto, [FromRoute] int charityeventId)
+        [HttpPost()]
+        public async Task<ActionResult> AddCharityEventFundraisingAsync([FromForm] AddCharityEventFundraisingDto charityEventDto)
         {
-            FundraisingService.Add(charityEventDto, charityeventId);
+            await FundraisingService.Add(charityEventDto);
             return Ok();
         }
-
-
+        /*
         [AllowAnonymous]
-        [HttpPut("{FundraisingId}")]
-        public ActionResult EditFundraising([FromBody] EditCharityEventFundraisingDto FundraisingDto, [FromRoute] int FundraisingId)
+        [HttpPost("image/{idFundraising}")]
+        public async Task<ActionResult> AddOneImageAsync(IFormFile image,[FromRoute] int idFundraising)
         {
-            FundraisingService.Edit(FundraisingDto, FundraisingId);
+            await FundraisingService.AddOneImage(image, idFundraising);
             return Ok();
         }
         [AllowAnonymous]
-        [HttpPatch("{FundraisingId}")]
-        public ActionResult SetDataFundraising([FromRoute] int FundraisingId, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        [HttpDelete("image")]
+        public async Task<ActionResult> AddOneImageAsync([FromQuery] int idImage, [FromQuery] int idFundraising)
+        {
+            await FundraisingService.DeleteImage(idImage, idFundraising);
+            return Ok();
+        }
+        */
+        [AllowAnonymous]
+        [HttpPut("{idFundraising}")]
+        public ActionResult EditFundraising([FromBody] EditCharityEventFundraisingDto FundraisingDto, [FromRoute] int idFundraising)
+        {
+            FundraisingService.Edit(FundraisingDto, idFundraising);
+            return Ok();
+        }
+        [AllowAnonymous]
+        [HttpPatch("{idFundraising}")]
+        public ActionResult SetDataFundraising([FromRoute] int idFundraising, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
             if (isVerified != null)
             {
-                FundraisingService.SetVerify(FundraisingId, (bool)isVerified);
+                FundraisingService.SetVerify(idFundraising, (bool)isVerified);
             }
             if (isActive != null)
             {
-                FundraisingService.SetActive(FundraisingId, (bool)isActive);
+                FundraisingService.SetActive(idFundraising, (bool)isActive);
             }
             return Ok();
         }
         [AllowAnonymous]
-        [HttpGet("{FundraisingId}")]
-        public ActionResult GetCharityEventFundraisingById([FromRoute] int FundraisingId)
+        [HttpGet("{idFundraising}")]
+        public ActionResult GetCharityEventFundraisingById([FromRoute] int idFundraising)
         {
-            return Ok(FundraisingService.GetById(FundraisingId));
+            return Ok(FundraisingService.GetById(idFundraising));
         }
         [AllowAnonymous]
         [HttpGet()]
@@ -58,6 +76,13 @@ namespace CharityEventsApi.Controllers
             return Ok(FundraisingService.GetAll());
         }
 
+        [AllowAnonymous]
+        [HttpPost("/image")]
+        public async Task<ActionResult> AddImage(IFormFile file)
+        {
+            await imageService.SaveImageAsync(file);
+            return Ok();
+        }
 
     }
 }

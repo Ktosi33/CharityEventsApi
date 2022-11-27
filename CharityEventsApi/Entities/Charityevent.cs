@@ -5,6 +5,11 @@ namespace CharityEventsApi.Entities
 {
     public partial class Charityevent
     {
+        public Charityevent()
+        {
+            ImageIdImages1 = new HashSet<Image>();
+        }
+
         public int IdCharityEvent { get; set; }
         public sbyte IsActive { get; set; }
         public string Title { get; set; } = null!;
@@ -21,5 +26,7 @@ namespace CharityEventsApi.Entities
         public virtual Image ImageIdImagesNavigation { get; set; } = null!;
         public virtual User Organizer { get; set; } = null!;
         public virtual Volunteering? VolunteeringIdVolunteeringNavigation { get; set; }
+
+        public virtual ICollection<Image> ImageIdImages1 { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using CharityEventsApi.Services.SearchService;
 using CharityEventsApi.Services.VolunteerService;
+using CharityEventsApi.Services.ImageService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,7 +104,8 @@ builder.Services.AddScoped<VolunteeringVerification>();
 builder.Services.AddScoped<CharityEventActivation>();
 builder.Services.AddScoped<FundraisingActivation>();
 builder.Services.AddScoped<VolunteeringActivation>();
-builder.Services.AddTransient<ICharityEventFactoryFacade, CharityEventFactoryFacade>();
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<ICharityEventFactoryFacade, CharityEventFactoryFacade>();
 builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddTransient<PersonalDataFactory>();
@@ -136,7 +138,7 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();
