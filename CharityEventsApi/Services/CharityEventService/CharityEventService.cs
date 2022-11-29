@@ -32,45 +32,41 @@ namespace CharityEventsApi.Services.CharityEventService
         
         public async Task AddOneImage(IFormFile image, int idCharityEvent)
         {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
+            if (ce is null)
             {
-                var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
-                if (ce is null)
-                {
-                    throw new NotFoundException("Charity event with given id doesn't exist");
-                }
-                int imageId = await imageService.SaveImageAsync(image);
-                var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
-                if (img is null)
-                {
-                    throw new BadRequestException("something went wrong");
-                }
-               // ce.ImageIdImages.Add(img);
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
+                throw new NotFoundException("Charity event with given id doesn't exist");
             }
+            int imageId = await imageService.SaveImageAsync(image);
+            var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
+            if (img is null)
+            {
+                throw new BadRequestException("something went wrong");
+            }
+            // ce.ImageIdImages.Add(img);
+            await dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
         }
         public async Task DeleteImage(int idImage, int idCharityEvent)
         {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+            using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
+            if (ce is null)
             {
-                var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
-                if (ce is null)
-                {
-                    throw new NotFoundException("Charity event with given id doesn't exist");
-                }
-                var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
-                if (image is null)
-                {
-                    throw new NotFoundException("Image with given id doesn't exist");
-                }
-
-                ce.ImageIdImages1.Remove(image);
-                await imageService.DeleteImageByObjectAsync(image);
-
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
+                throw new NotFoundException("Charity event with given id doesn't exist");
             }
+            var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
+            if (image is null)
+            {
+                throw new NotFoundException("Image with given id doesn't exist");
+            }
+
+            ce.ImageIdImages1.Remove(image);
+            await imageService.DeleteImageByObjectAsync(image);
+
+            await dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
         }
        
         public IEnumerable<GetCharityEventDto> GetAll()
@@ -81,7 +77,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 IsActive = ce.IsActive,
                 Description = ce.Description,
                 FundraisingId = ce.CharityFundraisingIdCharityFundraising,
-                isVerified = ce.IsVerified,
+                IsVerified = ce.IsVerified,
                 Title = ce.Title,
                 VolunteeringId = ce.VolunteeringIdVolunteering
              }
@@ -96,9 +92,19 @@ namespace CharityEventsApi.Services.CharityEventService
         public void Edit(EditCharityEventDto charityEventDto, int idCharityEvent)
         {
             var charityevent = getCharityEventFromDbById(idCharityEvent);
-            charityevent.Title = charityEventDto.Title;
+            if(charityEventDto.Title != null)
+            {
+                charityevent.Title = charityEventDto.Title;
+            }
+            if(charityEventDto.Description != null)
+            { 
             charityevent.Description = charityEventDto.Description;
-            charityevent.ImageIdImages = (int)charityEventDto.ImageId;
+            }
+            if(charityEventDto.ImageId.HasValue)
+            { 
+            charityevent.ImageIdImages = charityEventDto.ImageId.Value;
+            }
+
             dbContext.SaveChanges();
         }
         private Charityevent getCharityEventFromDbById(int idCharityEvent)
@@ -113,17 +119,15 @@ namespace CharityEventsApi.Services.CharityEventService
         }
         public async Task ChangeImage(IFormFile image, int idCharityEvent)
         {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {
-                var cv = getCharityEventFromDbById(idCharityEvent);
+            using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            var cv = getCharityEventFromDbById(idCharityEvent);
 
-                await imageService.DeleteImageByIdAsync(cv.ImageIdImages);
+            await imageService.DeleteImageByIdAsync(cv.ImageIdImages);
 
-                cv.ImageIdImages = await imageService.SaveImageAsync(image);
+            cv.ImageIdImages = await imageService.SaveImageAsync(image);
 
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
+            await dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
 
         }
 
@@ -147,7 +151,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 Title = c.Title,
                 VolunteeringId = c?.VolunteeringIdVolunteering,
                 FundraisingId = c?.CharityFundraisingIdCharityFundraising,
-                isVerified = c.IsVerified
+                IsVerified = c!.IsVerified
             };
         }
       

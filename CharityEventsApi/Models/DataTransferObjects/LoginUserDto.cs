@@ -2,8 +2,8 @@
 {
     public class LoginUserDto
     {
-        public string LoginOrEmail { get; set; }
-        public string Password { get; set; }
+        public string LoginOrEmail { get; set; } = null!;
+        public string Password { get; set; } = null!;
                 
     }
 }

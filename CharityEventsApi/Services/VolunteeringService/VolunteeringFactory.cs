@@ -10,7 +10,7 @@ namespace CharityEventsApi.Services.VolunteeringService
         {
             Volunteering volunteering = new Volunteering
             {
-                AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers != null ? (int)charityEventDto.AmountOfNeededVolunteers : 0, //TODO: can make problems
+                AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers != null ? (int)charityEventDto.AmountOfNeededVolunteers : 0, 
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
                 IsVerified = 0
@@ -23,7 +23,7 @@ namespace CharityEventsApi.Services.VolunteeringService
         {
             Volunteering volunteering = new Volunteering
             {
-                AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers != null ? (int)charityEventDto.AmountOfNeededVolunteers : 0, //TODO: can make problems
+                AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers, 
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
                 IsVerified = 0
@@ -32,16 +32,5 @@ namespace CharityEventsApi.Services.VolunteeringService
             return volunteering;
         }
 
-        public Location newLocation(AddLocationDto locationDto, Volunteering volunteering)
-        {
-            Location location = new Location
-            {
-                PostalCode = locationDto.PostalCode,
-                Street = locationDto.Street,
-                Town = locationDto.Town
-            };
-            location.VolunteeringIdVolunteerings.Add(volunteering);
-            return location;
-        }
     }
 }

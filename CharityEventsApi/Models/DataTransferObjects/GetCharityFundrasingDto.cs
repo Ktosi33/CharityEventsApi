@@ -3,7 +3,7 @@
     public class GetCharityFundrasingDto
     {
         public int Id { get; set; }
-        public string FundTarget { get; set; }
+        public string FundTarget { get; set; } = null!;
         public decimal AmountOfMoneyToCollect { get; set; }
         public decimal AmountOfAlreadyCollectedMoney { get; set; }
         public DateTime CreatedEventDate { get; set; }

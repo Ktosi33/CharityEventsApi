@@ -10,90 +10,22 @@ namespace CharityEventsApi.Services.VolunteeringService
     public class VolunteeringService : IVolunteeringService
     {
         private readonly CharityEventsDbContext dbContext;
-        private readonly VolunteeringFactory charityEventVolunteeringFactory;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
         private readonly VolunteeringActivation volunteeringActication;
         private readonly VolunteeringVerification volunteeringVerification;
         private readonly CharityEventVerification charityEventVerification;
-        private readonly IImageService imageService;
 
-        public VolunteeringService(CharityEventsDbContext dbContext, VolunteeringFactory charityEventVolunteeringFactory, 
-            ICharityEventFactoryFacade charityEventFactoryFacade, VolunteeringActivation volunteeringActication, 
-            VolunteeringVerification volunteeringVerification, CharityEventVerification charityEventVerification,
-            IImageService imageService)
+        public VolunteeringService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade,
+            VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification,
+            CharityEventVerification charityEventVerification)
         {
             this.dbContext = dbContext;
-            this.charityEventVolunteeringFactory = charityEventVolunteeringFactory;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.volunteeringActication = volunteeringActication;
             this.volunteeringVerification = volunteeringVerification;
             this.charityEventVerification = charityEventVerification;
-            this.imageService = imageService;
-        }
-        [Obsolete("AddLocation is deprecated, please use location controller instead")]
-        public void AddLocation(AddLocationDto locationDto)
-        {
-            charityEventFactoryFacade.AddLocation(locationDto);
         }
 
-        [Obsolete("EditLocation is deprecated, please use location controller instead")]
-        public void EditLocation(EditLocationDto locationDto, int locationId)
-        {
-            var location = dbContext.Locations.FirstOrDefault(l => l.IdLocation == locationId);
-            if (location == null)
-            {
-                throw new NotFoundException("Location with given id doesn't exist");
-            }
-            location.Street = locationDto.Street;
-            location.PostalCode = locationDto.PostalCode;
-            location.Town = locationDto.Town;
-            dbContext.SaveChanges();
-
-        }
-        /*
-        public async Task AddOneImage(IFormFile image, int idVolunteering)
-        {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {
-                var cv = await dbContext.Volunteerings.FirstOrDefaultAsync(v => v.IdVolunteering == idVolunteering);
-                if (cv is null)
-                {
-                    throw new NotFoundException("Charity event with given id doesn't exist");
-                }
-                int imageId = await imageService.SaveImageAsync(image);
-                var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
-                if (img is null)
-                {
-                    throw new BadRequestException("something went wrong");
-                }
-                cv.ImageIdImages.Add(img);
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-        }
-        public async Task DeleteImage(int idImage, int idVolunteering)
-        {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {
-                var cv = await dbContext.Volunteerings.FirstOrDefaultAsync(v => v.IdVolunteering == idVolunteering);
-                if (cv is null)
-                {
-                    throw new NotFoundException("Charity event with given id doesn't exist");
-                }
-                var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
-                if (image is null)
-                {
-                    throw new NotFoundException("Image with given id doesn't exist");
-                }
-
-                cv.ImageIdImages.Remove(image);
-                await imageService.DeleteImageByObjectAsync(image);
-
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-        }
-        */
         public async Task Add(AddCharityEventVolunteeringDto dto)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
@@ -147,7 +79,7 @@ namespace CharityEventsApi.Services.VolunteeringService
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
                 IsActive = c.IsActive,
-                isVerified = c.IsVerified
+                IsVerified = c.IsVerified
             };
         }
         public IEnumerable<GetCharityEventVolunteeringDto> GetAll()
@@ -159,7 +91,7 @@ namespace CharityEventsApi.Services.VolunteeringService
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
                 IsActive = c.IsActive,
-                isVerified = c.IsVerified
+                IsVerified = c.IsVerified
             }
             );
             if (volunteerings == null)

@@ -17,18 +17,13 @@ namespace CharityEventsApi.Services.ImageService
         public async Task<int> SaveImageAsync(IFormFile image)
         {
             checkifPathExistAsync();
-
-            long size = image.Length;
-
             return await addOneImageAsync(image);
-            
         }
         public async Task<List<int>> SaveImagesAsync(List<IFormFile> images)
         {
             checkifPathExistAsync();
 
-            long size = images.Sum(f => f.Length);
-            List<int> ids = new List<int>();
+            List<int> ids = new();
             foreach (var image in images)
             {
                ids.Add(await addOneImageAsync(image));
@@ -37,12 +32,11 @@ namespace CharityEventsApi.Services.ImageService
         }
         private async Task<int> addOneImageAsync(IFormFile image)
         {
-            int id = -1;
             
-                Image img = new Image { Path = "Temporary null", ContentType = image.ContentType };
+                Image img = new() { Path = "Temporary null", ContentType = image.ContentType };
                 dbContext.Images.Add(img);
                 dbContext.SaveChanges();
-                id = img.IdImages;
+                int id = img.IdImages;
                 var pathimg = Path.Combine(path, id.ToString());
 
                 if (image.Length > 0)
@@ -73,21 +67,24 @@ namespace CharityEventsApi.Services.ImageService
                 throw new NotFoundException("Image with given id doesn't exist");
             }
 
+            return await createImageDtoByObjectAsync(img);
+        }
+        private async Task<ImageDto> createImageDtoByObjectAsync(Image img)
+        {
             Byte[] content;
-            var pathimg = Path.Combine(path, id.ToString());
+            var pathimg = Path.Combine(path, img.IdImages.ToString());
             content = await File.ReadAllBytesAsync(pathimg);
             var image = new ImageDto
             {
-                IdImages = id,
+                IdImages = img.IdImages,
                 Content = Convert.ToBase64String(content),
                 ContentType = img.ContentType
             };
             return image;
         }
-        
         public async Task<IEnumerable<ImageDto>> GetImagesInRangeAsync(List<int> ids)
         {
-            List<ImageDto> images = new List<ImageDto>();
+            List<ImageDto> images = new();
             foreach (var id in ids)
             {
                 images.Add(await GetImageAsync(id));
@@ -97,13 +94,18 @@ namespace CharityEventsApi.Services.ImageService
         }
         public async Task<IEnumerable<ImageDto>> GetImagesDtoByImages(ICollection<Image> images)
         {
-            List<ImageDto> imagesDto = new List<ImageDto>();
+            List<ImageDto> imagesDto = new();
             foreach (var image in images)
             {
                 imagesDto.Add(await GetImageAsync(image.IdImages));
             }
 
             return imagesDto;
+        }
+        public List<Image> getImageObjectsByIds(List<int> ids)
+        {
+             return dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+           
         }
         public async Task DeleteImageByIdAsync(int idImage)
         {

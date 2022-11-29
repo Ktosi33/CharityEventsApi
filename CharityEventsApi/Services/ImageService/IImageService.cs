@@ -12,6 +12,7 @@ namespace CharityEventsApi.Services.ImageService
         public Task<int> SaveImageAsync(IFormFile image);
         public Task DeleteImageByIdAsync(int idImage);
         public Task DeleteImageByObjectAsync(Image image);
+        public List<Image> getImageObjectsByIds(List<int> ids);
 
     }
 }
