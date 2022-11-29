@@ -21,7 +21,7 @@ namespace CharityEventsApi.Services.PersonalDataService
             if((dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == userId)) == null)
                 personalDataFactoryFacade.addPersonalData(personalDataDto, userId);
             else
-                throw new Exception("User with the given id has data");        
+                throw new ForbiddenException("User with the given id has data");        
         }
 
         public void editAllPersonalData(EditAllPesonalDataDto personalDataDto, int idPersonalData)

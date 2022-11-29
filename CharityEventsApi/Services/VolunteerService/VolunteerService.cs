@@ -30,10 +30,10 @@ namespace CharityEventsApi.Services.VolunteerService
             if (volunteering != null)
             {
                 if (volunteering.IsVerified == 0 || volunteering.IsActive == 0)
-                    throw new Exception("Action must be verified and active");
+                    throw new ForbiddenException("Action must be verified and active");
 
                 if (volunteering.UserIdUsers.Contains(volunteer))
-                    throw new Exception("This volunteer has already been assigned to this action");
+                    throw new ForbiddenException("This volunteer has already been assigned to this action");
 
                 volunteering.UserIdUsers.Add(volunteer);
                 dbContext.SaveChanges();
@@ -92,7 +92,7 @@ namespace CharityEventsApi.Services.VolunteerService
                 throw new NotFoundException("Volunteering about this id does not exist");
 
             if (!volunteering.UserIdUsers.Contains(volunteer))
-                throw new Exception("This volunteer is not assigned to this action");
+                throw new ForbiddenException("This volunteer is not assigned to this action");
 
             volunteering.UserIdUsers.Remove(volunteer);
             dbContext.SaveChanges();

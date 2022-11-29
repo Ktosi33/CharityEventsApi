@@ -1,4 +1,4 @@
-﻿using CharityEventsApi.Services.UserStatistics;
+﻿using CharityEventsApi.Services.UserStatisticsService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CharityEventsApi.Controllers
