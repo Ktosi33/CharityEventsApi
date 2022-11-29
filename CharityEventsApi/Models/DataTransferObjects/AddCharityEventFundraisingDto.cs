@@ -1,8 +1,11 @@
-﻿namespace CharityEventsApi.Models.DataTransferObjects
+﻿using System.Text.Json.Serialization;
+
+namespace CharityEventsApi.Models.DataTransferObjects
 {
     public class AddCharityEventFundraisingDto
     {
-        public string FundTarget { get; set; }
+        public int CharityEventId { get; set; }
+        public string FundTarget { get; set; } = null!;
         public decimal AmountOfMoneyToCollect { get; set; }
     }
 }

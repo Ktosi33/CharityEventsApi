@@ -20,6 +20,7 @@ namespace CharityEventsApi.Entities
         public virtual DbSet<Charityevent> Charityevents { get; set; } = null!;
         public virtual DbSet<Charityfundraising> Charityfundraisings { get; set; } = null!;
         public virtual DbSet<Donation> Donations { get; set; } = null!;
+        public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Location> Locations { get; set; } = null!;
         public virtual DbSet<PersonalData> PersonalData { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
@@ -80,6 +81,8 @@ namespace CharityEventsApi.Entities
 
                 entity.HasIndex(e => e.CharityFundraisingIdCharityFundraising, "fk_CharityEvent_CharityFundraising1_idx");
 
+                entity.HasIndex(e => e.ImageIdImages, "fk_CharityEvent_Image1_idx");
+
                 entity.HasIndex(e => e.OrganizerId, "fk_CharityEvent_User1_idx");
 
                 entity.HasIndex(e => e.VolunteeringIdVolunteering, "fk_CharityEvent_Volunteering1_idx");
@@ -104,6 +107,10 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("datetime")
                     .HasColumnName("endEventDate");
 
+                entity.Property(e => e.ImageIdImages)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("Image_idImages");
+
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
@@ -117,7 +124,7 @@ namespace CharityEventsApi.Entities
                     .HasColumnName("organizer_id");
 
                 entity.Property(e => e.Title)
-                    .HasMaxLength(45)
+                    .HasMaxLength(180)
                     .HasColumnName("title");
 
                 entity.Property(e => e.VolunteeringIdVolunteering)
@@ -129,6 +136,12 @@ namespace CharityEventsApi.Entities
                     .HasForeignKey(d => d.CharityFundraisingIdCharityFundraising)
                     .HasConstraintName("fk_CharityEvent_CharityFundraising1");
 
+                entity.HasOne(d => d.ImageIdImagesNavigation)
+                    .WithMany(p => p.Charityevents)
+                    .HasForeignKey(d => d.ImageIdImages)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_CharityEvent_Image1");
+
                 entity.HasOne(d => d.Organizer)
                     .WithMany(p => p.Charityevents)
                     .HasForeignKey(d => d.OrganizerId)
@@ -139,6 +152,27 @@ namespace CharityEventsApi.Entities
                     .WithMany(p => p.Charityevents)
                     .HasForeignKey(d => d.VolunteeringIdVolunteering)
                     .HasConstraintName("fk_CharityEvent_Volunteering1");
+
+                entity.HasMany(d => d.ImageIdImages1)
+                    .WithMany(p => p.CharityEventIdCharityEvents)
+                    .UsingEntity<Dictionary<string, object>>(
+                        "CharityeventHasImage",
+                        l => l.HasOne<Image>().WithMany().HasForeignKey("ImageIdImages").HasConstraintName("fk_CharityEvent_has_Image_Image1"),
+                        r => r.HasOne<Charityevent>().WithMany().HasForeignKey("CharityEventIdCharityEvent").HasConstraintName("fk_CharityEvent_has_Image_CharityEvent1"),
+                        j =>
+                        {
+                            j.HasKey("CharityEventIdCharityEvent", "ImageIdImages").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+                            j.ToTable("charityevent_has_image");
+
+                            j.HasIndex(new[] { "CharityEventIdCharityEvent" }, "fk_CharityEvent_has_Image_CharityEvent1_idx");
+
+                            j.HasIndex(new[] { "ImageIdImages" }, "fk_CharityEvent_has_Image_Image1_idx");
+
+                            j.IndexerProperty<int>("CharityEventIdCharityEvent").HasColumnType("int(11)").HasColumnName("CharityEvent_idCharityEvent");
+
+                            j.IndexerProperty<int>("ImageIdImages").HasColumnType("int(11)").HasColumnName("Image_idImages");
+                        });
             });
 
             modelBuilder.Entity<Charityfundraising>(entity =>
@@ -169,7 +203,7 @@ namespace CharityEventsApi.Entities
                     .HasColumnName("endEventDate");
 
                 entity.Property(e => e.FundTarget)
-                    .HasMaxLength(40)
+                    .HasMaxLength(180)
                     .HasColumnName("fund_target");
 
                 entity.Property(e => e.IsActive)
@@ -183,9 +217,8 @@ namespace CharityEventsApi.Entities
 
             modelBuilder.Entity<Donation>(entity =>
             {
-                entity.HasKey(e => new { e.IdDonations, e.UserIdUser, e.CharityFundraisingIdCharityFundraising })
-                    .HasName("PRIMARY")
-                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
+                entity.HasKey(e => e.IdDonations)
+                    .HasName("PRIMARY");
 
                 entity.ToTable("donations");
 
@@ -195,20 +228,15 @@ namespace CharityEventsApi.Entities
 
                 entity.Property(e => e.IdDonations)
                     .HasColumnType("int(11)")
-                    .ValueGeneratedOnAdd()
                     .HasColumnName("idDonations");
-
-                entity.Property(e => e.UserIdUser)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("User_idUser");
-
-                entity.Property(e => e.CharityFundraisingIdCharityFundraising)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("CharityFundraising_idCharityFundraising");
 
                 entity.Property(e => e.AmountOfDonation)
                     .HasPrecision(10, 2)
                     .HasColumnName("amount_of_donation");
+
+                entity.Property(e => e.CharityFundraisingIdCharityFundraising)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("CharityFundraising_idCharityFundraising");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(2000)
@@ -217,6 +245,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.DonationDate)
                     .HasColumnType("datetime")
                     .HasColumnName("donationDate");
+
+                entity.Property(e => e.UserIdUser)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("User_idUser");
 
                 entity.HasOne(d => d.CharityFundraisingIdCharityFundraisingNavigation)
                     .WithMany(p => p.Donations)
@@ -229,6 +261,26 @@ namespace CharityEventsApi.Entities
                     .HasForeignKey(d => d.UserIdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Donations_User1");
+            });
+
+            modelBuilder.Entity<Image>(entity =>
+            {
+                entity.HasKey(e => e.IdImages)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("image");
+
+                entity.HasIndex(e => e.Path, "Path_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.IdImages, "idImages_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.IdImages)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("idImages");
+
+                entity.Property(e => e.ContentType).HasMaxLength(255);
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -257,11 +309,10 @@ namespace CharityEventsApi.Entities
 
             modelBuilder.Entity<PersonalData>(entity =>
             {
-                entity.HasKey(e => new { e.UserIdUser, e.AddressIdAddress })
-                    .HasName("PRIMARY")
-                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+                entity.HasKey(e => e.UserIdUser)
+                    .HasName("PRIMARY");
 
-                entity.ToTable("personal data");
+                entity.ToTable("personal_data");
 
                 entity.HasIndex(e => e.Email, "email_UNIQUE")
                     .IsUnique();
@@ -275,6 +326,7 @@ namespace CharityEventsApi.Entities
 
                 entity.Property(e => e.UserIdUser)
                     .HasColumnType("int(11)")
+                    .ValueGeneratedNever()
                     .HasColumnName("User_idUser");
 
                 entity.Property(e => e.AddressIdAddress)
@@ -304,8 +356,8 @@ namespace CharityEventsApi.Entities
                     .HasConstraintName("fk_Personal data_Address1");
 
                 entity.HasOne(d => d.UserIdUserNavigation)
-                    .WithMany(p => p.PersonalData)
-                    .HasForeignKey(d => d.UserIdUser)
+                    .WithOne(p => p.PersonalData)
+                    .HasForeignKey<PersonalData>(d => d.UserIdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Personal data_User1");
             });
@@ -379,8 +431,8 @@ namespace CharityEventsApi.Entities
                     .WithMany(p => p.UserIdUsers)
                     .UsingEntity<Dictionary<string, object>>(
                         "UserHasVolunteering",
-                        l => l.HasOne<Volunteering>().WithMany().HasForeignKey("VolunteeringIdVolunteering").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_User_has_Volunteering_Volunteering1"),
-                        r => r.HasOne<User>().WithMany().HasForeignKey("UserIdUser").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_User_has_Volunteering_User1"),
+                        l => l.HasOne<Volunteering>().WithMany().HasForeignKey("VolunteeringIdVolunteering").HasConstraintName("fk_User_has_Volunteering_Volunteering1"),
+                        r => r.HasOne<User>().WithMany().HasForeignKey("UserIdUser").HasConstraintName("fk_User_has_Volunteering_User1"),
                         j =>
                         {
                             j.HasKey("UserIdUser", "VolunteeringIdVolunteering").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -408,6 +460,10 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("int(11)")
                     .HasColumnName("idVolunteering");
 
+                entity.Property(e => e.AmountOfAttendedVolunteers)
+                    .HasColumnType("int(11)")
+                    .HasColumnName("amount_of_attended_volunteers");
+
                 entity.Property(e => e.AmountOfNeededVolunteers)
                     .HasColumnType("int(11)")
                     .HasColumnName("amount_of_needed_volunteers");
@@ -432,8 +488,8 @@ namespace CharityEventsApi.Entities
                     .WithMany(p => p.VolunteeringIdVolunteerings)
                     .UsingEntity<Dictionary<string, object>>(
                         "VolunteeringHasLocation",
-                        l => l.HasOne<Location>().WithMany().HasForeignKey("LocationIdLocation").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_Volunteering_has_Location_Location1"),
-                        r => r.HasOne<Volunteering>().WithMany().HasForeignKey("VolunteeringIdVolunteering").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_Volunteering_has_Location_Volunteering1"),
+                        l => l.HasOne<Location>().WithMany().HasForeignKey("LocationIdLocation").HasConstraintName("fk_Volunteering_has_Location_Location1"),
+                        r => r.HasOne<Volunteering>().WithMany().HasForeignKey("VolunteeringIdVolunteering").HasConstraintName("fk_Volunteering_has_Location_Volunteering1"),
                         j =>
                         {
                             j.HasKey("VolunteeringIdVolunteering", "LocationIdLocation").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });

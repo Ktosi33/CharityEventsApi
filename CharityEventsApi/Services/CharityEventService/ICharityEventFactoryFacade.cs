@@ -5,11 +5,8 @@ namespace CharityEventsApi.Services.CharityEventService
 {
     public interface ICharityEventFactoryFacade
     {
-        public void AddCharityEvent(AddAllCharityEventsDto charityEventDto);
-
-        public void AddCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent);
-
-        public void AddCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent);
-        public void AddLocation(AddLocationDto locationDto);
+        public Task AddCharityEvent(AddAllCharityEventsDto charityEventDto);
+        public Task AddCharityEventFundraising(AddCharityEventFundraisingDto charityEventDto, Charityevent charityEvent);
+        public Task AddCharityEventVolunteering(AddCharityEventVolunteeringDto charityEventDto, Charityevent charityevent);
     }
 }

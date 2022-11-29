@@ -1,6 +1,7 @@
 ﻿using CharityEventsApi.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CharityEventsApi.Tests.Integration.TestHealpers
@@ -26,7 +27,12 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                     dbContext.Roles.Add(role);
                     dbContext.SaveChanges();
                 }
-
+                var img = new Image { IdImages = 1, Path = "aaa", ContentType = "images/jpeg" };
+                if (!dbContext.Images.Any())
+                {
+                    dbContext.Images.Add(img);
+                    dbContext.SaveChanges();
+                }
                 if (!dbContext.Users.Any())
                 {
                     var user = new User { IdUser = 1, Login = "User", Password = "User", Email = "user@user.pl" };
@@ -35,11 +41,14 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                     dbContext.SaveChanges();
                 }
 
-                if (!dbContext.Charityevents.Any(e => e.IdCharityEvent == 1))
+                if (!dbContext.Charityevents.Any())
                 {
-                    var ce = new Charityevent { IdCharityEvent = 1, Title = "test", IsActive = 1, IsVerified = 1, Description = "Aaa", OrganizerId = 1, CreatedEventDate = DateTime.Now };
-                    var cf = new Charityfundraising { IdCharityFundraising = 1, FundTarget = "Test", AmountOfMoneyToCollect = 1000, CreatedEventDate = DateTime.Now, IsActive = 1, IsVerified = 1 };
-                    var cv = new Volunteering { IdVolunteering = 1, CreatedEventDate = DateTime.Now, AmountOfNeededVolunteers = 3, IsVerified = 1, IsActive = 1 };
+                    var ce = new Charityevent { IdCharityEvent = 1, Title = "test", IsActive = 1, IsVerified = 1, Description = "Aaa", 
+                        OrganizerId = 1, CreatedEventDate = DateTime.Now, ImageIdImagesNavigation = img, ImageIdImages1 = new List<Image>() { img } };
+                    var cf = new Charityfundraising { IdCharityFundraising = 1, FundTarget = "Test", AmountOfMoneyToCollect = 1000, 
+                        CreatedEventDate = DateTime.Now, IsActive = 1, IsVerified = 1 };
+                    var cv = new Volunteering { IdVolunteering = 1, CreatedEventDate = DateTime.Now, AmountOfNeededVolunteers = 3, 
+                        AmountOfAttendedVolunteers = 0,  IsVerified = 1, IsActive = 1 };
                     ce.CharityFundraisingIdCharityFundraising = 1;
                     ce.VolunteeringIdVolunteering = 1;
                     ce.CharityFundraisingIdCharityFundraisingNavigation = cf;
@@ -50,7 +59,8 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                     dbContext.Volunteerings.Add(cv);
                     dbContext.SaveChanges();
                 }
-            }
+             
+                }
         }
     }
 }

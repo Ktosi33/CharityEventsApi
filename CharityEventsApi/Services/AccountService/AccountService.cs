@@ -30,7 +30,7 @@ namespace CharityEventsApi.Services.AccountService
         public string GenerateJwt(LoginUserDto dto)
         {
             //login cant have @
-           // mail have to have @
+            //mail have to have @
             var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.LoginOrEmail);
             if(user == null)
             { 
@@ -46,11 +46,11 @@ namespace CharityEventsApi.Services.AccountService
             {
                 throw new BadRequestException("Zły adres email, login lub hasło");
             }
-            return writeToken(dto.LoginOrEmail);
+            return WriteToken(dto.LoginOrEmail);
         }
        
         
-        public string writeToken(string LoginOrEmail)
+        public string WriteToken(string LoginOrEmail)
         {
            
             var user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Email == LoginOrEmail);
@@ -67,6 +67,8 @@ namespace CharityEventsApi.Services.AccountService
             var claims = new List<Claim>()
             {
                 new Claim("Id", user.IdUser.ToString()),
+                new Claim("Roles", String.Join(",", user.RolesNames.Select(rn => rn.Name))),
+                new Claim("Login", user.Login),
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
                 new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)))
@@ -102,7 +104,6 @@ namespace CharityEventsApi.Services.AccountService
                 throw new NotFoundException("Volunteer Role doesn't exsist in database");
             }
             newUser.RolesNames.Add(VolunteerRole);
-            //VolunteerRole.UserIdUsers.Add(newUser);
 
             dbContext.Users.Add(newUser);
             dbContext.SaveChanges();

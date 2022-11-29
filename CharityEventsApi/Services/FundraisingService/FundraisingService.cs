@@ -8,25 +8,26 @@ namespace CharityEventsApi.Services.FundraisingService
     public class FundraisingService : IFundraisingService
     {
         private readonly CharityEventsDbContext dbContext;
-        private readonly FundraisingFactory charityEventFundraisingFactory;
         private readonly FundraisingVerification fundraisingVerification;
         private readonly FundraisingActivation fundraisingActivation;
         private readonly CharityEventVerification charityEventVerification;
+        private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
 
-        public FundraisingService(CharityEventsDbContext dbContext, FundraisingFactory charityEventFundraisingFactory, 
-            FundraisingVerification fundraisingVerification, FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification)
+        public FundraisingService(CharityEventsDbContext dbContext, FundraisingVerification fundraisingVerification,
+            FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification,
+            ICharityEventFactoryFacade charityEventFactoryFacade)
         {
             this.dbContext = dbContext;
-            this.charityEventFundraisingFactory = charityEventFundraisingFactory;
             this.fundraisingVerification = fundraisingVerification;
             this.fundraisingActivation = fundraisingActivation;
             this.charityEventVerification = charityEventVerification;
+            this.charityEventFactoryFacade = charityEventFactoryFacade;
         }
 
-        public void Add(AddCharityEventFundraisingDto dto, int charityEventId)
+        public async Task Add(AddCharityEventFundraisingDto dto)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == charityEventId);
-            if(charityevent is null)
+            var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
+            if (charityevent is null)
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
@@ -34,11 +35,9 @@ namespace CharityEventsApi.Services.FundraisingService
             {
                 throw new BadRequestException("Can't add charity event fundraising, because another one already exists in this charity event");
             }
-            Charityfundraising cf =  charityEventFundraisingFactory.CreateCharityEvent(dto);
-            dbContext.Charityfundraisings.Add(cf);
-            charityEventVerification.SetVerify(charityEventId, false);
-            charityevent.CharityFundraisingIdCharityFundraising = cf.IdCharityFundraising;
-            dbContext.SaveChanges();
+
+            await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
+            charityEventVerification.SetVerify(dto.CharityEventId, false);
         }
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
         {
@@ -47,11 +46,14 @@ namespace CharityEventsApi.Services.FundraisingService
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            if (FundraisingDto.AmountOfMoneyToCollect != null)
+            if (FundraisingDto.AmountOfMoneyToCollect is not null)
             {
                 charityevent.AmountOfMoneyToCollect = (decimal)FundraisingDto.AmountOfMoneyToCollect;
             }
+            if(FundraisingDto.FundTarget is not null)
+            { 
             charityevent.FundTarget = FundraisingDto.FundTarget;
+            }
             dbContext.SaveChanges();
         }
         public void SetActive(int FundraisingId, bool isActive)
@@ -75,6 +77,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return new GetCharityFundrasingDto
             {
+                Id = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
                 AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
                 CreatedEventDate = c.CreatedEventDate,
@@ -84,6 +87,26 @@ namespace CharityEventsApi.Services.FundraisingService
                 isVerified = c.IsVerified
             };
         }
-        
+        public IEnumerable<GetCharityFundrasingDto> GetAll()
+        {
+            var fundraisings = dbContext.Charityfundraisings.Select(c => new GetCharityFundrasingDto
+            {
+                Id = c.IdCharityFundraising,
+                AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
+                AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
+                CreatedEventDate = c.CreatedEventDate,
+                EndEventDate = c.EndEventDate,
+                FundTarget = c.FundTarget,
+                IsActive = c.IsActive,
+                isVerified = c.IsVerified
+            }
+            );
+            if (fundraisings == null)
+            {
+                throw new NotFoundException("CharityEvent with given id doesn't exist");
+            }
+            return fundraisings;
+        }
+
     }
 }

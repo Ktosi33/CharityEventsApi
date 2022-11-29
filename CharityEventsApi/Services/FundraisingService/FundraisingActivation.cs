@@ -13,7 +13,7 @@ namespace CharityEventsApi.Services.FundraisingService
         {
             this.dbContext = dbContext;
         }
-        protected override void active(int FundraisingId)
+        protected override void Active(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
@@ -34,7 +34,7 @@ namespace CharityEventsApi.Services.FundraisingService
             dbContext.SaveChanges();
         }
 
-        protected override void disactive(int FundraisingId)
+        protected override void Disactive(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)

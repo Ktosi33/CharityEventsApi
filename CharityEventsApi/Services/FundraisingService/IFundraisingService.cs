@@ -4,10 +4,11 @@ namespace CharityEventsApi.Services.FundraisingService
 {
     public interface IFundraisingService
     {
-        public void Add(AddCharityEventFundraisingDto dto, int charityEventId);
+        public Task Add(AddCharityEventFundraisingDto dto);
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId);
         public GetCharityFundrasingDto GetById(int id);
         public void SetActive(int FundraisingId, bool isActive);
         public void SetVerify(int FundraisingId, bool isVerified);
+        public IEnumerable<GetCharityFundrasingDto> GetAll();
     }
 }
