@@ -8,18 +8,18 @@ namespace CharityEventsApi.Services.CharityEventService
         {
             if (isActive)
             {
-                active(id);
+                Active(id);
             }
             else if (!isActive)
             {
-                disactive(id);
+                Disactive(id);
             }
             else
             {
                 throw new BadRequestException("Bad query");
             }
         }
-        protected abstract void disactive(int id);
-        protected abstract void active(int id);
+        protected abstract void Disactive(int id);
+        protected abstract void Active(int id);
     }
 }

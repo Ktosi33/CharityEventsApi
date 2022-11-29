@@ -8,9 +8,9 @@ using System.Linq;
 
 namespace CharityEventsApi.Services.SearchService
 {
-    public class SearchService: ISearchService
+    public class SearchService : ISearchService
     {
-        
+
         private readonly CharityEventsDbContext dbContext;
 
         public SearchService(CharityEventsDbContext dbContext, IFundraisingService fundraisingService, IVolunteeringService volunteeringService)
@@ -32,7 +32,7 @@ namespace CharityEventsApi.Services.SearchService
                 .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
                 .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
                 .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified));
-                
+
 
             var charityEventsDetails = new List<GetAllDetailsCharityEventDto>();
 
@@ -75,7 +75,7 @@ namespace CharityEventsApi.Services.SearchService
                     CreatedEventDate = charityEvent.VolunteeringIdVolunteeringNavigation.CreatedEventDate,
                     EndEventDate = charityEvent.VolunteeringIdVolunteeringNavigation.EndEventDate,
                     IsActive = charityEvent.VolunteeringIdVolunteeringNavigation.IsActive,
-                    isVerified = charityEvent.VolunteeringIdVolunteeringNavigation.IsVerified,
+                    IsVerified = charityEvent.VolunteeringIdVolunteeringNavigation.IsVerified,
                     Id = charityEvent.VolunteeringIdVolunteeringNavigation.IdVolunteering
                 };
             }

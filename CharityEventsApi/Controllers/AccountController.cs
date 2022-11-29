@@ -35,7 +35,7 @@ namespace CharityEventsApi.Controllers
 
         [Authorize(Roles = "Volunteer")]
         [HttpGet("isLogged")]
-        public ActionResult isLogged()
+        public ActionResult IsLogged()
         {
             return Ok();
         }

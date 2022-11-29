@@ -22,22 +22,7 @@ namespace CharityEventsApi.Controllers
             await VolunteeringService.Add(charityEventDto);
             return Ok();
         }
-        /*
-        [AllowAnonymous]
-        [HttpPost("image/{idVolunteering}")]
-        public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idVolunteering)
-        {
-            await VolunteeringService.AddOneImage(image, idVolunteering);
-            return Ok();
-        }
-        [AllowAnonymous]
-        [HttpDelete("image")]
-        public async Task<ActionResult> DeleteImageAsync([FromQuery] int idImage, [FromQuery] int idVolunteering)
-        {
-            await VolunteeringService.DeleteImage(idImage, idVolunteering);
-            return Ok();
-        }
-        */
+
         [AllowAnonymous]
         [HttpPut("{idVolunteering}")]
         public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int idVolunteering)
@@ -59,22 +44,9 @@ namespace CharityEventsApi.Controllers
             }
             return Ok();
         }
+
         [AllowAnonymous]
-        [HttpPost("location")]
-        public ActionResult AddLocation([FromBody] AddLocationDto locationDto)
-        {
-            VolunteeringService.AddLocation(locationDto);
-            return Ok();
-        }
-        [AllowAnonymous]
-        [HttpPut("location/{locationId}")]
-        public ActionResult EditLocation([FromBody] EditLocationDto locationDto, [FromRoute] int locationId)
-        {
-            VolunteeringService.EditLocation(locationDto, locationId);
-            return Ok();
-        }
-        [AllowAnonymous]
-        [HttpGet("{VolunteeringId}")]
+        [HttpGet("{idVolunteering}")]
         public ActionResult GetCharityEventById([FromRoute] int idVolunteering)
         {
             return Ok(VolunteeringService.GetById(idVolunteering));

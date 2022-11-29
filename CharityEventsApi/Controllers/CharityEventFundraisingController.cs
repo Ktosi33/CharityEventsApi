@@ -26,22 +26,7 @@ namespace CharityEventsApi.Controllers
             await FundraisingService.Add(charityEventDto);
             return Ok();
         }
-        /*
-        [AllowAnonymous]
-        [HttpPost("image/{idFundraising}")]
-        public async Task<ActionResult> AddOneImageAsync(IFormFile image,[FromRoute] int idFundraising)
-        {
-            await FundraisingService.AddOneImage(image, idFundraising);
-            return Ok();
-        }
-        [AllowAnonymous]
-        [HttpDelete("image")]
-        public async Task<ActionResult> AddOneImageAsync([FromQuery] int idImage, [FromQuery] int idFundraising)
-        {
-            await FundraisingService.DeleteImage(idImage, idFundraising);
-            return Ok();
-        }
-        */
+
         [AllowAnonymous]
         [HttpPut("{idFundraising}")]
         public ActionResult EditFundraising([FromBody] EditCharityEventFundraisingDto FundraisingDto, [FromRoute] int idFundraising)

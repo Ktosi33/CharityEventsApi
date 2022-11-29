@@ -18,41 +18,14 @@ namespace CharityEventsApi.Tests.Integration.Controllers
 {
     public class CharityEventFundraisingControllerTests
     {
-      
-        private HttpClient client;
+        private readonly HttpClient client;
         public CharityEventFundraisingControllerTests()
         {
-            var factory = new WebApplicationFactory<Program>();
-            client = factory.WithWebHostBuilder(builder =>
-            {
-
-                builder.ConfigureServices(services =>
-                {
-                    var dbContext = services.FirstOrDefault(dbContext => dbContext.ServiceType == typeof(DbContextOptions<CharityEventsDbContext>));
-                    services.Remove(dbContext);
-
-                    string _dbName = Guid.NewGuid().ToString();
-                    services.AddDbContext<CharityEventsDbContext>(options => options.UseInMemoryDatabase(databaseName: _dbName)
-                   .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
-                    services.AddTransient<SeedTestData>();
-
-                    var sp = services.BuildServiceProvider();
-
-                    using (var scope = sp.CreateScope())
-                    {
-                        var seedTestData = scope.ServiceProvider.GetRequiredService<SeedTestData>();
-                        seedTestData.Seed();
-                    }
-
-                });
-
-            })
-           .CreateClient();
-
+            client = new ClientInit().Client;
         }
 
         [Fact]
-        public async Task DisactiveFundraising_CreateNewAndDisactiveHim_ReturnsOkResult()
+        public async Task givenIsActive_whenDisactiveFundraising_thenReturnsOkResult()
         {
             //act
             var response = await client.PatchAsync("/v1/CharityEventFundraising/1?isActive=false", null);
@@ -62,7 +35,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task GetFundraising_ById_ReturnsOkResult()
+        public async Task givenIdFundraising_whenGetFundraising_thenReturnsOkResult()
         {
             //act
             var response = await client.GetAsync("/v1/CharityEventFundraising/1");
@@ -73,7 +46,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("NewTitle", 1.1)]
         [InlineData("Test", 2)]
-        public async Task EditFundraising_FromEditCharityEventDto_ReturnsOkResult(string fundTarget, decimal amountOfMoneyToCollect)
+        public async Task givenEditCharityEventFundraisingDto_whenEditFundraising_thenReturnsOkResult(string fundTarget, decimal amountOfMoneyToCollect)
         {
             //arange
             EditCharityEventFundraisingDto dto = new EditCharityEventFundraisingDto
@@ -92,7 +65,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
-        public async Task setActiveVerifyFundraising_ChangeVerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
+        public async Task givenIsVerifiedIsActiveFundraising_whenChangeVerifyAndActive_thenReturnsOkResult(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
@@ -105,7 +78,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [InlineData("false", "true")]
         [InlineData("isVerified", "isActive")]
         [InlineData("null", "null")]
-        public async Task setActiveVerifyFundraising_ChangeVerifyAndActive_ReturnsBadRequestResult(string isVerified, string isActive)
+        public async Task givenIsVerifiedIsActiveFundraising_whenChangeVerifyAndActive_thenReturnsBadRequest(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEventFundraising/1?isVerified={isVerified}&isActive={isActive}", null);

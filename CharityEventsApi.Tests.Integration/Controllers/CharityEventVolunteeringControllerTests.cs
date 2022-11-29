@@ -18,40 +18,14 @@ namespace CharityEventsApi.Tests.Integration.Controllers
 {
     public class CharityEventVolunteeringControllerTests
     {
-        private HttpClient client;
+        private readonly HttpClient client;
         public CharityEventVolunteeringControllerTests()
         {
-            var factory = new WebApplicationFactory<Program>();
-            client = factory.WithWebHostBuilder(builder =>
-            {
-
-                builder.ConfigureServices(services =>
-                {
-                    var dbContext = services.FirstOrDefault(dbContext => dbContext.ServiceType == typeof(DbContextOptions<CharityEventsDbContext>));
-                    services.Remove(dbContext);
-
-                    string _dbName = Guid.NewGuid().ToString();
-                    services.AddDbContext<CharityEventsDbContext>(options => options.UseInMemoryDatabase(databaseName: _dbName)
-                   .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
-                    services.AddTransient<SeedTestData>();
-
-                    var sp = services.BuildServiceProvider();
-
-                    using (var scope = sp.CreateScope())
-                    {
-                        var seedTestData = scope.ServiceProvider.GetRequiredService<SeedTestData>();
-                        seedTestData.Seed();
-                    }
-
-                });
-
-            })
-           .CreateClient();
-
+            client = new ClientInit().Client;
         }
 
         [Fact]
-        public async Task DisactiveVolunteering_CreateNewAndDisactiveHim_ReturnsOkResult()
+        public async Task givenIsActive_whenDisactiveVolunteering_thenReturnsOkResult()
         {
             //act
             var response = await client.PatchAsync("/v1/CharityEventVolunteering/1?isActive=false", null);
@@ -61,21 +35,21 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task GetVolunteering_ById_ReturnsOkResult()
+        public async Task givenIdVolunteering_whenGetVolunteering_thenReturnsOkResult()
         {
             //act
             var response = await client.GetAsync("/v1/CharityEventVolunteering/1");
 
             //assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
         [Theory]
         [InlineData(0)]
         [InlineData(1)]
-        public async Task EditVolunteering_FromEditCharityEventDto_ReturnsOkResult(int amountOfNeededVolunteers)
+        public async Task givenEditCharityEventVolunteeringDto_whenEditVolunteering_thenReturnsOkResult(int amountOfNeededVolunteers)
         {
             //arange
-            EditCharityEventVolunteeringDto dto = new EditCharityEventVolunteeringDto
+            EditCharityEventVolunteeringDto dto = new()
             {
                AmountOfNeededVolunteers = amountOfNeededVolunteers
             };
@@ -90,7 +64,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
-        public async Task setActiveVerifyVolunteering_VerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
+        public async Task givenIsVerifiedIsActiveVolunteering_whenChangeVerifyAndActive_thenReturnsOkResult(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEventVolunteering/1?isVerified={isVerified}&isActive={isActive}", null);
@@ -103,7 +77,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [InlineData("false", "true")]
         [InlineData("1", "1")]
         [InlineData("null", "null")]
-        public async Task setActiveVerifyVolunteering_VerifyAndActive_ReturnsBadRequestResult(string isVerified, string isActive)
+        public async Task givenIsVerifiedIsActiveVolunteering_whenChangeVerifyAndActive_thenReturnsBadRequest(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEventVolunteering/1?isVerified={isVerified}&isActive={isActive}", null);

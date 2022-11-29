@@ -14,7 +14,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             this.dbContext = dbContext;
         }
 
-        protected override void active(int VolunteeringId)
+        protected override void Active(int VolunteeringId)
         {
             var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == VolunteeringId);
             if (volunteering == null)
@@ -35,7 +35,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             dbContext.SaveChanges();
         }
 
-        protected override void disactive(int VolunteeringId)
+        protected override void Disactive(int VolunteeringId)
         {
             var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == VolunteeringId);
             if (volunteering == null)

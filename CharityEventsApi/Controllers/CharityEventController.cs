@@ -12,11 +12,9 @@ namespace CharityEventsApi.Controllers
     public class CharityEventController : ControllerBase
     {
         private readonly ICharityEventService charityEventService;
-        private readonly IImageService imageService;
-        public CharityEventController(ICharityEventService charityEventService, IImageService imageService)
+        public CharityEventController(ICharityEventService charityEventService)
         {
             this.charityEventService = charityEventService;
-            this.imageService = imageService;
         }
 
         [AllowAnonymous]
@@ -105,6 +103,7 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(charityEventService.GetCharityEventById(idCharityEvent));
         }
+
         [AllowAnonymous]
         [HttpGet()]
         public ActionResult GetCharityEvents()

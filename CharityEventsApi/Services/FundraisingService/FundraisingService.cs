@@ -8,18 +8,16 @@ namespace CharityEventsApi.Services.FundraisingService
     public class FundraisingService : IFundraisingService
     {
         private readonly CharityEventsDbContext dbContext;
-        private readonly FundraisingFactory charityEventFundraisingFactory;
         private readonly FundraisingVerification fundraisingVerification;
         private readonly FundraisingActivation fundraisingActivation;
         private readonly CharityEventVerification charityEventVerification;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
 
-        public FundraisingService(CharityEventsDbContext dbContext, FundraisingFactory charityEventFundraisingFactory, 
-            FundraisingVerification fundraisingVerification, FundraisingActivation fundraisingActivation,
-            CharityEventVerification charityEventVerification, ICharityEventFactoryFacade charityEventFactoryFacade)
+        public FundraisingService(CharityEventsDbContext dbContext, FundraisingVerification fundraisingVerification,
+            FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification,
+            ICharityEventFactoryFacade charityEventFactoryFacade)
         {
             this.dbContext = dbContext;
-            this.charityEventFundraisingFactory = charityEventFundraisingFactory;
             this.fundraisingVerification = fundraisingVerification;
             this.fundraisingActivation = fundraisingActivation;
             this.charityEventVerification = charityEventVerification;
@@ -41,50 +39,6 @@ namespace CharityEventsApi.Services.FundraisingService
             await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
             charityEventVerification.SetVerify(dto.CharityEventId, false);
         }
-        /*
-        public async Task AddOneImage(IFormFile image, int fundraisingId)
-        {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {
-                var cf = await dbContext.Charityfundraisings.FirstOrDefaultAsync(f => f.IdCharityFundraising == fundraisingId);
-                if (cf is null)
-                {
-                    throw new NotFoundException("Charity event with given id doesn't exist");
-                }
-                int imageId = await imageService.SaveImageAsync(image);
-                var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
-                if (img is null)
-                {
-                    throw new BadRequestException("something went wrong");
-                }
-                cf.ImageIdImages.Add(img);
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-        }
-        public async Task DeleteImage(int idImage, int idFundraising)
-        {
-            using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
-            {
-                var cf = await dbContext.Charityfundraisings.FirstOrDefaultAsync(f => f.IdCharityFundraising == idFundraising);
-                if(cf is null)
-                {
-                    throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
-                }
-                var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
-                if(image is null)
-                {
-                    throw new NotFoundException("Image with given id doesn't exist");
-                }
-
-                cf.ImageIdImages.Remove(image);
-                await imageService.DeleteImageByObjectAsync(image);
-
-                await dbContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-        }
-        */
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
         {
             var charityevent = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
@@ -92,11 +46,14 @@ namespace CharityEventsApi.Services.FundraisingService
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            if (FundraisingDto.AmountOfMoneyToCollect != null)
+            if (FundraisingDto.AmountOfMoneyToCollect is not null)
             {
                 charityevent.AmountOfMoneyToCollect = (decimal)FundraisingDto.AmountOfMoneyToCollect;
             }
+            if(FundraisingDto.FundTarget is not null)
+            { 
             charityevent.FundTarget = FundraisingDto.FundTarget;
+            }
             dbContext.SaveChanges();
         }
         public void SetActive(int FundraisingId, bool isActive)

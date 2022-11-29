@@ -16,19 +16,19 @@ namespace CharityEventsApi.Controllers
         }
         
         [HttpGet("donations/{userId}")]
-        public ActionResult getDonationByUserId([FromRoute] int userId)
+        public ActionResult GetDonationByUserId([FromRoute] int userId)
         {
             return Ok(userStatisticsService.getDonationStatisticByUserId(userId));
         }
 
         [HttpGet("volunteering/{userId}")]
-        public ActionResult getVolunteeringByUserId([FromRoute] int userId)
+        public ActionResult GetVolunteeringByUserId([FromRoute] int userId)
         {
             return Ok(userStatisticsService.getVolunteeringStatisticsByUserId(userId));
         }
 
         [HttpGet("{userId}")]
-        public ActionResult getUserStatisticsByUserId([FromRoute] int userId)
+        public ActionResult GetUserStatisticsByUserId([FromRoute] int userId)
         {
             return Ok(userStatisticsService.getUserStatisticsByUserId(userId));
         }
