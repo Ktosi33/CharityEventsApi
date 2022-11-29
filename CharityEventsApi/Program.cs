@@ -7,7 +7,7 @@ using CharityEventsApi.Services.FundraisingService;
 using CharityEventsApi.Services.DonationService;
 using CharityEventsApi.Services.LocationService;
 using CharityEventsApi.Services.PersonalDataService;
-using CharityEventsApi.Services.UserStatistics;
+using CharityEventsApi.Services.UserStatisticsService;
 using CharityEventsApi.Services.VolunteeringService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

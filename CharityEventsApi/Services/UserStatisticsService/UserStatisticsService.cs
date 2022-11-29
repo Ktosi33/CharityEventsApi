@@ -4,7 +4,7 @@ using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Exceptions;
 
 
-namespace CharityEventsApi.Services.UserStatistics
+namespace CharityEventsApi.Services.UserStatisticsService
 {
     public class UserStatisticsService: IUserStatisticsService
     {
