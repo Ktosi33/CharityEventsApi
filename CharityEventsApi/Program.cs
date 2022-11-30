@@ -89,6 +89,7 @@ builder.Services.AddDbContext<CharityEventsDbContext>(
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("CharityEventsConnectionString"))
         )
     );
+
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -116,7 +117,6 @@ builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 
-
 var app = builder.Build();
 
 
@@ -133,9 +133,12 @@ app.UseMiddleware<ErrorHandlingMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+
 }
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
