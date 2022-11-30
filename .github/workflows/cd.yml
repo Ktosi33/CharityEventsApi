@@ -1,0 +1,51 @@
+name: cd-pipeline
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v3.0.3
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore Dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Publish
+        run: dotnet publish ./CharityEventsApi/CharityEventsApi.csproj  -c Release -o ${{ env.DOTNET_ROOT }}/api
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.1.1
+        with: 
+         name: charityeventsapi-artifact
+         path: ${{ env.DOTNET_ROOT }}/api
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Prod'
+      url: ${{ steps.deploy-to-azure.outputs.webapp-url }}
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2.0.10
+        with:
+          name: charityeventsapi-artifact
+
+      - name: Azure WebApp Deploy
+        id: deploy-to-azure
+        uses:  Azure/webapps-deploy@v2.2.4
+        with:
+          app-name: 'charityeventsapi'
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
