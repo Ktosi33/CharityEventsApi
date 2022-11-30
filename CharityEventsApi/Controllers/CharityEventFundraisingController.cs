@@ -61,13 +61,7 @@ namespace CharityEventsApi.Controllers
             return Ok(FundraisingService.GetAll());
         }
 
-        [AllowAnonymous]
-        [HttpPost("/image")]
-        public async Task<ActionResult> AddImage(IFormFile file)
-        {
-            await imageService.SaveImageAsync(file);
-            return Ok();
-        }
+     
 
     }
 }
