@@ -55,31 +55,10 @@ namespace CharityEventsApi.Controllers
         }
         /*
         [AllowAnonymous]
-        [HttpPost("/images")]
-        public async Task<ActionResult> AddImages(List<IFormFile> files)
-        {
-            await imageService.SaveImagesAsync(files);
-            return Ok();
-        }
-        [AllowAnonymous]
-        [HttpPost("/image")]
-        public async Task<ActionResult> AddImage(IFormFile file)
-        {
-            await imageService.SaveImageAsync(file);
-            return Ok();
-        }
-        [AllowAnonymous]
-        [HttpGet("/image/{id}")]
-        public async Task<ActionResult> GetImageById(int id)
+        [HttpGet("image")]
+        public async Task<ActionResult> GetImages()
         {
             return Ok(await imageService.GetImageAsync(id));
-        }
-
-        [AllowAnonymous]
-        [HttpPut("/image")]
-        public async Task<ActionResult> GetImages([FromBody]List<int> ids)
-        {
-            return Ok(imageService.GetImagesInRangeAsync(ids));
         }
         */
         [AllowAnonymous]
