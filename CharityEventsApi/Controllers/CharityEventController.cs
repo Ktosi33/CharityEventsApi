@@ -53,14 +53,14 @@ namespace CharityEventsApi.Controllers
             await charityEventService.ChangeImage(image, idCharityEvent);
             return Ok();
         }
-        /*
+       
         [AllowAnonymous]
-        [HttpGet("image")]
-        public async Task<ActionResult> GetImages()
+        [HttpGet("images/{idCharityEvent}")]
+        public async Task<ActionResult> GetImages([FromRoute] int idCharityEvent)
         {
-            return Ok(await imageService.GetImageAsync(id));
+            return Ok(await charityEventService.GetImagesAsync(idCharityEvent));
         }
-        */
+       
         [AllowAnonymous]
         [HttpPatch("{idCharityEvent}")]
         public ActionResult SetDataCharityEvent([FromRoute] int idCharityEvent, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)

@@ -14,6 +14,8 @@ namespace CharityEventsApi.Services.CharityEventService
         public void SetActive(int chariyEventId, bool isActive);
         public void SetVerify(int chariyEventId, bool isVerified);
         public IEnumerable<GetCharityEventDto> GetAll();
-        
+        public Task<IEnumerable<ImageDto>> GetImagesAsync(int idCharityEvent);
+
+
     }
 }

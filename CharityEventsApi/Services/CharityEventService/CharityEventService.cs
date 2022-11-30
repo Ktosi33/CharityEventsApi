@@ -48,6 +48,17 @@ namespace CharityEventsApi.Services.CharityEventService
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
+        public async Task<IEnumerable<ImageDto>> GetImagesAsync(int idCharityEvent)
+        {
+            var ce = await dbContext.Charityevents.Include(c => c.ImageIdImages1).FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
+            if (ce is null)
+            {
+                throw new NotFoundException("Charity event with given id doesn't exist");
+            }
+            IEnumerable<ImageDto> imageDtos = await imageService.GetImagesDtoByImages(ce.ImageIdImages1);
+
+            return imageDtos;
+        }
         public async Task DeleteImage(int idImage, int idCharityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
