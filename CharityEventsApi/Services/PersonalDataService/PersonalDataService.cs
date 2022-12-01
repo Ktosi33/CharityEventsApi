@@ -16,6 +16,18 @@ namespace CharityEventsApi.Services.PersonalDataService
             this.personalDataFactoryFacade = personalDataFactoryFacade;
         }
 
+        public bool doesPersonalDataExists(int id)
+        {
+            var d = dbContext
+                .PersonalData
+                .FirstOrDefault(d => d.UserIdUser == id);
+
+            if (d == null)
+                return false;
+            else
+                return true;
+        }
+
         public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId)
         {
             if((dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == userId)) == null)

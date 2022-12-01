@@ -41,5 +41,12 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(personalDataService.getPersonalDataById(userId));
         }
+
+        [AllowAnonymous]
+        [HttpGet("exist/{userId}")]
+        public ActionResult PersonalDataExists([FromRoute] int userId)
+        {
+            return Ok(personalDataService.doesPersonalDataExists(userId));
+        }
     }
 }
