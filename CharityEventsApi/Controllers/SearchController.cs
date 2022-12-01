@@ -23,10 +23,12 @@ namespace CharityEventsApi.Controllers
         [AllowAnonymous]
         [HttpGet()]
         public async Task<ActionResult> GetCharityEventsDetails([FromQuery] bool? isVerified, [FromQuery] bool? isActive,
-            [FromQuery] bool? isFundraising, [FromQuery] bool? fundraisingIsActive, [FromQuery] bool? fundraisingIsVerified, [FromQuery] bool? isVolunteering, [FromQuery] bool? volunteeringIsActive,
-            [FromQuery] bool? volunteeringIsVerified)
+            [FromQuery] bool? isFundraising, [FromQuery] bool? fundraisingIsActive, [FromQuery] bool? fundraisingIsVerified, 
+            [FromQuery] bool? isVolunteering, [FromQuery] bool? volunteeringIsActive, [FromQuery] bool? volunteeringIsVerified,
+            [FromQuery] string? sortBy, [FromQuery] string? sortDirection)
         {
-            return Ok(await searchService.GetCharityEvents(isVerified, isActive, isFundraising, isVolunteering, volunteeringIsActive, fundraisingIsActive, volunteeringIsVerified, fundraisingIsVerified));
+            return Ok(await searchService.GetCharityEvents(isVerified, isActive, isFundraising, isVolunteering, 
+                volunteeringIsActive, fundraisingIsActive, volunteeringIsVerified, fundraisingIsVerified, sortBy, sortDirection));
         }
         
         [AllowAnonymous]

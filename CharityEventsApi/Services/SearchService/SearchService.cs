@@ -1,11 +1,14 @@
 ﻿using CharityEventsApi.Entities;
+using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.FundraisingService;
 using CharityEventsApi.Services.ImageService;
 using CharityEventsApi.Services.VolunteeringService;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace CharityEventsApi.Services.SearchService
 {
@@ -22,10 +25,9 @@ namespace CharityEventsApi.Services.SearchService
         }
 
         public async Task<IEnumerable<GetAllDetailsCharityEventDto>> GetCharityEvents(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
-           bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified)
+           bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection)
         {
-
-            var charityEvents = await dbContext.Charityevents
+            var charityEvents = dbContext.Charityevents
                 .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
                 .Include(c => c.VolunteeringIdVolunteeringNavigation)
                 .Where(c => isVerified == null || c.IsVerified == Convert.ToSByte(isVerified))
@@ -35,19 +37,20 @@ namespace CharityEventsApi.Services.SearchService
                 .Where(c => volunteeringIsActive == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
                 .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
                 .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
-                .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified))
-                .ToListAsync();
-                
+                .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified));
 
+            charityEvents = sort(charityEvents, sortBy, sortDirection);
+
+            var charityEventsList = await charityEvents.ToListAsync();
             var charityEventsDetails = new List<GetAllDetailsCharityEventDto>();
 
-            foreach (Charityevent charityEvent in charityEvents)
+            foreach (Charityevent charityEvent in charityEventsList)
                 charityEventsDetails.Add(await getDetails(charityEvent));
-
-            charityEventsDetails.Reverse();
 
             return charityEventsDetails;
         }
+
+        
 
         public async Task<GetAllDetailsCharityEventDto> GetCharityEventsById(int charityEventId)
         {
@@ -103,6 +106,35 @@ namespace CharityEventsApi.Services.SearchService
             }
 
             return charityEventDetails;
+        }
+
+        public IQueryable<Charityevent> sort(IQueryable<Charityevent> charityEvents, string? sortBy, string? sortDirection)
+        {
+            if (!string.IsNullOrEmpty(sortBy) && !string.IsNullOrEmpty(sortDirection))
+            {
+                var columnsSelectors = new Dictionary<string, Expression<Func<Charityevent, object>>>
+                {
+                    { nameof(Charityevent.CreatedEventDate), c => c.CreatedEventDate },
+                };
+
+                if (!columnsSelectors.ContainsKey(sortBy))
+                    throw new BadRequestException("Invalid sorting rule");
+               
+                var selectedColumn = columnsSelectors[sortBy];              
+
+                if (sortDirection == "ASC")
+                    charityEvents = charityEvents.OrderBy(c => c.CreatedEventDate);
+                else if (sortDirection == "DESC")
+                    charityEvents = charityEvents.OrderByDescending(c => c.CreatedEventDate);
+                else
+                    throw new BadRequestException("Invalid direction");
+            } 
+            else
+            {
+                charityEvents = charityEvents.OrderByDescending(c => c.CreatedEventDate);
+            }
+
+            return charityEvents;
         }
 
     }

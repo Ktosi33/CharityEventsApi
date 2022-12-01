@@ -6,7 +6,7 @@ namespace CharityEventsApi.Services.SearchService
     public interface ISearchService
     {
         public Task<IEnumerable<GetAllDetailsCharityEventDto>> GetCharityEvents(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
-            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified);
+            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection);
         public Task<GetAllDetailsCharityEventDto> GetCharityEventsById(int charityEventId);
     }
 }
