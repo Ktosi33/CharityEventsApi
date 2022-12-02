@@ -17,6 +17,10 @@ using System.Text;
 using CharityEventsApi.Services.SearchService;
 using CharityEventsApi.Services.VolunteerService;
 using CharityEventsApi.Services.ImageService;
+using FluentValidation;
+using CharityEventsApi.Models.Validators;
+using CharityEventsApi.Models.DataTransferObjects;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +52,8 @@ builder.Services.AddAuthentication(option =>
 
 
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -116,6 +122,9 @@ builder.Services.AddScoped<IDonationService, DonationService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddScoped<IVolunteerService, VolunteerService>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
+builder.Services.AddScoped<IValidator<LoginUserDto>, LoginUserDtoValidator>();
+builder.Services.AddScoped<IValidator<AddAllPersonalDataDto>, AddAllPersonalDataDtoValidator>();
 
 var app = builder.Build();
 
