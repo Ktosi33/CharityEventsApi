@@ -24,6 +24,7 @@ namespace CharityEventsApi.Services.SearchService
             this.imageService = imageService;   
         }
 
+        [Obsolete("GetCharityEvents is deprecated, please use getCharityEventsWithPagination instead")]
         public async Task<IEnumerable<GetAllDetailsCharityEventDto>> GetCharityEvents(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection)
         {
@@ -50,7 +51,42 @@ namespace CharityEventsApi.Services.SearchService
             return charityEventsDetails;
         }
 
-        
+        public async Task<PagedResultDto<GetAllDetailsCharityEventDto>> GetCharityEventsWithPagination(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
+           bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection,
+           int pageNumber, int pageSize)
+        {
+            var charityEvents = dbContext.Charityevents
+                .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
+                .Include(c => c.VolunteeringIdVolunteeringNavigation)
+                .Where(c => isVerified == null || c.IsVerified == Convert.ToSByte(isVerified))
+                .Where(c => isActive == null || c.IsActive == Convert.ToSByte(isActive))
+                .Where(c => isFundraising == null || c.CharityFundraisingIdCharityFundraising.Equals(null) == !isFundraising)
+                .Where(c => isVolunteering == null || c.VolunteeringIdVolunteering.Equals(null) == !isVolunteering)
+                .Where(c => volunteeringIsActive == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
+                .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
+                .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
+                .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified));
+
+            charityEvents = sort(charityEvents, sortBy, sortDirection);
+
+            List<Charityevent> charityEventsList = new();
+            var charityEventsDetails = new List<GetAllDetailsCharityEventDto>();
+
+            if (pageNumber <= 0 || pageSize <= 0)
+                throw new BadRequestException("Values ​​needed for pagination cannot be non-positive");
+
+            charityEventsList = await charityEvents
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            var totalItemsCount = charityEvents.Count();
+
+            foreach (Charityevent charityEvent in charityEventsList)
+                charityEventsDetails.Add(await getDetails(charityEvent));
+
+            return new PagedResultDto<GetAllDetailsCharityEventDto>(charityEventsDetails,totalItemsCount, pageSize, pageNumber);
+        }
 
         public async Task<GetAllDetailsCharityEventDto> GetCharityEventsById(int charityEventId)
         {
