@@ -23,7 +23,7 @@ namespace CharityEventsApi.Services.DonationService
                 CharityFundraisingIdCharityFundraising = addDonationDto.CharityFundraisingIdCharityFundraising,
                 UserIdUser = addDonationDto.UserIdUser,
                 Description = addDonationDto.Description,
-                DonationDate = addDonationDto.DonationDate
+                DonationDate = DateTime.Now
             };
 
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
