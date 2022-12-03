@@ -128,6 +128,9 @@ builder.Services.AddScoped<IValidator<AddAllPersonalDataDto>, AddAllPersonalData
 builder.Services.AddScoped<IValidator<AddAllCharityEventsDto>, AddAllCharityEventsDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCharityEventDto>, AddCharityEventDtoValidator>();
 builder.Services.AddScoped<IValidator<AddCharityEventFundraisingDto>, AddCharityEventFundraisingDtoValidator>();
+builder.Services.AddScoped<IValidator<AddCharityEventVolunteeringDto>, AddCharityEventVolunteeringDtoValidator>();
+builder.Services.AddScoped<IValidator<AddDonationDto>, AddDonationDtoValidator>();
+builder.Services.AddScoped<IValidator<AddLocationDto>, AddLocationDtoValidator>();
 
 var app = builder.Build();
 
