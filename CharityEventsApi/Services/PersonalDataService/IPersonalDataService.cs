@@ -6,7 +6,7 @@ namespace CharityEventsApi.Services.PersonalDataService
     {
         public GetAllPersonalDataDto getPersonalDataById(int id);
         public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId);
-        public void editAllPersonalData(EditAllPesonalDataDto personalDataDto, int idPersonalData);
+        public void editAllPersonalData(EditAllPersonalDataDto personalDataDto, int idPersonalData);
         public bool doesPersonalDataExists(int id);
     }
 }

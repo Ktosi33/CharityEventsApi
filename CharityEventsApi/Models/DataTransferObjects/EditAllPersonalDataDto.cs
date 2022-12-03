@@ -1,6 +1,6 @@
 ﻿namespace CharityEventsApi.Models.DataTransferObjects
 {
-    public class EditAllPesonalDataDto
+    public class EditAllPersonalDataDto
     {
         public string Name { get; set; } = null!;
         public string Surname { get; set; } = null!;

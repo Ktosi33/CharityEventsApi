@@ -36,7 +36,7 @@ namespace CharityEventsApi.Services.PersonalDataService
                 throw new ForbiddenException("User with the given id has data");        
         }
 
-        public void editAllPersonalData(EditAllPesonalDataDto personalDataDto, int idPersonalData)
+        public void editAllPersonalData(EditAllPersonalDataDto personalDataDto, int idPersonalData)
         {
             var personalData = dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == idPersonalData);
             if (personalData == null)
