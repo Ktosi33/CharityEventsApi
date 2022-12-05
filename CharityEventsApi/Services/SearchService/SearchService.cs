@@ -93,6 +93,7 @@ namespace CharityEventsApi.Services.SearchService
             var charityEvent = await dbContext.Charityevents
                 .Where(c => c.IdCharityEvent == charityEventId)
                 .Include(x => x.VolunteeringIdVolunteeringNavigation)
+                .ThenInclude(x => x.UserIdUsers)
                 .Include(x => x.CharityFundraisingIdCharityFundraisingNavigation)
                 .ToListAsync();
 
@@ -122,7 +123,8 @@ namespace CharityEventsApi.Services.SearchService
                     EndEventDate = charityEvent.VolunteeringIdVolunteeringNavigation.EndEventDate,
                     IsActive = charityEvent.VolunteeringIdVolunteeringNavigation.IsActive,
                     IsVerified = charityEvent.VolunteeringIdVolunteeringNavigation.IsVerified,
-                    Id = charityEvent.VolunteeringIdVolunteeringNavigation.IdVolunteering
+                    Id = charityEvent.VolunteeringIdVolunteeringNavigation.IdVolunteering,
+                    AmountOfAttendedVolunteers = charityEvent.VolunteeringIdVolunteeringNavigation.UserIdUsers.Count,
                 };
             }
 

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int AmountOfNeededVolunteers { get; set; }
+        public int AmountOfAttendedVolunteers { get; set; }
         public DateTime CreatedEventDate { get; set; }
         public DateTime? EndEventDate { get; set; }
         public sbyte IsActive { get; set; }
