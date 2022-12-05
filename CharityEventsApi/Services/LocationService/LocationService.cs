@@ -74,10 +74,32 @@ namespace CharityEventsApi.Services.LocationService
 
             return new GetLocationDto
             {
+                IdLocation = location.IdLocation,
                 PostalCode = location.PostalCode,
                 Street = location.Street,
                 Town = location.Town
+               
             };
+        }
+
+        public List<GetLocationDto> getLocationsByVolunteeringId(int volunteeringId)
+        {
+            var volunteering = dbContext.Volunteerings
+                .Include(v => v.LocationIdLocations)
+                .FirstOrDefault(v => v.IdVolunteering == volunteeringId);
+
+            if (volunteering == null)
+                throw new NotFoundException("Volunteering about this id does not exist");
+
+            var locations = volunteering.LocationIdLocations;
+            List<GetLocationDto> locationsList = new List<GetLocationDto>();
+
+            foreach (var location in locations)
+            {
+                locationsList.Add(getLocationById(location.IdLocation));
+            }
+
+            return locationsList;
         }
     }
 }

@@ -50,5 +50,12 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(locationService.getLocationById(locationId));
         }
+
+        [AllowAnonymous]
+        [HttpGet("charityEventVolunteering/{volunteeringId}")]
+        public ActionResult GetLocationsByCharityEventVolunteeringId([FromRoute] int volunteeringId)
+        {
+            return Ok(locationService.getLocationsByVolunteeringId(volunteeringId));
+        }
     }
 }

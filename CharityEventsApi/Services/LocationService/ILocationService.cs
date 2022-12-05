@@ -11,5 +11,6 @@ namespace CharityEventsApi.Services.LocationService
         public void deleteLocation(int locationId);
 
         public GetLocationDto getLocationById(int locationId);
+        public List<GetLocationDto> getLocationsByVolunteeringId(int volunteeringId);
     }
 }
