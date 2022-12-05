@@ -100,6 +100,31 @@ namespace CharityEventsApi.Services.SearchService
             return await getDetails(charityEvent.First());
         }
 
+        public async Task<List<GetAllDetailsCharityEventDto>> GetMostPopularFundraisings(int numberOfEvents)
+        {
+            List<GetAllDetailsCharityEventDto> mostPopularFundraisingsList = new List<GetAllDetailsCharityEventDto>();
+            
+            var fundraisings = dbContext.Charityfundraisings
+                .Include(f => f.Donations)
+                .Include(f => f.Charityevents)
+                .Where(f => f.IsActive == 1)
+                .Where(f => f.IsVerified == 1);
+
+            fundraisings = fundraisings.OrderByDescending(f => f.Donations.Count);
+
+            var fundraisingsList = await fundraisings
+                .Take(numberOfEvents)
+                .ToListAsync();
+
+            foreach (var fundraising in fundraisingsList)
+            {
+                mostPopularFundraisingsList.Add(await GetCharityEventsById(fundraising.Charityevents.FirstOrDefault(c => c.CharityFundraisingIdCharityFundraising == fundraising.IdCharityFundraising).IdCharityEvent));
+            }
+
+            return mostPopularFundraisingsList;
+            
+        }
+
         public async Task<GetAllDetailsCharityEventDto> getDetails(Charityevent charityEvent)
         {
             GetAllDetailsCharityEventDto charityEventDetails = new GetAllDetailsCharityEventDto()
