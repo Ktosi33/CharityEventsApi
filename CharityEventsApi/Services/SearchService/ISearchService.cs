@@ -11,5 +11,6 @@ namespace CharityEventsApi.Services.SearchService
             bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection,
             int pageNumber, int pageSize);
         public Task<GetAllDetailsCharityEventDto> GetCharityEventsById(int charityEventId);
+        public Task<List<GetAllDetailsCharityEventDto>> GetMostPopularFundraisings(int numberOfEvents);
     }
 }

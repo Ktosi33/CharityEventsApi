@@ -49,5 +49,12 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(await searchService.GetCharityEventsById(charityEventId));
         }
+
+        [AllowAnonymous]
+        [HttpGet("mostPopularFundraisings")]
+        public async Task<ActionResult> GetMostPopularFundraisings([FromQuery] int numberOfEvents)
+        {
+            return Ok(await searchService.GetMostPopularFundraisings(numberOfEvents));
+        }
     }
 }
