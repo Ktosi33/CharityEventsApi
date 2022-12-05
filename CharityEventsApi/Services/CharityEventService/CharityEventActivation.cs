@@ -1,5 +1,6 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
@@ -14,7 +15,10 @@ namespace CharityEventsApi.Services.CharityEventService
 
         protected override void Active(int charityEventId)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            var charityevent = dbContext.Charityevents
+                .Include(ce => ce.CharityFundraisingIdCharityFundraisingNavigation)
+                .Include(ce => ce.VolunteeringIdVolunteeringNavigation)
+                .FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
@@ -25,6 +29,22 @@ namespace CharityEventsApi.Services.CharityEventService
                 throw new BadRequestException("You cant active charity event while event isn't active or verified");
             }
             charityevent.IsActive = 1;
+            if(charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
+            {
+                if(charityevent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == 0)
+                {
+                    throw new BadRequestException("Firstly verify fundraising charity");
+                }
+                charityevent.CharityFundraisingIdCharityFundraisingNavigation.IsActive = 1;
+            }
+            if (charityevent.VolunteeringIdVolunteeringNavigation != null)
+            {
+                if (charityevent.VolunteeringIdVolunteeringNavigation.IsVerified == 0)
+                {
+                    throw new BadRequestException("Firstly verify volunteering charity");
+                }
+                charityevent.VolunteeringIdVolunteeringNavigation.IsActive = 1;
+            }
             dbContext.SaveChanges();
         }
         protected override void Disactive(int charityEventId)
