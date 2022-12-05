@@ -7,5 +7,6 @@ namespace CharityEventsApi.Services.DonationService
         public void addDonation(AddDonationDto addDonationDto);
 
         public GetDonationDto getDonationById(int donationId);
+        public List<GetDonationDto> getDonationsByCharityFundraisingId(int fundraisingId);
     }
 }

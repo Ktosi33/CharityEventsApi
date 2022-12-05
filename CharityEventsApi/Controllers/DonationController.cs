@@ -34,5 +34,12 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(donationService.getDonationById(donationId));
         }
+
+        [AllowAnonymous]
+        [HttpGet("charityEventFundraising/{idCharityEventFundraising}")]
+        public ActionResult GetDonationsByCharityEventFundraisingId([FromRoute] int idCharityEventFundraising)
+        {
+            return Ok(donationService.getDonationsByCharityFundraisingId(idCharityEventFundraising));
+        }
     }
 }
