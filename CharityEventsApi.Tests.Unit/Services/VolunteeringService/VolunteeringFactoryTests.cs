@@ -18,7 +18,7 @@ namespace CharityEventsApi.Tests.Unit.Services.VolunteeringService
         [Theory]
         [InlineData("FT", "bbb", "ccc", 1, 2, 1, true, true)]
         [InlineData("Test", "asd", "asd", 1, 0, 1, false, true)]
-        public void givenAddAllCharityEventsDto_whenCreateNewObject_thenReturnsVolunteering
+        public void AddAllCharityEventsDto_CreateNewObject_ReturnsVolunteering
             (string title, string description, string fundTarget,
             decimal amountOfMoneyToCollect, int amountOfNeededVolunteers,
             int organizerId, bool isFundraising, bool isVolunteering)

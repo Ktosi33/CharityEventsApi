@@ -20,7 +20,7 @@ namespace CharityEventsApi.Tests.Unit.Services.CharityEventService
         [InlineData("FT", "bbb", "ccc", 1, 2, 1, false, true)]
         [InlineData("Test", "asd", "asd", 1, 0, 1, true, true)]
         [InlineData("Asd", "", "zzz", 3, 1, 1, false, false)]
-        public async Task givenAddAllCharityEventsDto_whenCreateNewObject_thenReturnsCharityevent
+        public async Task AddAllCharityEventsDto_CreateNewObject_ReturnsCharityevent
             (string title, string description, string fundTarget,
             decimal amountOfMoneyToCollect, int amountOfNeededVolunteers,
             int organizerId, bool isFundraising, bool isVolunteering)

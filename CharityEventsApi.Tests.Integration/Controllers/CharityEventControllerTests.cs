@@ -35,8 +35,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [InlineData("Aaa", "bbb", "ccc", 2.1, 2, 1, true, true)]
         [InlineData("TF", "bbb", "ccc", 2.1, 2, 1, true, false)]
         [InlineData("FT", "bbb", "ccc", 2.1, 2, 1, false, true)]
-        [InlineData("All null", "ccc", "aaa", 0, 0, 1, false, false)]
-        public async Task givenAddAllCharityEventDtoByForm_whenCreateAllCharityEvents_thenReturnsOkResult
+        public async Task AddAllCharityEventDtoByForm_CreateAllCharityEvents_ReturnsOkResult
             (string title, string description, string fundTarget,
             decimal amountOfMoneyToCollect, int amountOfNeededVolunteers,
             int organizerId, bool isFundraising, bool isVolunteering)
@@ -66,8 +65,9 @@ namespace CharityEventsApi.Tests.Integration.Controllers
 
         [Theory]
         [InlineData("Aaa", "bbb", "ccc", 2.1, 1, 0, true, true)]
-        //[InlineData("", null, null, null, null, 1, false, false)] //that test wouldnt pass when validators are added
-        public async Task givenAddAllCharityEventDtoByForm_whenCreateAllCharityEvents_thenReturnsBadRequest
+        [InlineData("All null", "ccc", "aaa", 1.1, 3, 1, false, false)]
+        [InlineData("", "", "", 0.0, 1, 1, false, false)] 
+        public async Task AddAllCharityEventDtoByForm_whenCreateAllCharityEvents_ReturnsBadRequest
        (string title, string description, string fundTarget, decimal amountOfMoneyToCollect, 
             int amountOfNeededVolunteers, int organizerId, bool isFundraising, bool isVolunteering)
         {
@@ -94,7 +94,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task givenIsActive_whenDisactiveBySettingfalse_thenReturnsOkResult()
+        public async Task IsActive_DisactiveBySettingfalse_ReturnsOkResult()
         {       
             //act
             var response = await client.PatchAsync("/v1/CharityEvent/1?isActive=false", null);
@@ -104,7 +104,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
      
         [Fact]
-        public async Task givenIdCharityEvent_whenGetCharityEvent_thenReturnsOkResult()
+        public async Task IdCharityEvent_GetCharityEvent_ReturnsOkResult()
         {
             //act
             var response = await client.GetAsync("/v1/CharityEvent/1");
@@ -116,7 +116,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("NewTitle", "Desc", 1,1)]
         [InlineData("NewTitlea", null, 1,1)]
-        public async Task givenEditCharityEventDto_whenEditCharityEvent_thenReturnsOkResult(string title, string description, int organizerId, int imageId)
+        public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult(string title, string description, int organizerId, int imageId)
         {
             //arange
             EditCharityEventDto dto = new EditCharityEventDto
@@ -137,7 +137,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
-        public async Task givenIsVerifiedIsActive_whenChangeVerifyAndActive_thenReturnsOkResult(string isVerified, string isActive)
+        public async Task IsVerifiedIsActive_ChangeVerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
@@ -150,7 +150,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [InlineData("false", "true")]
         [InlineData("asd", "asd")]
         [InlineData("null", "null")]
-        public async Task givenIsVerifiedIsActive_whenChangeVerifyAndActive_thenReturnsBadRequest(string isVerified, string isActive)
+        public async Task IsVerifiedIsActive_ChangeVerifyAndActive_ReturnsBadRequest(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
