@@ -16,12 +16,12 @@ using Xunit;
 
 namespace CharityEventsApi.Tests.Integration.Controllers
 {
-    public class CharityEventFundraisingControllerTests
+    public class CharityEventFundraisingControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient client;
-        public CharityEventFundraisingControllerTests()
+        public CharityEventFundraisingControllerTests(CustomWebApplicationFactory<Program> factory)
         {
-            client = new ClientInit().Client;
+            client = factory.CreateClient();
         }
 
         [Fact]

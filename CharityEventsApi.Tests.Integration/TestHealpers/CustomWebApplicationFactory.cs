@@ -1,30 +1,25 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using System;
 using System.Linq;
-using System.Net.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using CharityEventsApi.Entities;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System;
-
 
 namespace CharityEventsApi.Tests.Integration.TestHealpers
 {
-    public class ClientInit
+    public class CustomWebApplicationFactory<TProgram>: WebApplicationFactory<TProgram> where TProgram : class
     {
-        public HttpClient Client { get; }
-        public ClientInit()
+        protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            var factory = new WebApplicationFactory<Program>();
-            Client = factory.WithWebHostBuilder(builder =>
-            {
-
+            
                 builder.ConfigureServices(services =>
                 {
                     var dbContext = services.FirstOrDefault(dbContext => dbContext.ServiceType == typeof(DbContextOptions<CharityEventsDbContext>));
-                    if(dbContext is not null)
-                    { 
-                    services.Remove(dbContext);
+                    if (dbContext is not null)
+                    {
+                        services.Remove(dbContext);
                     }
 
                     string _dbName = Guid.NewGuid().ToString();
@@ -42,9 +37,7 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
 
                 });
 
-            })
-           .CreateClient();
+         
         }
-        
     }
 }

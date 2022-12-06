@@ -23,12 +23,14 @@ using System.Net.Http.Headers;
 
 namespace CharityEventsApi.Tests.Integration.Controllers
 {
-    public class CharityEventControllerTests 
+    public class CharityEventControllerTests  : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient client;
-        public CharityEventControllerTests()
+
+        public CharityEventControllerTests(CustomWebApplicationFactory<Program> factory)
         {
-            client = new ClientInit().Client;           
+            client = factory.CreateClient();
+
         }
         
         [Theory]
