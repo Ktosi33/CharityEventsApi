@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using CharityEventsApi.Entities;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.AspNetCore.Authorization.Policy;
 
 namespace CharityEventsApi.Tests.Integration.TestHealpers
 {
@@ -25,6 +26,11 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                     string _dbName = Guid.NewGuid().ToString();
                     services.AddDbContext<CharityEventsDbContext>(options => options.UseInMemoryDatabase(databaseName: _dbName)
                   .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
+
+                    services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
+                    services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
+
                     services.AddTransient<SeedTestData>();
 
                     var sp = services.BuildServiceProvider();
