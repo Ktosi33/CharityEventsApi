@@ -41,5 +41,12 @@ namespace CharityEventsApi.Controllers
             volunteerService.deleteVolunteer(deleteVolunteerDto);
             return Ok();
         }
+
+        [AllowAnonymous]
+        [HttpGet("exist")]
+        public ActionResult UserIsVolunteer([FromQuery] int idUser, [FromQuery] int idVolunteering)
+        {
+            return Ok(volunteerService.isVolunteer(idUser, idVolunteering));        
+        }
     }
 }

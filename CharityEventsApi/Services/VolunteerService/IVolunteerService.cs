@@ -7,5 +7,6 @@ namespace CharityEventsApi.Services.VolunteerService
         public void addVolunteer(AddVolunteerDto addVolunteerDto);
         public void deleteVolunteer(DeleteVolunteerDto deleteVolunteerDto);
         public List<GetVolunteerDto> getVolunteersByVolunteeringId(int volunteeringId);
+        public bool isVolunteer(int idUser, int idVolunteering);
     }
 }
