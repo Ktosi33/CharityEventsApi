@@ -57,7 +57,7 @@ namespace CharityEventsApi.Services.DonationService
                 Description = donation.Description,
                 CharityFundraisingIdCharityFundraising = donation.CharityFundraisingIdCharityFundraising,
                 DonationDate = donation.DonationDate,
-                UserIdUser = donation.UserIdUser
+                UserIdUser = (int)donation.UserIdUser!
             };
         }
     }
