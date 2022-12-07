@@ -19,7 +19,7 @@ namespace CharityEventsApi.Controllers
             this.volunteerService = volunteerService;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Volunteer,Organizer,Admin")]
         [HttpPost()]
         public ActionResult AddVolunteer([FromBody] AddVolunteerDto addVolunteerDto)
         {
@@ -34,7 +34,7 @@ namespace CharityEventsApi.Controllers
             return Ok(volunteerService.getVolunteersByVolunteeringId(volunteeringId));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Volunteer,Organizer,Admin")]
         [HttpDelete()]
         public ActionResult DeleteVolunteer([FromBody] DeleteVolunteerDto deleteVolunteerDto)
         {

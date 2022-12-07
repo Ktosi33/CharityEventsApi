@@ -17,21 +17,21 @@ namespace CharityEventsApi.Controllers
             this.charityEventService = charityEventService;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Volunteer,Organizer,Admin")]
         [HttpPost()]
         public async Task<ActionResult> AddCharityEvent([FromForm] AddAllCharityEventsDto charityEventDto)
         {
            await charityEventService.Add(charityEventDto);
             return Ok();
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPost("image/{idCharityEvent}")]
         public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
         {
             await charityEventService.AddOneImage(image, idCharityEvent);
             return Ok();
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpDelete("image")]
         public async Task<ActionResult> DeleteImageAsync([FromQuery] int idImage, [FromQuery] int idCharityEvent)
         {
@@ -39,16 +39,16 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPut("{idCharityEvent}")]
         public ActionResult EditCharityEvent([FromBody] EditCharityEventDto charityEventDto, [FromRoute] int idCharityEvent)
         {
             charityEventService.Edit(charityEventDto, idCharityEvent);
             return Ok();
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPut("image/{idCharityEvent}")]
-        public async Task<ActionResult> ChangeImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
+        public async Task<ActionResult> ChangeMainImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
         {
             await charityEventService.ChangeImage(image, idCharityEvent);
             return Ok();
@@ -61,9 +61,9 @@ namespace CharityEventsApi.Controllers
             return Ok(await charityEventService.GetImagesAsync(idCharityEvent));
         }
        
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPatch("{idCharityEvent}")]
-        public ActionResult SetDataCharityEvent([FromRoute] int idCharityEvent, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        public ActionResult SetFieldCharityEvent([FromRoute] int idCharityEvent, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
             if (isVerified != null)
             {

@@ -33,7 +33,7 @@ namespace CharityEventsApi.Controllers
             return Ok(token);
         }
 
-        [Authorize(Roles = "Volunteer")]
+        [Authorize()]
         [HttpGet("isLogged")]
         public ActionResult IsLogged()
         {

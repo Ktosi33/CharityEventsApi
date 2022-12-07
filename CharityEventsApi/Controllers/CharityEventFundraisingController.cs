@@ -19,7 +19,7 @@ namespace CharityEventsApi.Controllers
             this.FundraisingService = FundraisingService;
             this.imageService = imageService;
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPost()]
         public async Task<ActionResult> AddCharityEventFundraisingAsync([FromForm] AddCharityEventFundraisingDto charityEventDto)
         {
@@ -27,16 +27,16 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPut("{idFundraising}")]
         public ActionResult EditFundraising([FromBody] EditCharityEventFundraisingDto FundraisingDto, [FromRoute] int idFundraising)
         {
             FundraisingService.Edit(FundraisingDto, idFundraising);
             return Ok();
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPatch("{idFundraising}")]
-        public ActionResult SetDataFundraising([FromRoute] int idFundraising, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        public ActionResult SetFieldFundraising([FromRoute] int idFundraising, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
         {
             if (isVerified != null)
             {

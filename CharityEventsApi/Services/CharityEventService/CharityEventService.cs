@@ -44,7 +44,7 @@ namespace CharityEventsApi.Services.CharityEventService
             {
                 throw new BadRequestException("something went wrong");
             }
-            // ce.ImageIdImages.Add(img);
+            ce.ImageIdImages1.Add(img);
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
