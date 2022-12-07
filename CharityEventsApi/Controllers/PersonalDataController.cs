@@ -43,6 +43,13 @@ namespace CharityEventsApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet("some/{userId}")]
+        public ActionResult GetSomePersonalDataById([FromRoute] int userId)
+        {
+            return Ok(personalDataService.getSomePersonalDataById(userId));
+        }
+
+        [AllowAnonymous]
         [HttpGet("exists/{userId}")]
         public ActionResult PersonalDataExists([FromRoute] int userId)
         {

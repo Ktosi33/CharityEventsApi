@@ -59,7 +59,25 @@ namespace CharityEventsApi.Services.PersonalDataService
             dbContext.SaveChanges();
 
         }
-        
+
+        public GetSomePersonalDataDto getSomePersonalDataById(int userId)
+        {
+            var d = dbContext
+                .PersonalData
+                .Include(d => d.AddressIdAddressNavigation)
+                .FirstOrDefault(d => d.UserIdUser == userId);
+
+            if (d is null)
+                throw new NotFoundException("PersonalData for this user id doesn't exist");
+
+
+            return new GetSomePersonalDataDto
+            {
+                Name = d.Name,
+                Surname = d.Surname
+            };
+        }
+
         public GetAllPersonalDataDto getPersonalDataById(int id)
         {
             var d = dbContext
