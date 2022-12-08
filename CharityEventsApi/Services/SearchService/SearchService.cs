@@ -1,13 +1,8 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
-using CharityEventsApi.Services.CharityEventService;
-using CharityEventsApi.Services.FundraisingService;
 using CharityEventsApi.Services.ImageService;
-using CharityEventsApi.Services.VolunteeringService;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace CharityEventsApi.Services.SearchService
@@ -21,7 +16,7 @@ namespace CharityEventsApi.Services.SearchService
         public SearchService(CharityEventsDbContext dbContext, IImageService imageService)
         {
             this.dbContext = dbContext;
-            this.imageService = imageService;   
+            this.imageService = imageService;
         }
 
         [Obsolete("GetCharityEvents is deprecated, please use getCharityEventsWithPagination instead")]
@@ -53,7 +48,7 @@ namespace CharityEventsApi.Services.SearchService
 
         public async Task<PagedResultDto<GetAllDetailsCharityEventDto>> GetCharityEventsWithPagination(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection,
-           int pageNumber, int pageSize)
+           int pageNumber, int pageSize, bool? volunteeringOrFundrasingIsActive, bool? volunteeringOrFundrasingIsVerified)
         {
             var charityEvents = dbContext.Charityevents
                 .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
@@ -65,7 +60,9 @@ namespace CharityEventsApi.Services.SearchService
                 .Where(c => volunteeringIsActive == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringIsActive))
                 .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
                 .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
-                .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified));
+                .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified))
+                .Where(c => volunteeringOrFundrasingIsActive == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringOrFundrasingIsActive) || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(volunteeringOrFundrasingIsActive))
+                .Where(c => volunteeringOrFundrasingIsVerified == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundrasingIsVerified) || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundrasingIsVerified));
 
             charityEvents = sort(charityEvents, sortBy, sortDirection);
 
@@ -84,8 +81,8 @@ namespace CharityEventsApi.Services.SearchService
 
             foreach (Charityevent charityEvent in charityEventsList)
                 charityEventsDetails.Add(await getDetails(charityEvent));
-
-            return new PagedResultDto<GetAllDetailsCharityEventDto>(charityEventsDetails,totalItemsCount, pageSize, pageNumber);
+            
+            return new PagedResultDto<GetAllDetailsCharityEventDto>(charityEventsDetails, totalItemsCount, pageSize, pageNumber);
         }
 
         public async Task<GetAllDetailsCharityEventDto> GetCharityEventsById(int charityEventId)
@@ -103,7 +100,7 @@ namespace CharityEventsApi.Services.SearchService
         public async Task<List<GetAllDetailsCharityEventDto>> GetMostPopularFundraisings(int numberOfEvents)
         {
             List<GetAllDetailsCharityEventDto> mostPopularFundraisingsList = new List<GetAllDetailsCharityEventDto>();
-            
+
             var fundraisings = dbContext.Charityfundraisings
                 .Include(f => f.Donations)
                 .Include(f => f.Charityevents)
@@ -122,7 +119,7 @@ namespace CharityEventsApi.Services.SearchService
             }
 
             return mostPopularFundraisingsList;
-            
+
         }
 
         public async Task<GetAllDetailsCharityEventDto> getDetails(Charityevent charityEvent)
@@ -182,8 +179,8 @@ namespace CharityEventsApi.Services.SearchService
 
                 if (!columnsSelectors.ContainsKey(sortBy))
                     throw new BadRequestException("Invalid sorting rule");
-               
-                var selectedColumn = columnsSelectors[sortBy];              
+
+                var selectedColumn = columnsSelectors[sortBy];
 
                 if (sortDirection == "ASC")
                     charityEvents = charityEvents.OrderBy(c => c.CreatedEventDate);
@@ -191,7 +188,7 @@ namespace CharityEventsApi.Services.SearchService
                     charityEvents = charityEvents.OrderByDescending(c => c.CreatedEventDate);
                 else
                     throw new BadRequestException("Invalid direction");
-            } 
+            }
             else
             {
                 charityEvents = charityEvents.OrderByDescending(c => c.CreatedEventDate);

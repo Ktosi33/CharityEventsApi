@@ -36,11 +36,12 @@ namespace CharityEventsApi.Controllers
         public async Task<ActionResult> GetCharityEventsDetailsPagination([FromQuery] bool? isVerified, [FromQuery] bool? isActive,
             [FromQuery] bool? isFundraising, [FromQuery] bool? fundraisingIsActive, [FromQuery] bool? fundraisingIsVerified,
             [FromQuery] bool? isVolunteering, [FromQuery] bool? volunteeringIsActive, [FromQuery] bool? volunteeringIsVerified,
-            [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] int pageNumber, [FromQuery] int pageSize)
+            [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] int pageNumber, [FromQuery] int pageSize, 
+            [FromQuery] bool? volunteeringOrFundrasingIsActive, [FromQuery] bool? volunteeringOrFundrasingIsVerified)
         {
             return Ok(await searchService.GetCharityEventsWithPagination(isVerified, isActive, isFundraising, isVolunteering,
                 volunteeringIsActive, fundraisingIsActive, volunteeringIsVerified, fundraisingIsVerified, sortBy, sortDirection,
-                pageNumber, pageSize));
+                pageNumber, pageSize, volunteeringOrFundrasingIsActive, volunteeringOrFundrasingIsVerified));
         }
 
         [AllowAnonymous]
