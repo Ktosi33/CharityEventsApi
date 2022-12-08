@@ -22,15 +22,6 @@ namespace CharityEventsApi.Services.VolunteeringService
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }
-            var charityevent = volunteering.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventVolunteering doesn't have charity event.");
-            }
-            if (charityevent.IsVerified == 0)
-            {
-                throw new BadRequestException("Firstly verify charityevent");
-            }
             volunteering.IsVerified = 1;
             dbContext.SaveChanges();
         }

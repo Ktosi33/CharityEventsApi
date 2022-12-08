@@ -8,9 +8,7 @@
 
         }
         public UnauthorizedException() : base("Unauthorized exception, status code 401.") { }
-        {
-
-        }
+      
        
     }
 }

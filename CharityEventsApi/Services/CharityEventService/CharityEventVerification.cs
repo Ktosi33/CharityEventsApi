@@ -26,16 +26,6 @@ namespace CharityEventsApi.Services.CharityEventService
             }
 
             charityevent.IsVerified = 1;
-
-            if(charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
-            {
-                charityevent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified = 1;
-            }
-            if (charityevent.VolunteeringIdVolunteeringNavigation != null)
-            {
-                charityevent.VolunteeringIdVolunteeringNavigation.IsVerified = 1;
-            }
-
             dbContext.SaveChanges();
         }
         protected override void unverify(int charityEventId)
@@ -48,16 +38,7 @@ namespace CharityEventsApi.Services.CharityEventService
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }
-
             charityEventActivation.SetActive(charityEventId, false);
-            if (charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
-            {
-                charityevent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified = 0;
-            }
-            if (charityevent.VolunteeringIdVolunteeringNavigation != null)
-            {
-                charityevent.VolunteeringIdVolunteeringNavigation.IsVerified = 0;
-            }
             charityevent.IsVerified = 0;
             dbContext.SaveChanges();
         }

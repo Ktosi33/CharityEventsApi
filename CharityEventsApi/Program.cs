@@ -21,6 +21,7 @@ using FluentValidation;
 using CharityEventsApi.Models.Validators;
 using CharityEventsApi.Models.DataTransferObjects;
 using FluentValidation.AspNetCore;
+using CharityEventsApi.Services.UserContextAuthService;
 using CharityEventsApi.Services.UserContextService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -118,6 +119,7 @@ builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
+builder.Services.AddTransient<IUserContextAuthService, UserContextAuthService>();
 builder.Services.AddTransient<PersonalDataFactory>();
 builder.Services.AddTransient<PersonalDataAddressFactory>();
 builder.Services.AddTransient<IPersonalDataFactoryFacade, PersonalDataFactoryFacade>();

@@ -23,15 +23,6 @@ namespace CharityEventsApi.Services.FundraisingService
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventFundraising doesn't have charity event.");
-            }
-            if (charityevent.IsVerified == 0)
-            {
-                throw new BadRequestException("Firstly verify charityevent");
-            }
             fundraising.IsVerified = 1;
             dbContext.SaveChanges();
         }

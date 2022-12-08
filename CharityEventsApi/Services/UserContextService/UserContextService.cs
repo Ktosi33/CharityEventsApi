@@ -11,34 +11,35 @@ namespace CharityEventsApi.Services.UserContextService
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        private ClaimsPrincipal? getCurrentUserOrDefault() 
-            => httpContextAccessor?.HttpContext?.User;
+        private ClaimsPrincipal? getCurrentUserOrDefault()
+          => httpContextAccessor?.HttpContext?.User;
 
-        private Claim? getCurrentUserIdOrDefault() 
+        private Claim? getCurrentUserIdOrDefault()
             => getCurrentUserOrDefault()?.Claims.FirstOrDefault(r => r.Type == ClaimTypes.NameIdentifier);
 
-    
+
         public ClaimsPrincipal getCurrentUser()
         {
             var user = getCurrentUserOrDefault();
 
-            if(user == null)
+            if (user == null)
             {
-                throw new NotFoundException("JWT User doesn't exist");
+                throw new UnauthorizedException("JWT User doesn't exist");
             }
-           
+
             return user;
         }
-       
+
         public int getCurrentUserId()
         {
-            var userId = getCurrentUserIdOrDefault();
+            var idUser = getCurrentUserIdOrDefault();
 
-            if (userId == null) {
-                throw new NotFoundException("JWT Id claim doesn't exist");
+            if (idUser == null)
+            {
+                throw new UnauthorizedException("JWT Id claim doesn't exist");
             }
 
-            return int.Parse(userId.Value);
+            return int.Parse(idUser.Value);
         }
 
     }

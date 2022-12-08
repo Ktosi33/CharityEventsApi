@@ -14,7 +14,7 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                 new[]
                 {
                     new Claim(ClaimTypes.NameIdentifier, "1"),
-                    new Claim(ClaimTypes.Role, "Administrator")
+                    new Claim(ClaimTypes.Role, "Admin")
                 }
                 ));
             context.HttpContext.User = claimsPrincipal;

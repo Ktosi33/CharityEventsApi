@@ -29,7 +29,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 throw new BadRequestException("You cant active charity event while event isn't active or verified");
             }
             charityevent.IsActive = 1;
-            if(charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
+          /*  if(charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
             {
                 if(charityevent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == 0)
                 {
@@ -44,7 +44,8 @@ namespace CharityEventsApi.Services.CharityEventService
                     throw new BadRequestException("Firstly verify volunteering charity");
                 }
                 charityevent.VolunteeringIdVolunteeringNavigation.IsActive = 1;
-            }
+            } 
+          */
             dbContext.SaveChanges();
         }
         protected override void Disactive(int charityEventId)
@@ -67,7 +68,7 @@ namespace CharityEventsApi.Services.CharityEventService
                     {
                         cf.EndEventDate = DateTime.Now;
                     }
-                    cf.IsActive = 0;
+                    //cf.IsActive = 0;
                 }
             }
             if (charityevent.VolunteeringIdVolunteering != null)
@@ -79,7 +80,7 @@ namespace CharityEventsApi.Services.CharityEventService
                     {
                         cv.EndEventDate = DateTime.Now;
                     }
-                    cv.IsActive = 0;
+                   // cv.IsActive = 0;
                 }
             }
 
