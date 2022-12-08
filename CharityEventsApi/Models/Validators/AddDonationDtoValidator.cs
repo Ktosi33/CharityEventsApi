@@ -14,16 +14,6 @@ namespace CharityEventsApi.Models.Validators
                 .NotEmpty()
                 .GreaterThan(0);
 
-            RuleFor(x => x.UserIdUser)
-                .NotEmpty()
-                .Custom((value, context) =>
-                {
-                    var userExist = dbContext.Users.Any(u => u.IdUser == value);
-
-                    if (!userExist)
-                        context.AddFailure("UserIdUser", "Użytkownik o podanym ID nie istnieje");
-                });
-
             RuleFor(x => x.CharityFundraisingIdCharityFundraising)
                 .NotEmpty()
                 .Custom((value, context) =>
