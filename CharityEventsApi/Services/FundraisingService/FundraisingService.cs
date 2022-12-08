@@ -2,6 +2,7 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
+using CharityEventsApi.Services.UserContextAuthService;
 using Microsoft.EntityFrameworkCore;
 namespace CharityEventsApi.Services.FundraisingService
 {
@@ -12,60 +13,80 @@ namespace CharityEventsApi.Services.FundraisingService
         private readonly FundraisingActivation fundraisingActivation;
         private readonly CharityEventVerification charityEventVerification;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
+        private readonly IUserContextAuthService userContextService;
+        private readonly FundraisingDenial fundraisingDenial;
 
         public FundraisingService(CharityEventsDbContext dbContext, FundraisingVerification fundraisingVerification,
             FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification,
-            ICharityEventFactoryFacade charityEventFactoryFacade)
+            ICharityEventFactoryFacade charityEventFactoryFacade, IUserContextAuthService userContextService, FundraisingDenial fundraisingDenial)
         {
             this.dbContext = dbContext;
             this.fundraisingVerification = fundraisingVerification;
             this.fundraisingActivation = fundraisingActivation;
             this.charityEventVerification = charityEventVerification;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
+            this.userContextService = userContextService;
+            this.fundraisingDenial = fundraisingDenial;
         }
 
         public async Task Add(AddCharityEventFundraisingDto dto)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
-            if (charityevent is null)
-            {
+
+            if (charityevent is null) {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
-            if (charityevent.CharityFundraisingIdCharityFundraising is not null)
-            {
+
+            if (charityevent.CharityFundraisingIdCharityFundraising is not null) {
                 throw new BadRequestException("Can't add charity event fundraising, because another one already exists in this charity event");
             }
 
             await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
-            charityEventVerification.SetVerify(dto.CharityEventId, false);
+
+            charityEventVerification.SetValue(dto.CharityEventId, false);
         }
+
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
         {
-            var charityevent = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (charityevent == null)
+            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            if (fundraising is null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
+
+            AuthorizeIfUserOrganizerOrAdmin(FundraisingId);
+
             if (FundraisingDto.AmountOfMoneyToCollect is not null)
             {
-                charityevent.AmountOfMoneyToCollect = (decimal)FundraisingDto.AmountOfMoneyToCollect;
+                fundraising.AmountOfMoneyToCollect = (decimal)FundraisingDto.AmountOfMoneyToCollect;
             }
             if(FundraisingDto.FundTarget is not null)
             { 
-            charityevent.FundTarget = FundraisingDto.FundTarget;
+            fundraising.FundTarget = FundraisingDto.FundTarget;
             }
             dbContext.SaveChanges();
         }
-        public void SetActive(int FundraisingId, bool isActive)
+
+        public void SetActive(int idFundraising, bool isActive)
         {
-            fundraisingActivation.SetActive(FundraisingId, isActive);
+            AuthorizeIfUserOrganizerOrAdmin(idFundraising);
+
+            fundraisingActivation.SetValue(idFundraising, isActive);
         }
-        public void SetVerify(int FundraisingId, bool isVerified) 
+        
+        public void SetVerify(int idFundraising, bool isVerified) 
         {
-            fundraisingVerification.SetVerify(FundraisingId, isVerified);
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+
+            fundraisingVerification.SetValue(idFundraising, isVerified);
         }
-       
-      
+        public void SetDeny(int idFundraising, bool isDenied)
+        {
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+
+            fundraisingDenial.SetValue(idFundraising, isDenied);
+        }
+
         public GetCharityFundrasingDto GetById(int id)
         {
             var c = dbContext.Charityfundraisings.FirstOrDefault(c => c.IdCharityFundraising == id);
@@ -101,12 +122,20 @@ namespace CharityEventsApi.Services.FundraisingService
                 isVerified = c.IsVerified
             }
             );
-            if (fundraisings == null)
-            {
-                throw new NotFoundException("CharityEvent with given id doesn't exist");
-            }
+
             return fundraisings;
         }
+        private void AuthorizeIfUserOrganizerOrAdmin(int fundraisingId)
+        {
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.CharityFundraisingIdCharityFundraising == fundraisingId);
+            if (charityevent is null)
+            {
+                throw new InternalServerErrorException();
+            }
 
+            userContextService.AuthorizeIfOnePass(charityevent.OrganizerId, "Admin");
+        }
+
+        
     }
 }

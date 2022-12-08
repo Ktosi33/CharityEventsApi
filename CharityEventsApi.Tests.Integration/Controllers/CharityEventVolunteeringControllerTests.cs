@@ -16,16 +16,16 @@ using Xunit;
 
 namespace CharityEventsApi.Tests.Integration.Controllers
 {
-    public class CharityEventVolunteeringControllerTests
+    public class CharityEventVolunteeringControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient client;
-        public CharityEventVolunteeringControllerTests()
+        public CharityEventVolunteeringControllerTests(CustomWebApplicationFactory<Program> factory)
         {
-            client = new ClientInit().Client;
+            client = factory.CreateClient();
         }
 
         [Fact]
-        public async Task givenIsActive_whenDisactiveVolunteering_thenReturnsOkResult()
+        public async Task IsActive_DisactiveVolunteering_ReturnsOkResult()
         {
             //act
             var response = await client.PatchAsync("/v1/CharityEventVolunteering/1?isActive=false", null);
@@ -35,7 +35,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task givenIdVolunteering_whenGetVolunteering_thenReturnsOkResult()
+        public async Task IdVolunteering_GetVolunteering_ReturnsOkResult()
         {
             //act
             var response = await client.GetAsync("/v1/CharityEventVolunteering/1");
@@ -44,9 +44,9 @@ namespace CharityEventsApi.Tests.Integration.Controllers
              response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
         [Theory]
-        [InlineData(0)]
+        [InlineData(2)]
         [InlineData(1)]
-        public async Task givenEditCharityEventVolunteeringDto_whenEditVolunteering_thenReturnsOkResult(int amountOfNeededVolunteers)
+        public async Task EditCharityEventVolunteeringDto_EditVolunteering_ReturnsOkResult(int amountOfNeededVolunteers)
         {
             //arange
             EditCharityEventVolunteeringDto dto = new()
@@ -64,7 +64,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
-        public async Task givenIsVerifiedIsActiveVolunteering_whenChangeVerifyAndActive_thenReturnsOkResult(string isVerified, string isActive)
+        public async Task IsVerifiedIsActiveVolunteering_ChangeVerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEventVolunteering/1?isVerified={isVerified}&isActive={isActive}", null);
@@ -77,7 +77,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [InlineData("false", "true")]
         [InlineData("1", "1")]
         [InlineData("null", "null")]
-        public async Task givenIsVerifiedIsActiveVolunteering_whenChangeVerifyAndActive_thenReturnsBadRequest(string isVerified, string isActive)
+        public async Task IsVerifiedIsActiveVolunteering_ChangeVerifyAndActive_ReturnsBadRequest(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEventVolunteering/1?isVerified={isVerified}&isActive={isActive}", null);

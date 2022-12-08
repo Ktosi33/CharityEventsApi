@@ -71,8 +71,11 @@ namespace CharityEventsApi.Services.AccountService
                 new Claim("Login", user.Login),
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)))
             };
+            foreach(Role r in user.RolesNames)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, r.Name));
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Double.Parse(authenticationSettings.JwtExpireDays));

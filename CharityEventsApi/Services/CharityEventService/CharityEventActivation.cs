@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
-    public class CharityEventActivation : ActivationBase
+    public class CharityEventActivation : BooleanCharityEventQueryBase
     {
         private readonly CharityEventsDbContext dbContext;
 
@@ -13,7 +13,7 @@ namespace CharityEventsApi.Services.CharityEventService
             this.dbContext = dbContext;
         }
 
-        protected override void Active(int charityEventId)
+        protected override void setTrue(int charityEventId)
         {
             var charityevent = dbContext.Charityevents
                 .Include(ce => ce.CharityFundraisingIdCharityFundraisingNavigation)
@@ -29,7 +29,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 throw new BadRequestException("You cant active charity event while event isn't active or verified");
             }
             charityevent.IsActive = 1;
-            if(charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
+          /*  if(charityevent.CharityFundraisingIdCharityFundraisingNavigation != null)
             {
                 if(charityevent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == 0)
                 {
@@ -44,10 +44,11 @@ namespace CharityEventsApi.Services.CharityEventService
                     throw new BadRequestException("Firstly verify volunteering charity");
                 }
                 charityevent.VolunteeringIdVolunteeringNavigation.IsActive = 1;
-            }
+            } 
+          */
             dbContext.SaveChanges();
         }
-        protected override void Disactive(int charityEventId)
+        protected override void setFalse(int charityEventId)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent == null)
@@ -67,7 +68,7 @@ namespace CharityEventsApi.Services.CharityEventService
                     {
                         cf.EndEventDate = DateTime.Now;
                     }
-                    cf.IsActive = 0;
+                    //cf.IsActive = 0;
                 }
             }
             if (charityevent.VolunteeringIdVolunteering != null)
@@ -79,7 +80,7 @@ namespace CharityEventsApi.Services.CharityEventService
                     {
                         cv.EndEventDate = DateTime.Now;
                     }
-                    cv.IsActive = 0;
+                   // cv.IsActive = 0;
                 }
             }
 

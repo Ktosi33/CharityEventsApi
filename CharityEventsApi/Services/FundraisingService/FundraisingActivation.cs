@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.FundraisingService
 {
-    public class FundraisingActivation : ActivationBase
+    public class FundraisingActivation : BooleanCharityEventQueryBase
     {
         private readonly CharityEventsDbContext dbContext;
 
@@ -13,20 +13,15 @@ namespace CharityEventsApi.Services.FundraisingService
         {
             this.dbContext = dbContext;
         }
-        protected override void Active(int FundraisingId)
+        protected override void setTrue(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventFundraising doesn't have charity event.");
-            }
 
-            if (charityevent.IsActive == 0 || charityevent.IsVerified == 0 || fundraising.IsVerified == 0)
+            if (fundraising.IsVerified == 0)
             {
                 throw new BadRequestException("You cant active fundraising while charity event isn't active or verified");
             }
@@ -34,7 +29,7 @@ namespace CharityEventsApi.Services.FundraisingService
             dbContext.SaveChanges();
         }
 
-        protected override void Disactive(int FundraisingId)
+        protected override void setFalse(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)

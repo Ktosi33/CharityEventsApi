@@ -15,7 +15,7 @@ namespace CharityEventsApi.Controllers
         {
             this.VolunteeringService = VolunteeringService;
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPost()]
         public async Task<ActionResult> AddCharityEventVolunteeringAsync([FromForm] AddCharityEventVolunteeringDto charityEventDto)
         {
@@ -23,25 +23,28 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPut("{idVolunteering}")]
         public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int idVolunteering)
         {
             VolunteeringService.Edit(VolunteeringDto, idVolunteering);
             return Ok();
         }
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPatch("{idVolunteering}")]
-        public ActionResult SetDataVolunteering([FromRoute] int idVolunteering, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        public ActionResult SetFieldVolunteering([FromRoute] int idVolunteering, [FromQuery] bool? isVerified, 
+            [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
-            if (isVerified != null)
-            {
+            if (isVerified != null) {
                 VolunteeringService.SetVerify(idVolunteering, (bool)isVerified);
             }
-            if (isActive != null)
-            {
+            if (isActive != null) {
                 VolunteeringService.SetActive(idVolunteering, (bool)isActive);
             }
+            if (isDenied != null) {
+                VolunteeringService.SetDeny(idVolunteering, (bool)isDenied);
+            }
+
             return Ok();
         }
 

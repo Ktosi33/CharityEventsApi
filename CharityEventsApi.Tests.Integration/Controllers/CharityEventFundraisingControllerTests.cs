@@ -16,16 +16,16 @@ using Xunit;
 
 namespace CharityEventsApi.Tests.Integration.Controllers
 {
-    public class CharityEventFundraisingControllerTests
+    public class CharityEventFundraisingControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient client;
-        public CharityEventFundraisingControllerTests()
+        public CharityEventFundraisingControllerTests(CustomWebApplicationFactory<Program> factory)
         {
-            client = new ClientInit().Client;
+            client = factory.CreateClient();
         }
 
         [Fact]
-        public async Task givenIsActive_whenDisactiveFundraising_thenReturnsOkResult()
+        public async Task IsActive_DisactiveFundraising_ReturnsOkResult()
         {
             //act
             var response = await client.PatchAsync("/v1/CharityEventFundraising/1?isActive=false", null);
@@ -35,7 +35,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task givenIdFundraising_whenGetFundraising_thenReturnsOkResult()
+        public async Task IdFundraising_GetFundraising_ReturnsOkResult()
         {
             //act
             var response = await client.GetAsync("/v1/CharityEventFundraising/1");
@@ -46,7 +46,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("NewTitle", 1.1)]
         [InlineData("Test", 2)]
-        public async Task givenEditCharityEventFundraisingDto_whenEditFundraising_thenReturnsOkResult(string fundTarget, decimal amountOfMoneyToCollect)
+        public async Task EditCharityEventFundraisingDto_EditFundraising_ReturnsOkResult(string fundTarget, decimal amountOfMoneyToCollect)
         {
             //arange
             EditCharityEventFundraisingDto dto = new EditCharityEventFundraisingDto
@@ -65,7 +65,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
-        public async Task givenIsVerifiedIsActiveFundraising_whenChangeVerifyAndActive_thenReturnsOkResult(string isVerified, string isActive)
+        public async Task IsVerifiedIsActiveFundraising_ChangeVerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
@@ -78,7 +78,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [InlineData("false", "true")]
         [InlineData("isVerified", "isActive")]
         [InlineData("null", "null")]
-        public async Task givenIsVerifiedIsActiveFundraising_whenChangeVerifyAndActive_thenReturnsBadRequest(string isVerified, string isActive)
+        public async Task IsVerifiedIsActiveFundraising_ChangeVerifyAndActive_ReturnsBadRequest(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEventFundraising/1?isVerified={isVerified}&isActive={isActive}", null);

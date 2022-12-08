@@ -20,7 +20,7 @@ namespace CharityEventsApi.Controllers
             this.locationService = locationService;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPost()]
         public ActionResult AddLocation([FromBody] AddLocationDto addLocationDto)
         {
@@ -28,7 +28,7 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpPut("{locationId}")]
         public ActionResult EditLocation([FromBody] EditLocationDto locationDto, [FromRoute] int locationId)
         {
@@ -36,7 +36,7 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Organizer,Admin")]
         [HttpDelete("{locationId}")]
         public ActionResult DeleteLocation([FromRoute] int locationId)
         {

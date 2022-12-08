@@ -22,10 +22,11 @@ namespace CharityEventsApi.Services.CharityEventService
                 OrganizerId = charityEventDto.OrganizerId,
                 IsActive = 0,
                 IsVerified = 0,
+                IsDenied = 0,
                 Organizer = organizer,
                 ImageIdImages = await imageService.SaveImageAsync(charityEventDto.ImageCharityEvent),
                 CreatedEventDate = DateTime.Now
-               
+
             };
             if (charityEventDto.ImagesCharityEvent != null)
             {
@@ -44,6 +45,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 OrganizerId = charityEventDto.OrganizerId,
                 IsActive = 0,
                 IsVerified = 0,
+                IsDenied = 0,
                 Organizer = organizer,
                 CreatedEventDate = DateTime.Now,
                 ImageIdImages = await imageService.SaveImageAsync(charityEventDto.Image)

@@ -21,6 +21,7 @@ namespace CharityEventsApi.Entities
         public DateTime CreatedEventDate { get; set; }
         public DateTime? EndEventDate { get; set; }
         public int ImageIdImages { get; set; }
+        public sbyte IsDenied { get; set; }
 
         public virtual Charityfundraising? CharityFundraisingIdCharityFundraisingNavigation { get; set; }
         public virtual Image ImageIdImagesNavigation { get; set; } = null!;

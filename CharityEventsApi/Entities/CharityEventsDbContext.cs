@@ -115,6 +115,10 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
 
+                entity.Property(e => e.IsDenied)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isDenied");
+
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isVerified");
@@ -210,6 +214,10 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
 
+                entity.Property(e => e.IsDenied)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isDenied");
+
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isVerified");
@@ -259,7 +267,6 @@ namespace CharityEventsApi.Entities
                 entity.HasOne(d => d.UserIdUserNavigation)
                     .WithMany(p => p.Donations)
                     .HasForeignKey(d => d.UserIdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_Donations_User1");
             });
 
@@ -317,9 +324,9 @@ namespace CharityEventsApi.Entities
                 entity.HasIndex(e => e.Email, "email_UNIQUE")
                     .IsUnique();
 
-                entity.HasIndex(e => e.AddressIdAddress, "fk_Personal data_Address1_idx");
-
                 entity.HasIndex(e => e.UserIdUser, "fk_Personal data_User1_idx");
+
+                entity.HasIndex(e => e.AddressIdAddress, "fk_Personal_data_Address1_idx");
 
                 entity.HasIndex(e => e.PhoneNumber, "phone_number_UNIQUE")
                     .IsUnique();
@@ -353,7 +360,7 @@ namespace CharityEventsApi.Entities
                     .WithMany(p => p.PersonalData)
                     .HasForeignKey(d => d.AddressIdAddress)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_Personal data_Address1");
+                    .HasConstraintName("fk_Personal_data_Address1");
 
                 entity.HasOne(d => d.UserIdUserNavigation)
                     .WithOne(p => p.PersonalData)
@@ -403,7 +410,7 @@ namespace CharityEventsApi.Entities
                     .HasColumnName("login");
 
                 entity.Property(e => e.Password)
-                    .HasMaxLength(60)
+                    .HasMaxLength(255)
                     .HasColumnName("password");
 
                 entity.HasMany(d => d.RolesNames)
@@ -479,6 +486,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
+
+                entity.Property(e => e.IsDenied)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isDenied");
 
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")

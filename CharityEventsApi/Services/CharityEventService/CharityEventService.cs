@@ -2,6 +2,7 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.ImageService;
+using CharityEventsApi.Services.UserContextAuthService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.CharityEventService
@@ -13,16 +14,20 @@ namespace CharityEventsApi.Services.CharityEventService
         private readonly CharityEventVerification charityEventVerification;
         private readonly CharityEventActivation charityEventActivation;
         private readonly IImageService imageService;
+        private readonly IUserContextAuthService userContextService;
+        private readonly CharityEventDenial charityEventDenial;
 
         public CharityEventService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade, 
             CharityEventVerification charityEventVerification, CharityEventActivation charityEventActivation,
-            IImageService imageService)
+            IImageService imageService, IUserContextAuthService userContextService, CharityEventDenial charityEventDenial)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.charityEventVerification = charityEventVerification;
             this.charityEventActivation = charityEventActivation;
             this.imageService = imageService;
+            this.userContextService = userContextService;
+            this.charityEventDenial = charityEventDenial;
         }
 
         public async Task Add(AddAllCharityEventsDto charityEventDto)
@@ -32,19 +37,20 @@ namespace CharityEventsApi.Services.CharityEventService
         
         public async Task AddOneImage(IFormFile image, int idCharityEvent)
         {
+           
+
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
-            if (ce is null)
-            {
-                throw new NotFoundException("Charity event with given id doesn't exist");
-            }
+            var ce = getCharityEventFromDbById(idCharityEvent);
+
+
+            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
             int imageId = await imageService.SaveImageAsync(image);
             var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
             if (img is null)
             {
                 throw new BadRequestException("something went wrong");
             }
-            // ce.ImageIdImages.Add(img);
+            ce.ImageIdImages1.Add(img);
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
@@ -62,11 +68,10 @@ namespace CharityEventsApi.Services.CharityEventService
         public async Task DeleteImage(int idImage, int idCharityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var ce = await dbContext.Charityevents.FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
-            if (ce is null)
-            {
-                throw new NotFoundException("Charity event with given id doesn't exist");
-            }
+            var ce = getCharityEventFromDbById(idCharityEvent);
+     
+            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
+
             var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
             if (image is null)
             {
@@ -93,10 +98,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 VolunteeringId = ce.VolunteeringIdVolunteering
              }
             );
-            if (charityevents == null)
-            {
-                throw new NotFoundException("CharityEvent with given id doesn't exist");
-            }
+
             return charityevents;
         }
 
@@ -131,25 +133,33 @@ namespace CharityEventsApi.Services.CharityEventService
         public async Task ChangeImage(IFormFile image, int idCharityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var cv = getCharityEventFromDbById(idCharityEvent);
+            var ce = getCharityEventFromDbById(idCharityEvent);
+            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
+            await imageService.DeleteImageByIdAsync(ce.ImageIdImages);
 
-            await imageService.DeleteImageByIdAsync(cv.ImageIdImages);
-
-            cv.ImageIdImages = await imageService.SaveImageAsync(image);
+            ce.ImageIdImages = await imageService.SaveImageAsync(image);
 
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
 
         }
 
-        public void SetActive(int chariyEventId, bool isActive)
+        public void SetActive(int idCharityEvent, bool isActive)
         {
-            charityEventActivation.SetActive(chariyEventId, isActive);
+            var ce = getCharityEventFromDbById(idCharityEvent);
+            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
+            charityEventActivation.SetValue(idCharityEvent, isActive);
         }
      
-        public void SetVerify(int chariyEventId, bool isVerified)
+        public void SetVerify(int idCharityEvent, bool isVerified)
         {
-            charityEventVerification.SetVerify(chariyEventId, isVerified);
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+            charityEventVerification.SetValue(idCharityEvent, isVerified);
+        }
+        public void SetDeny(int idCharityEvent, bool isDenied)
+        {
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+            charityEventDenial.SetValue(idCharityEvent, isDenied);
         }
         public GetCharityEventDto GetCharityEventById(int id)
         {
@@ -165,7 +175,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 IsVerified = c!.IsVerified
             };
         }
-      
 
+      
     }
 }

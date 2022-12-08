@@ -13,7 +13,8 @@ namespace CharityEventsApi.Services.VolunteeringService
                 AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers != null ? (int)charityEventDto.AmountOfNeededVolunteers : 0, 
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
-                IsVerified = 0
+                IsVerified = 0,
+                IsDenied = 0
             };
 
             return volunteering;
@@ -26,7 +27,8 @@ namespace CharityEventsApi.Services.VolunteeringService
                 AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers, 
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
-                IsVerified = 0
+                IsVerified = 0,
+                IsDenied = 0
             };
 
             return volunteering;
