@@ -48,7 +48,7 @@ namespace CharityEventsApi.Services.SearchService
 
         public async Task<PagedResultDto<GetAllDetailsCharityEventDto>> GetCharityEventsWithPagination(bool? isVerified, bool? isActive, bool? isFundraising, bool? isVolunteering,
            bool? volunteeringIsActive, bool? fundraisingIsActive, bool? volunteeringIsVerified, bool? fundraisingIsVerified, string? sortBy, string? sortDirection,
-           int pageNumber, int pageSize, bool? volunteeringOrFundrasingIsActive, bool? volunteeringOrFundrasingIsVerified)
+           int pageNumber, int pageSize, bool? volunteeringOrFundraisingIsActive, bool? volunteeringOrFundraisingIsVerified, bool? volunteeringOrFundraisingIsDenied)
         {
             var charityEvents = dbContext.Charityevents
                 .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
@@ -61,8 +61,9 @@ namespace CharityEventsApi.Services.SearchService
                 .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
                 .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
                 .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified))
-                .Where(c => volunteeringOrFundrasingIsActive == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringOrFundrasingIsActive) || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(volunteeringOrFundrasingIsActive))
-                .Where(c => volunteeringOrFundrasingIsVerified == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundrasingIsVerified) || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundrasingIsVerified));
+                .Where(c => volunteeringOrFundraisingIsActive == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive) || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive))
+                .Where(c => volunteeringOrFundraisingIsVerified == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified) || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified))
+                .Where(c => volunteeringOrFundraisingIsDenied == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied) || c.CharityFundraisingIdCharityFundraisingNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied));
 
             charityEvents = sort(charityEvents, sortBy, sortDirection);
 
@@ -130,7 +131,8 @@ namespace CharityEventsApi.Services.SearchService
                 IsActive = charityEvent.IsActive,
                 Description = charityEvent.Description,
                 FundraisingId = charityEvent.CharityFundraisingIdCharityFundraising,
-                isVerified = charityEvent.IsVerified,
+                IsVerified = charityEvent.IsVerified,
+                IsDenied = charityEvent.IsDenied,
                 Title = charityEvent.Title,
                 imageDto = await imageService.GetImageAsync(charityEvent.ImageIdImages),
                 VolunteeringId = charityEvent.VolunteeringIdVolunteering
@@ -145,6 +147,7 @@ namespace CharityEventsApi.Services.SearchService
                     EndEventDate = charityEvent.VolunteeringIdVolunteeringNavigation.EndEventDate,
                     IsActive = charityEvent.VolunteeringIdVolunteeringNavigation.IsActive,
                     IsVerified = charityEvent.VolunteeringIdVolunteeringNavigation.IsVerified,
+                    IsDenied = charityEvent.VolunteeringIdVolunteeringNavigation.IsDenied,
                     Id = charityEvent.VolunteeringIdVolunteeringNavigation.IdVolunteering,
                     AmountOfAttendedVolunteers = charityEvent.VolunteeringIdVolunteeringNavigation.UserIdUsers.Count,
                 };
@@ -152,7 +155,7 @@ namespace CharityEventsApi.Services.SearchService
 
             if (charityEvent.CharityFundraisingIdCharityFundraisingNavigation != null)
             {
-                charityEventDetails.CharityEventFundrasing = new GetCharityFundrasingDto
+                charityEventDetails.CharityEventFundrasing = new GetCharityFundraisingDto
                 {
                     AmountOfAlreadyCollectedMoney = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.AmountOfAlreadyCollectedMoney,
                     AmountOfMoneyToCollect = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.AmountOfMoneyToCollect,
@@ -161,6 +164,7 @@ namespace CharityEventsApi.Services.SearchService
                     FundTarget = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.FundTarget,
                     IsActive = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IsActive,
                     isVerified = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IsVerified,
+                    IsDenied = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IsDenied,
                     Id = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.IdCharityFundraising
                 };
             }

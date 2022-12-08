@@ -1,6 +1,6 @@
 ﻿namespace CharityEventsApi.Models.DataTransferObjects
 {
-    public class GetCharityFundrasingDto
+    public class GetCharityFundraisingDto
     {
         public int Id { get; set; }
         public string FundTarget { get; set; } = null!;
@@ -10,5 +10,6 @@
         public DateTime? EndEventDate { get; set; }
         public sbyte IsActive { get; set; }
         public sbyte isVerified { get; set; }
+        public sbyte IsDenied { get; set; }
     }
 }

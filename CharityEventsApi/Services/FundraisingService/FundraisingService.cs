@@ -87,7 +87,7 @@ namespace CharityEventsApi.Services.FundraisingService
             fundraisingDenial.SetValue(idFundraising, isDenied);
         }
 
-        public GetCharityFundrasingDto GetById(int id)
+        public GetCharityFundraisingDto GetById(int id)
         {
             var c = dbContext.Charityfundraisings.FirstOrDefault(c => c.IdCharityFundraising == id);
             if (c is null)
@@ -96,7 +96,7 @@ namespace CharityEventsApi.Services.FundraisingService
             }
 
 
-            return new GetCharityFundrasingDto
+            return new GetCharityFundraisingDto
             {
                 Id = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
@@ -108,9 +108,9 @@ namespace CharityEventsApi.Services.FundraisingService
                 isVerified = c.IsVerified
             };
         }
-        public IEnumerable<GetCharityFundrasingDto> GetAll()
+        public IEnumerable<GetCharityFundraisingDto> GetAll()
         {
-            var fundraisings = dbContext.Charityfundraisings.Select(c => new GetCharityFundrasingDto
+            var fundraisings = dbContext.Charityfundraisings.Select(c => new GetCharityFundraisingDto
             {
                 Id = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
