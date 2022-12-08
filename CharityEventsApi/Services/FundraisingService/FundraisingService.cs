@@ -14,10 +14,11 @@ namespace CharityEventsApi.Services.FundraisingService
         private readonly CharityEventVerification charityEventVerification;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
         private readonly IUserContextAuthService userContextService;
+        private readonly FundraisingDenial fundraisingDenial;
 
         public FundraisingService(CharityEventsDbContext dbContext, FundraisingVerification fundraisingVerification,
             FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification,
-            ICharityEventFactoryFacade charityEventFactoryFacade, IUserContextAuthService userContextService)
+            ICharityEventFactoryFacade charityEventFactoryFacade, IUserContextAuthService userContextService, FundraisingDenial fundraisingDenial)
         {
             this.dbContext = dbContext;
             this.fundraisingVerification = fundraisingVerification;
@@ -25,6 +26,7 @@ namespace CharityEventsApi.Services.FundraisingService
             this.charityEventVerification = charityEventVerification;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.userContextService = userContextService;
+            this.fundraisingDenial = fundraisingDenial;
         }
 
         public async Task Add(AddCharityEventFundraisingDto dto)
@@ -41,7 +43,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
             await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
 
-            charityEventVerification.SetVerify(dto.CharityEventId, false);
+            charityEventVerification.SetValue(dto.CharityEventId, false);
         }
 
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
@@ -65,21 +67,26 @@ namespace CharityEventsApi.Services.FundraisingService
             dbContext.SaveChanges();
         }
 
-        public void SetActive(int FundraisingId, bool isActive)
+        public void SetActive(int idFundraising, bool isActive)
         {
-            AuthorizeIfUserOrganizerOrAdmin(FundraisingId);
+            AuthorizeIfUserOrganizerOrAdmin(idFundraising);
 
-            fundraisingActivation.SetActive(FundraisingId, isActive);
+            fundraisingActivation.SetValue(idFundraising, isActive);
         }
         
-        public void SetVerify(int FundraisingId, bool isVerified) 
+        public void SetVerify(int idFundraising, bool isVerified) 
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin"); 
+            userContextService.AuthorizeIfOnePass(null, "Admin");
 
-            fundraisingVerification.SetVerify(FundraisingId, isVerified);
+            fundraisingVerification.SetValue(idFundraising, isVerified);
         }
-       
-      
+        public void SetDeny(int idFundraising, bool isDenied)
+        {
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+
+            fundraisingDenial.SetValue(idFundraising, isDenied);
+        }
+
         public GetCharityFundrasingDto GetById(int id)
         {
             var c = dbContext.Charityfundraisings.FirstOrDefault(c => c.IdCharityFundraising == id);
@@ -129,5 +136,6 @@ namespace CharityEventsApi.Services.FundraisingService
             userContextService.AuthorizeIfOnePass(charityevent.OrganizerId, "Admin");
         }
 
+        
     }
 }

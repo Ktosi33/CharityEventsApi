@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.FundraisingService
 {
-    public class FundraisingActivation : ActivationBase
+    public class FundraisingActivation : BooleanCharityEventQueryBase
     {
         private readonly CharityEventsDbContext dbContext;
 
@@ -13,7 +13,7 @@ namespace CharityEventsApi.Services.FundraisingService
         {
             this.dbContext = dbContext;
         }
-        protected override void Active(int FundraisingId)
+        protected override void setTrue(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
@@ -29,7 +29,7 @@ namespace CharityEventsApi.Services.FundraisingService
             dbContext.SaveChanges();
         }
 
-        protected override void Disactive(int FundraisingId)
+        protected override void setFalse(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)

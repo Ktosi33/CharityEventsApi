@@ -9,6 +9,7 @@ namespace CharityEventsApi.Services.FundraisingService
         public GetCharityFundrasingDto GetById(int id);
         public void SetActive(int FundraisingId, bool isActive);
         public void SetVerify(int FundraisingId, bool isVerified);
+        public void SetDeny(int idCharityEvent, bool isDenied);
         public IEnumerable<GetCharityFundrasingDto> GetAll();
     }
 }

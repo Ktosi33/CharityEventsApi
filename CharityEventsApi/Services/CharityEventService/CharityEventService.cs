@@ -15,10 +15,11 @@ namespace CharityEventsApi.Services.CharityEventService
         private readonly CharityEventActivation charityEventActivation;
         private readonly IImageService imageService;
         private readonly IUserContextAuthService userContextService;
+        private readonly CharityEventDenial charityEventDenial;
 
         public CharityEventService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade, 
             CharityEventVerification charityEventVerification, CharityEventActivation charityEventActivation,
-            IImageService imageService, IUserContextAuthService userContextService)
+            IImageService imageService, IUserContextAuthService userContextService, CharityEventDenial charityEventDenial)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
@@ -26,6 +27,7 @@ namespace CharityEventsApi.Services.CharityEventService
             this.charityEventActivation = charityEventActivation;
             this.imageService = imageService;
             this.userContextService = userContextService;
+            this.charityEventDenial = charityEventDenial;
         }
 
         public async Task Add(AddAllCharityEventsDto charityEventDto)
@@ -146,13 +148,18 @@ namespace CharityEventsApi.Services.CharityEventService
         {
             var ce = getCharityEventFromDbById(idCharityEvent);
             userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
-            charityEventActivation.SetActive(idCharityEvent, isActive);
+            charityEventActivation.SetValue(idCharityEvent, isActive);
         }
      
-        public void SetVerify(int chariyEventId, bool isVerified)
+        public void SetVerify(int idCharityEvent, bool isVerified)
         {
             userContextService.AuthorizeIfOnePass(null, "Admin");
-            charityEventVerification.SetVerify(chariyEventId, isVerified);
+            charityEventVerification.SetValue(idCharityEvent, isVerified);
+        }
+        public void SetDeny(int idCharityEvent, bool isDenied)
+        {
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+            charityEventDenial.SetValue(idCharityEvent, isDenied);
         }
         public GetCharityEventDto GetCharityEventById(int id)
         {
@@ -168,8 +175,7 @@ namespace CharityEventsApi.Services.CharityEventService
                 IsVerified = c!.IsVerified
             };
         }
-      
-      
 
+      
     }
 }

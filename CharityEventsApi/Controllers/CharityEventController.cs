@@ -63,16 +63,19 @@ namespace CharityEventsApi.Controllers
        
         [Authorize(Roles = "Organizer,Admin")]
         [HttpPatch("{idCharityEvent}")]
-        public ActionResult SetFieldCharityEvent([FromRoute] int idCharityEvent, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        public ActionResult SetFieldCharityEvent([FromRoute] int idCharityEvent, [FromQuery] bool? isVerified,
+            [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
-            if (isVerified != null)
-            {
+            if (isVerified != null) {
                 charityEventService.SetVerify(idCharityEvent, (bool)isVerified);
             }
-            if (isActive != null)
-            {
+            if (isActive != null) {
                 charityEventService.SetActive(idCharityEvent, (bool)isActive);
             }
+            if (isDenied != null) {
+                charityEventService.SetDeny(idCharityEvent, (bool)isDenied);
+            }
+
             return Ok();
         }
        

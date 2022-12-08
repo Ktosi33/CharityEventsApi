@@ -16,10 +16,12 @@ namespace CharityEventsApi.Services.VolunteeringService
         private readonly VolunteeringVerification volunteeringVerification;
         private readonly CharityEventVerification charityEventVerification;
         private readonly IUserContextAuthService userContextService;
+        private readonly VolunteeringDenial volunteeringDenial;
 
         public VolunteeringService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade,
             VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification,
-            CharityEventVerification charityEventVerification, IUserContextAuthService userContextService)
+            CharityEventVerification charityEventVerification, IUserContextAuthService userContextService, 
+            VolunteeringDenial volunteeringDenial)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
@@ -27,6 +29,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             this.volunteeringVerification = volunteeringVerification;
             this.charityEventVerification = charityEventVerification;
             this.userContextService = userContextService;
+            this.volunteeringDenial = volunteeringDenial;
         }
 
         public async Task Add(AddCharityEventVolunteeringDto dto)
@@ -42,17 +45,22 @@ namespace CharityEventsApi.Services.VolunteeringService
             }
             await charityEventFactoryFacade.AddCharityEventVolunteering(dto, charityevent);
 
-            charityEventVerification.SetVerify(dto.CharityEventId, false);
+            charityEventVerification.SetValue(dto.CharityEventId, false);
         }
         public void SetActive(int idVolunteering, bool isActive)
         {
             AuthorizeIfUserOrganizerOrAdmin(idVolunteering);
-            volunteeringActication.SetActive(idVolunteering, isActive);
+            volunteeringActication.SetValue(idVolunteering, isActive);
         }
         public void SetVerify(int idVolunteering, bool isVerified)
         {
             userContextService.AuthorizeIfOnePass(null, "Admin");
-            volunteeringVerification.SetVerify(idVolunteering, isVerified);
+            volunteeringVerification.SetValue(idVolunteering, isVerified);
+        }
+        public void SetDeny(int idVolunteering, bool isDenied)
+        {
+            userContextService.AuthorizeIfOnePass(null, "Admin");
+            volunteeringDenial.SetValue(idVolunteering, isDenied);
         }
         public void Edit(EditCharityEventVolunteeringDto VolunteeringDto, int idVolunteering)
         {
@@ -113,5 +121,6 @@ namespace CharityEventsApi.Services.VolunteeringService
             userContextService.AuthorizeIfOnePass(charityevent.OrganizerId, "Admin");
         }
 
+       
     }
 }

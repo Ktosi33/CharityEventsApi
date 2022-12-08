@@ -14,7 +14,8 @@ namespace CharityEventsApi.Services.FundraisingService
                 FundTarget = charityEventDto.FundTarget ?? "",
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
-                IsVerified = 0
+                IsVerified = 0,
+                IsDenied = 0
             };
 
             return charityfundraising;
@@ -28,6 +29,7 @@ namespace CharityEventsApi.Services.FundraisingService
                 CreatedEventDate = DateTime.Now,
                 IsActive = 0,
                 IsVerified = 0,
+                IsDenied = 0
 
             };
 

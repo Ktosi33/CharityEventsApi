@@ -115,6 +115,10 @@ namespace CharityEventsApi.Entities
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
 
+                entity.Property(e => e.IsDenied)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isDenied");
+
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isVerified");
@@ -209,6 +213,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
+
+                entity.Property(e => e.IsDenied)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isDenied");
 
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")
@@ -478,6 +486,10 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IsActive)
                     .HasColumnType("tinyint(4)")
                     .HasColumnName("isActive");
+
+                entity.Property(e => e.IsDenied)
+                    .HasColumnType("tinyint(4)")
+                    .HasColumnName("isDenied");
 
                 entity.Property(e => e.IsVerified)
                     .HasColumnType("tinyint(4)")

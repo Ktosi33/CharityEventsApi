@@ -32,16 +32,19 @@ namespace CharityEventsApi.Controllers
         }
         [Authorize(Roles = "Organizer,Admin")]
         [HttpPatch("{idVolunteering}")]
-        public ActionResult SetFieldVolunteering([FromRoute] int idVolunteering, [FromQuery] bool? isVerified, [FromQuery] bool? isActive)
+        public ActionResult SetFieldVolunteering([FromRoute] int idVolunteering, [FromQuery] bool? isVerified, 
+            [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
-            if (isVerified != null)
-            {
+            if (isVerified != null) {
                 VolunteeringService.SetVerify(idVolunteering, (bool)isVerified);
             }
-            if (isActive != null)
-            {
+            if (isActive != null) {
                 VolunteeringService.SetActive(idVolunteering, (bool)isActive);
             }
+            if (isDenied != null) {
+                VolunteeringService.SetDeny(idVolunteering, (bool)isDenied);
+            }
+
             return Ok();
         }
 

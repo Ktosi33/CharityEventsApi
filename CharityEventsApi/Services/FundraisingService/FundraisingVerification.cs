@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.FundraisingService
 {
-    public class FundraisingVerification : VerificationBase
+    public class FundraisingVerification : BooleanCharityEventQueryBase
     {
         private readonly CharityEventsDbContext dbContext;
         private readonly FundraisingActivation fundraisingActivation;
@@ -16,9 +16,9 @@ namespace CharityEventsApi.Services.FundraisingService
             this.fundraisingActivation = fundraisingActivation;
         }
 
-        protected override void verify(int FundraisingId)
+        protected override void setTrue(int FundraisingId)
         {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
@@ -26,14 +26,14 @@ namespace CharityEventsApi.Services.FundraisingService
             fundraising.IsVerified = 1;
             dbContext.SaveChanges();
         }
-        protected override void unverify(int FundraisingId)
+        protected override void setFalse(int FundraisingId)
         {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            fundraisingActivation.SetActive(FundraisingId,false);
+            fundraisingActivation.SetValue(FundraisingId,false);
             fundraising.IsVerified = 0;
             dbContext.SaveChanges();
         }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
-    public class CharityEventVerification : VerificationBase
+    public class CharityEventVerification : BooleanCharityEventQueryBase
     {
         private readonly CharityEventsDbContext dbContext;
         private readonly CharityEventActivation charityEventActivation;
@@ -14,12 +14,9 @@ namespace CharityEventsApi.Services.CharityEventService
             this.dbContext = dbContext;
             this.charityEventActivation = charityEventActivation;
         }
-        protected override void verify(int charityEventId)
+        protected override void setTrue(int charityEventId)
         {
-            var charityevent = dbContext.Charityevents
-            .Include(ce => ce.CharityFundraisingIdCharityFundraisingNavigation)
-            .Include(ce => ce.VolunteeringIdVolunteeringNavigation)
-            .FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
@@ -28,17 +25,14 @@ namespace CharityEventsApi.Services.CharityEventService
             charityevent.IsVerified = 1;
             dbContext.SaveChanges();
         }
-        protected override void unverify(int charityEventId)
+        protected override void setFalse(int charityEventId)
         {
-            var charityevent = dbContext.Charityevents
-          .Include(ce => ce.CharityFundraisingIdCharityFundraisingNavigation)
-          .Include(ce => ce.VolunteeringIdVolunteeringNavigation)
-          .FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }
-            charityEventActivation.SetActive(charityEventId, false);
+            charityEventActivation.SetValue(charityEventId, false);
             charityevent.IsVerified = 0;
             dbContext.SaveChanges();
         }
