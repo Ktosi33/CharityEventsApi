@@ -37,12 +37,12 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isFundraising, [FromQuery] bool? fundraisingIsActive, [FromQuery] bool? fundraisingIsVerified,
             [FromQuery] bool? isVolunteering, [FromQuery] bool? volunteeringIsActive, [FromQuery] bool? volunteeringIsVerified,
             [FromQuery] string? sortBy, [FromQuery] string? sortDirection, [FromQuery] int pageNumber, [FromQuery] int pageSize, 
-            [FromQuery] bool? volunteeringOrFundrasingIsActive, [FromQuery] bool? volunteeringOrFundrasingIsVerified,
+            [FromQuery] bool? volunteeringOrFundraisingIsActive, [FromQuery] bool? volunteeringOrFundraisingIsVerified,
             [FromQuery] bool? volunteeringOrFundraisingIsDenied)
         {
             return Ok(await searchService.GetCharityEventsWithPagination(isVerified, isActive, isFundraising, isVolunteering,
                 volunteeringIsActive, fundraisingIsActive, volunteeringIsVerified, fundraisingIsVerified, sortBy, sortDirection,
-                pageNumber, pageSize, volunteeringOrFundrasingIsActive, volunteeringOrFundrasingIsVerified, volunteeringOrFundraisingIsDenied));
+                pageNumber, pageSize, volunteeringOrFundraisingIsActive, volunteeringOrFundraisingIsVerified, volunteeringOrFundraisingIsDenied));
         }
 
         [AllowAnonymous]
