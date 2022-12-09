@@ -155,7 +155,7 @@ namespace CharityEventsApi.Services.SearchService
 
             if (charityEvent.CharityFundraisingIdCharityFundraisingNavigation != null)
             {
-                charityEventDetails.CharityEventFundrasing = new GetCharityFundraisingDto
+                charityEventDetails.CharityEventFundraising = new GetCharityFundraisingDto
                 {
                     AmountOfAlreadyCollectedMoney = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.AmountOfAlreadyCollectedMoney,
                     AmountOfMoneyToCollect = charityEvent.CharityFundraisingIdCharityFundraisingNavigation.AmountOfMoneyToCollect,

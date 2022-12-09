@@ -12,7 +12,7 @@
         public int? VolunteeringId { get; set; }
         public GetCharityEventVolunteeringDto? CharityEventVolunteering { get; set; }  
         public int? FundraisingId { get; set; }
-        public GetCharityFundraisingDto? CharityEventFundrasing { get; set; }
+        public GetCharityFundraisingDto? CharityEventFundraising { get; set; }
 
     }
 }
