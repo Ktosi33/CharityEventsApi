@@ -11,11 +11,14 @@ namespace CharityEventsApi.Controllers
     public class CharityEventVolunteeringController : ControllerBase
     {
         private readonly IVolunteeringService VolunteeringService;
-        public CharityEventVolunteeringController(IVolunteeringService VolunteeringService)
+        private readonly AuthVolunteeringService authVolunteeringService;
+
+        public CharityEventVolunteeringController(IVolunteeringService VolunteeringService, AuthVolunteeringService authVolunteeringService)
         {
             this.VolunteeringService = VolunteeringService;
+            this.authVolunteeringService = authVolunteeringService;
         }
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "Volunteer,Admin")]
         [HttpPost()]
         public async Task<ActionResult> AddCharityEventVolunteeringAsync([FromForm] AddCharityEventVolunteeringDto charityEventDto)
         {
@@ -27,6 +30,7 @@ namespace CharityEventsApi.Controllers
         [HttpPut("{idVolunteering}")]
         public ActionResult EditVolunteering([FromBody] EditCharityEventVolunteeringDto VolunteeringDto, [FromRoute] int idVolunteering)
         {
+            authVolunteeringService.AuthorizeUserIdIfRoleWithIdVolunteering(idVolunteering, "Organizer");
             VolunteeringService.Edit(VolunteeringDto, idVolunteering);
             return Ok();
         }
@@ -36,12 +40,15 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
             if (isVerified != null) {
+                authVolunteeringService.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
                 VolunteeringService.SetVerify(idVolunteering, (bool)isVerified);
             }
             if (isActive != null) {
+                authVolunteeringService.AuthorizeUserIdIfRoleWithIdVolunteering(idVolunteering, "Organizer");
                 VolunteeringService.SetActive(idVolunteering, (bool)isActive);
             }
             if (isDenied != null) {
+                authVolunteeringService.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
                 VolunteeringService.SetDeny(idVolunteering, (bool)isDenied);
             }
 
