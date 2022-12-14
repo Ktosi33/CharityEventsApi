@@ -2,7 +2,7 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.ImageService;
-using CharityEventsApi.Services.UserContextAuthService;
+using CharityEventsApi.Services.UserAuthService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.CharityEventService
@@ -14,19 +14,17 @@ namespace CharityEventsApi.Services.CharityEventService
         private readonly CharityEventVerification charityEventVerification;
         private readonly CharityEventActivation charityEventActivation;
         private readonly IImageService imageService;
-        private readonly IUserContextAuthService userContextService;
         private readonly CharityEventDenial charityEventDenial;
 
         public CharityEventService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade, 
             CharityEventVerification charityEventVerification, CharityEventActivation charityEventActivation,
-            IImageService imageService, IUserContextAuthService userContextService, CharityEventDenial charityEventDenial)
+            IImageService imageService, CharityEventDenial charityEventDenial)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.charityEventVerification = charityEventVerification;
             this.charityEventActivation = charityEventActivation;
             this.imageService = imageService;
-            this.userContextService = userContextService;
             this.charityEventDenial = charityEventDenial;
         }
 
@@ -37,13 +35,10 @@ namespace CharityEventsApi.Services.CharityEventService
         
         public async Task AddOneImage(IFormFile image, int idCharityEvent)
         {
-           
-
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
             var ce = getCharityEventFromDbById(idCharityEvent);
 
 
-            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
             int imageId = await imageService.SaveImageAsync(image);
             var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
             if (img is null)
@@ -70,7 +65,6 @@ namespace CharityEventsApi.Services.CharityEventService
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
             var ce = getCharityEventFromDbById(idCharityEvent);
      
-            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
 
             var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
             if (image is null)
@@ -120,7 +114,7 @@ namespace CharityEventsApi.Services.CharityEventService
 
             dbContext.SaveChanges();
         }
-        private Charityevent getCharityEventFromDbById(int idCharityEvent)
+        public Charityevent getCharityEventFromDbById(int idCharityEvent)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == idCharityEvent);
             if (charityevent == null)
@@ -134,7 +128,6 @@ namespace CharityEventsApi.Services.CharityEventService
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
             var ce = getCharityEventFromDbById(idCharityEvent);
-            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
             await imageService.DeleteImageByIdAsync(ce.ImageIdImages);
 
             ce.ImageIdImages = await imageService.SaveImageAsync(image);
@@ -147,18 +140,15 @@ namespace CharityEventsApi.Services.CharityEventService
         public void SetActive(int idCharityEvent, bool isActive)
         {
             var ce = getCharityEventFromDbById(idCharityEvent);
-            userContextService.AuthorizeIfOnePass(ce.OrganizerId, "Admin");
             charityEventActivation.SetValue(idCharityEvent, isActive);
         }
      
         public void SetVerify(int idCharityEvent, bool isVerified)
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin");
             charityEventVerification.SetValue(idCharityEvent, isVerified);
         }
         public void SetDeny(int idCharityEvent, bool isDenied)
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin");
             charityEventDenial.SetValue(idCharityEvent, isDenied);
         }
         public GetCharityEventDto GetCharityEventById(int id)

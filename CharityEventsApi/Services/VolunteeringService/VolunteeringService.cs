@@ -3,7 +3,7 @@ using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.ImageService;
-using CharityEventsApi.Services.UserContextAuthService;
+using CharityEventsApi.Services.UserAuthService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.VolunteeringService
@@ -15,12 +15,12 @@ namespace CharityEventsApi.Services.VolunteeringService
         private readonly VolunteeringActivation volunteeringActication;
         private readonly VolunteeringVerification volunteeringVerification;
         private readonly CharityEventVerification charityEventVerification;
-        private readonly IUserContextAuthService userContextService;
+        private readonly IUserAuthService userContextService;
         private readonly VolunteeringDenial volunteeringDenial;
 
         public VolunteeringService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade,
             VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification,
-            CharityEventVerification charityEventVerification, IUserContextAuthService userContextService, 
+            CharityEventVerification charityEventVerification, IUserAuthService userContextService, 
             VolunteeringDenial volunteeringDenial)
         {
             this.dbContext = dbContext;
