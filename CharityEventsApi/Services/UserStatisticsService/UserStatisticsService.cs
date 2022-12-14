@@ -2,7 +2,8 @@
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Exceptions;
-
+using Microsoft.EntityFrameworkCore;
+using CharityEventsApi.Services.SearchService;
 
 namespace CharityEventsApi.Services.UserStatisticsService
 {
@@ -10,10 +11,12 @@ namespace CharityEventsApi.Services.UserStatisticsService
     {
 
         private readonly CharityEventsDbContext dbContext;
+        private readonly ISearchService searchService;
 
-        public UserStatisticsService(CharityEventsDbContext dbContext)
+        public UserStatisticsService(CharityEventsDbContext dbContext, ISearchService searchService)
         {
             this.dbContext = dbContext;
+            this.searchService = searchService;
         }
 
         public List<DonationDto> getDonationStatisticByUserId(int id)
@@ -91,6 +94,27 @@ namespace CharityEventsApi.Services.UserStatisticsService
                 NumberFundrasingsAsOrganizer = numberFundrasingsAsOrganizer,
                 NumberVolunteeringsAsOrganizer = numberVolunteeringsAsOrganizer     
             };
+        }
+
+        public async Task<List<GetAllDetailsCharityEventDto>> getCharityEventsWithVolunteeringByUserId(int userId)
+        {
+            List<GetAllDetailsCharityEventDto> charityEvents = new List<GetAllDetailsCharityEventDto>();
+
+            var volunteerings = await dbContext.Volunteerings
+                .Where(v => v.UserIdUsers.Any(u => u.IdUser == userId))
+                .Include(v => v.Charityevents)
+                .ToListAsync();
+
+            if (volunteerings is null)
+                throw new NotFoundException("Nie znaleziono akcji");
+
+            foreach (Volunteering v in volunteerings)
+            {
+                var charityEventId = v.Charityevents.FirstOrDefault(c => c.VolunteeringIdVolunteering == v.IdVolunteering).IdCharityEvent;
+                charityEvents.Add(await searchService.GetCharityEventsById(charityEventId));
+            }
+
+            return charityEvents;
         }
     }
 }

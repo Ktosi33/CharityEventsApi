@@ -34,5 +34,12 @@ namespace CharityEventsApi.Controllers
         {
             return Ok(userStatisticsService.getUserStatisticsByUserId(userId));
         }
+        [Authorize]
+        [HttpGet("charityEventsWithVolunteering/{userId}")]
+        public async Task<ActionResult> GetCharityEventsWithVolunteeringByUserId([FromRoute] int userId)
+        {
+            return Ok(await userStatisticsService.getCharityEventsWithVolunteeringByUserId(userId));
+        }
+
     }
 }
