@@ -16,7 +16,9 @@ namespace CharityEventsApi.Services.CharityEventService
         public void SetDeny(int idCharityEvent, bool isDenied);
         public IEnumerable<GetCharityEventDto> GetAll();
         public Task<IEnumerable<ImageDto>> GetImagesAsync(int idCharityEvent);
-        public Charityevent getCharityEventFromDbById(int idCharityEvent);
+        public Charityevent getCharityEventByCharityEventId(int idCharityEvent);
+        public Charityevent getCharityEventByVolunteeringId(int idVolunteering);
+        public Charityevent getCharityEventByFundraisingId(int idFundraising);
 
 
     }

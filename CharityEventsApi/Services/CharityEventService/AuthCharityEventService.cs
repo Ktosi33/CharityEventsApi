@@ -19,16 +19,16 @@ namespace CharityEventsApi.Services.CharityEventService
             Charityevent? charityevent = null;
 
             if(idCharityEvent.HasValue) {
-                charityevent = charityEventService.getCharityEventFromDbById(idCharityEvent.Value);
+                charityevent = charityEventService.getCharityEventByCharityEventId(idCharityEvent.Value);
             }
 
-            userAuthService.AuthorizeIfOnePass(charityevent?.IdCharityEvent, role);
+            userAuthService.AuthorizeIfOnePass(charityevent?.OrganizerId, role);
         }
 
         public void AuthorizeUserIdIfRoleWithIdCharityEvent(int idCharityEvent, string role)
         {
-            var charityevent = charityEventService.getCharityEventFromDbById(idCharityEvent);
-            userAuthService.AuthorizeUserIdIfRole(charityevent.IdCharityEvent, role);
+            var charityevent = charityEventService.getCharityEventByCharityEventId(idCharityEvent);
+            userAuthService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
         }
     }
 }

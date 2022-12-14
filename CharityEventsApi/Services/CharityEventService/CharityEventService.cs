@@ -36,7 +36,7 @@ namespace CharityEventsApi.Services.CharityEventService
         public async Task AddOneImage(IFormFile image, int idCharityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var ce = getCharityEventFromDbById(idCharityEvent);
+            var ce = getCharityEventByCharityEventId(idCharityEvent);
 
 
             int imageId = await imageService.SaveImageAsync(image);
@@ -63,7 +63,7 @@ namespace CharityEventsApi.Services.CharityEventService
         public async Task DeleteImage(int idImage, int idCharityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var ce = getCharityEventFromDbById(idCharityEvent);
+            var ce = getCharityEventByCharityEventId(idCharityEvent);
      
 
             var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
@@ -98,7 +98,7 @@ namespace CharityEventsApi.Services.CharityEventService
 
         public void Edit(EditCharityEventDto charityEventDto, int idCharityEvent)
         {
-            var charityevent = getCharityEventFromDbById(idCharityEvent);
+            var charityevent = getCharityEventByCharityEventId(idCharityEvent);
             if(charityEventDto.Title != null)
             {
                 charityevent.Title = charityEventDto.Title;
@@ -114,7 +114,7 @@ namespace CharityEventsApi.Services.CharityEventService
 
             dbContext.SaveChanges();
         }
-        public Charityevent getCharityEventFromDbById(int idCharityEvent)
+        public Charityevent getCharityEventByCharityEventId(int idCharityEvent)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == idCharityEvent);
             if (charityevent == null)
@@ -124,10 +124,32 @@ namespace CharityEventsApi.Services.CharityEventService
 
             return charityevent;
         }
+        public Charityevent getCharityEventByFundraisingId(int idFundraising)
+        {
+            Charityevent? charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.CharityFundraisingIdCharityFundraising == idFundraising);
+
+            if (charityevent is null)
+            {
+                throw new InternalServerErrorException();
+            }
+
+            return charityevent;
+        }
+        public Charityevent getCharityEventByVolunteeringId(int idVolunteering)
+        {
+            Charityevent? charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.VolunteeringIdVolunteering == idVolunteering);
+
+            if (charityevent is null)
+            {
+                throw new InternalServerErrorException();
+            }
+
+            return charityevent;
+        }
         public async Task ChangeImage(IFormFile image, int idCharityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var ce = getCharityEventFromDbById(idCharityEvent);
+            var ce = getCharityEventByCharityEventId(idCharityEvent);
             await imageService.DeleteImageByIdAsync(ce.ImageIdImages);
 
             ce.ImageIdImages = await imageService.SaveImageAsync(image);
@@ -139,7 +161,7 @@ namespace CharityEventsApi.Services.CharityEventService
 
         public void SetActive(int idCharityEvent, bool isActive)
         {
-            var ce = getCharityEventFromDbById(idCharityEvent);
+            var ce = getCharityEventByCharityEventId(idCharityEvent);
             charityEventActivation.SetValue(idCharityEvent, isActive);
         }
      
@@ -153,7 +175,7 @@ namespace CharityEventsApi.Services.CharityEventService
         }
         public GetCharityEventDto GetCharityEventById(int id)
         {
-            var c = getCharityEventFromDbById(id);
+            var c = getCharityEventByCharityEventId(id);
 
             return new GetCharityEventDto {
                 Id = c.IdCharityEvent,
