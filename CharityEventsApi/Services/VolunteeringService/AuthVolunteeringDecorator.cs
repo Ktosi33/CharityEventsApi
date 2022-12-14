@@ -2,35 +2,35 @@
 using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.UserAuthService;
 
-namespace CharityEventsApi.Services.FundraisingService
+namespace CharityEventsApi.Services.VolunteeringService
 {
-    public class AuthFundraisingService
+    public class AuthVolunteeringDecorator
     {
         private readonly IUserAuthService userAuthService;
         private readonly ICharityEventService charityEventService;
 
-        public AuthFundraisingService(IUserAuthService userAuthService, ICharityEventService charityEventService)
+        public AuthVolunteeringDecorator(IUserAuthService userAuthService, ICharityEventService charityEventService)
         {
             this.userAuthService = userAuthService;
             this.charityEventService = charityEventService;
         }
 
-        public void AuthorizeIfOnePassWithIdFundraising(int? idFundraising, string? role)
+        public void AuthorizeIfOnePassWithIdVolunteering(int? idVolunteering, string? role)
         {
             Charityevent? charityevent = null;
 
-            if (idFundraising.HasValue)
+            if (idVolunteering.HasValue)
             {
-                charityevent = charityEventService.getCharityEventByFundraisingId(idFundraising.Value);
+                charityevent = charityEventService.getCharityEventByVolunteeringId(idVolunteering.Value);
             }
 
             userAuthService.AuthorizeIfOnePass(charityevent?.OrganizerId, role);
         }
 
-        public void AuthorizeUserIdIfRoleWithIdFundraising(int idFundraising, string role)
+        public void AuthorizeUserIdIfRoleWithIdVolunteering(int idVolunteering, string role)
         {
-            var charityevent = charityEventService.getCharityEventByFundraisingId(idFundraising);
+            var charityevent = charityEventService.getCharityEventByVolunteeringId(idVolunteering);
             userAuthService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
         }
-    } 
+    }
 }

@@ -3,12 +3,12 @@ using CharityEventsApi.Services.UserAuthService;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
-    public class AuthCharityEventService
+    public class AuthCharityEventDecorator
     {
         private readonly IUserAuthService userAuthService;
         private readonly ICharityEventService charityEventService;
 
-        public AuthCharityEventService(IUserAuthService userAuthService, ICharityEventService charityEventService)
+        public AuthCharityEventDecorator(IUserAuthService userAuthService, ICharityEventService charityEventService)
         {
             this.userAuthService = userAuthService;
             this.charityEventService = charityEventService;

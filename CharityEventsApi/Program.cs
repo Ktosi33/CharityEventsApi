@@ -146,7 +146,10 @@ builder.Services.AddScoped<IValidator<EditCharityEventDto>, EditCharityEventDtoV
 builder.Services.AddScoped<IValidator<EditCharityEventFundraisingDto>, EditCharityEventFundraisingDtoValidator>();
 builder.Services.AddScoped<IValidator<EditCharityEventVolunteeringDto>, EditCharityEventVolunteeringDtoValidator>();
 builder.Services.AddScoped<IValidator<EditLocationDto>, EditLocationDtoValidator>();
-builder.Services.AddScoped<AuthCharityEventService>();
+builder.Services.AddScoped<AuthCharityEventDecorator>();
+builder.Services.AddScoped<AuthVolunteeringDecorator>();
+builder.Services.AddScoped<AuthFundraisingDecorator>();
+builder.Services.AddScoped<AuthLocationDecorator>();
 
 
 

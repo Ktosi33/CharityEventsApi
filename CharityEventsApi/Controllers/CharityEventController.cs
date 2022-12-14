@@ -12,12 +12,12 @@ namespace CharityEventsApi.Controllers
     public class CharityEventController : ControllerBase
     {
         private readonly ICharityEventService charityEventService;
-        private readonly AuthCharityEventService authCharityEventService;
+        private readonly AuthCharityEventDecorator authCharityEvent;
 
-        public CharityEventController(ICharityEventService charityEventService, AuthCharityEventService authCharityEventService)
+        public CharityEventController(ICharityEventService charityEventService, AuthCharityEventDecorator authCharityEvent)
         {
             this.charityEventService = charityEventService;
-            this.authCharityEventService = authCharityEventService;
+            this.authCharityEvent = authCharityEvent;
         }
 
         [Authorize(Roles = "Volunteer,Admin")]
@@ -31,7 +31,7 @@ namespace CharityEventsApi.Controllers
         [HttpPost("image/{idCharityEvent}")]
         public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
         {
-            authCharityEventService.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+            authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
             await charityEventService.AddOneImage(image, idCharityEvent);
             return Ok();
         }
@@ -39,7 +39,7 @@ namespace CharityEventsApi.Controllers
         [HttpDelete("image")]
         public async Task<ActionResult> DeleteImageAsync([FromQuery] int idImage, [FromQuery] int idCharityEvent)
         {
-            authCharityEventService.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+            authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
             await charityEventService.DeleteImage(idImage, idCharityEvent);
             return Ok();
         }
@@ -48,7 +48,7 @@ namespace CharityEventsApi.Controllers
         [HttpPut("{idCharityEvent}")]
         public ActionResult EditCharityEvent([FromBody] EditCharityEventDto charityEventDto, [FromRoute] int idCharityEvent)
         {
-            authCharityEventService.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+            authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
             charityEventService.Edit(charityEventDto, idCharityEvent);
             return Ok();
         }
@@ -56,7 +56,7 @@ namespace CharityEventsApi.Controllers
         [HttpPut("image/{idCharityEvent}")]
         public async Task<ActionResult> ChangeMainImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
         {
-            authCharityEventService.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+            authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
             await charityEventService.ChangeImage(image, idCharityEvent);
             return Ok();
         }
@@ -74,15 +74,15 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
             if (isVerified != null) {
-                authCharityEventService.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");
+                authCharityEvent.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");
                 charityEventService.SetVerify(idCharityEvent, (bool)isVerified);
             }
             if (isActive != null) {
-                authCharityEventService.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+                authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
                 charityEventService.SetActive(idCharityEvent, (bool)isActive);
             }
             if (isDenied != null) {
-                authCharityEventService.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");
+                authCharityEvent.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");
                 charityEventService.SetDeny(idCharityEvent, (bool)isDenied);
             }
 

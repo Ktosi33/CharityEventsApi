@@ -12,12 +12,12 @@ namespace CharityEventsApi.Controllers
     public class CharityEventFundraisingController : ControllerBase
     {
         private readonly IFundraisingService FundraisingService;
-        private readonly AuthFundraisingService authFundraisingService;
+        private readonly AuthFundraisingDecorator authFundraising;
 
-        public CharityEventFundraisingController(IFundraisingService FundraisingService, AuthFundraisingService authFundraisingService)
+        public CharityEventFundraisingController(IFundraisingService FundraisingService, AuthFundraisingDecorator authFundraising)
         {
             this.FundraisingService = FundraisingService;
-            this.authFundraisingService = authFundraisingService;
+            this.authFundraising = authFundraising;
         }
         [Authorize(Roles = "Volunteer,Admin")]
         [HttpPost()]
@@ -31,7 +31,7 @@ namespace CharityEventsApi.Controllers
         [HttpPut("{idFundraising}")]
         public ActionResult EditFundraising([FromBody] EditCharityEventFundraisingDto FundraisingDto, [FromRoute] int idFundraising)
         {
-            authFundraisingService.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
+            authFundraising.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
             FundraisingService.Edit(FundraisingDto, idFundraising);
             return Ok();
         }
@@ -41,15 +41,15 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
             if (isVerified != null) {
-                authFundraisingService.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
+                authFundraising.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
                 FundraisingService.SetVerify(idFundraising, (bool)isVerified);
             }
             if (isActive != null) {
-                authFundraisingService.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
+                authFundraising.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
                 FundraisingService.SetActive(idFundraising, (bool)isActive);
             }
             if (isDenied != null) {
-                authFundraisingService.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
+                authFundraising.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
                 FundraisingService.SetDeny(idFundraising, (bool)isDenied);
             }
 
