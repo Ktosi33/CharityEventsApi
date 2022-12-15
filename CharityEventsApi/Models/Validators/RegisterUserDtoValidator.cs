@@ -31,6 +31,9 @@ namespace CharityEventsApi.Models.Validators
                 .NotEmpty()
                 .Custom((value, context) =>
                 {
+                    if (value.Contains("@"))
+                        context.AddFailure("Login", "Login nie może zawierać @");
+
                     var loginInUse = dbContext.Users.Any(u => u.Login == value);
 
                     if (loginInUse)
