@@ -61,9 +61,9 @@ namespace CharityEventsApi.Services.SearchService
                 .Where(c => fundraisingIsActive == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(fundraisingIsActive))
                 .Where(c => volunteeringIsVerified == null || c.VolunteeringIdVolunteeringNavigation == null || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringIsVerified))
                 .Where(c => fundraisingIsVerified == null || c.CharityFundraisingIdCharityFundraisingNavigation == null || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(fundraisingIsVerified))
-                .Where(c => volunteeringOrFundraisingIsActive == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive) || c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive))
-                .Where(c => volunteeringOrFundraisingIsVerified == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified) || c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified))
-                .Where(c => volunteeringOrFundraisingIsDenied == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || c.VolunteeringIdVolunteeringNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied) || c.CharityFundraisingIdCharityFundraisingNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied));
+                .Where(c => volunteeringOrFundraisingIsActive == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || (c.CharityFundraisingIdCharityFundraisingNavigation != null && c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive)) || (c.VolunteeringIdVolunteeringNavigation != null && c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive)))
+                .Where(c => volunteeringOrFundraisingIsVerified == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || (c.CharityFundraisingIdCharityFundraisingNavigation != null && c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified)) || (c.VolunteeringIdVolunteeringNavigation != null && c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified)))
+                .Where(c => volunteeringOrFundraisingIsDenied == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || (c.CharityFundraisingIdCharityFundraisingNavigation != null && c.CharityFundraisingIdCharityFundraisingNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied)) || (c.VolunteeringIdVolunteeringNavigation != null && c.VolunteeringIdVolunteeringNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied)));
 
             charityEvents = sort(charityEvents, sortBy, sortDirection);
 
@@ -91,7 +91,7 @@ namespace CharityEventsApi.Services.SearchService
             var charityEvent = await dbContext.Charityevents
                 .Where(c => c.IdCharityEvent == charityEventId)
                 .Include(x => x.VolunteeringIdVolunteeringNavigation)
-                .ThenInclude(x => x.UserIdUsers)
+                .ThenInclude(x => x!.UserIdUsers)
                 .Include(x => x.CharityFundraisingIdCharityFundraisingNavigation)
                 .ToListAsync();
 
@@ -116,7 +116,9 @@ namespace CharityEventsApi.Services.SearchService
 
             foreach (var fundraising in fundraisingsList)
             {
-                mostPopularFundraisingsList.Add(await GetCharityEventsById(fundraising.Charityevents.FirstOrDefault(c => c.CharityFundraisingIdCharityFundraising == fundraising.IdCharityFundraising).IdCharityEvent));
+                var charityEvent = fundraising.Charityevents.FirstOrDefault(c => c.CharityFundraisingIdCharityFundraising == fundraising.IdCharityFundraising);
+                if (charityEvent != null)
+                    mostPopularFundraisingsList.Add(await GetCharityEventsById(charityEvent.IdCharityEvent));
             }
 
             return mostPopularFundraisingsList;

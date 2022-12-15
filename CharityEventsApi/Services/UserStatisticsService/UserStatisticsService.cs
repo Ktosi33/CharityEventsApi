@@ -110,8 +110,9 @@ namespace CharityEventsApi.Services.UserStatisticsService
 
             foreach (Volunteering v in volunteerings)
             {
-                var charityEventId = v.Charityevents.FirstOrDefault(c => c.VolunteeringIdVolunteering == v.IdVolunteering).IdCharityEvent;
-                charityEvents.Add(await searchService.GetCharityEventsById(charityEventId));
+                var charityEvent = v.Charityevents.FirstOrDefault(c => c.VolunteeringIdVolunteering == v.IdVolunteering);
+                if (charityEvent != null)
+                    charityEvents.Add(await searchService.GetCharityEventsById(charityEvent.IdCharityEvent));
             }
 
             return charityEvents;
