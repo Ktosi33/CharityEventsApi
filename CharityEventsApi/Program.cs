@@ -23,6 +23,7 @@ using CharityEventsApi.Models.DataTransferObjects;
 using FluentValidation.AspNetCore;
 using CharityEventsApi.Services.UserContextAuthService;
 using CharityEventsApi.Services.UserContextService;
+using CharityEventsApi.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -98,6 +99,7 @@ builder.Services.AddDbContext<CharityEventsDbContext>(
         )
     );
 
+builder.Services.AddScoped<RoleSeeder>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
@@ -161,6 +163,12 @@ app.UseCors(x => x
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
+
+var scope = app.Services.CreateScope();
+var seeder = scope.ServiceProvider.GetRequiredService<RoleSeeder>();
+
+seeder.Seed();
+
 if (app.Environment.IsDevelopment())
 {
 
