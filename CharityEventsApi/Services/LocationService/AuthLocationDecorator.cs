@@ -23,8 +23,11 @@ namespace CharityEventsApi.Services.LocationService
         {
 
             var volunteering = getLocation(idLocation).VolunteeringIdVolunteerings.FirstOrDefault();
-
-            var charityevent = charityEventService.getCharityEventByVolunteeringId(volunteering.IdVolunteering);
+            if(volunteering is null)
+            {
+                throw new NotFoundException("Volunteering with given location doesnt exist");
+            }
+            var charityevent = charityEventService.GetCharityEventByVolunteeringId(volunteering.IdVolunteering);
 
             authUserService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
         }

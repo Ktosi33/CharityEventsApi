@@ -14,11 +14,11 @@ namespace CharityEventsApi.Services.CharityEventService
         public void SetVerify(int idCharityEvent, bool isVerified);
         public void SetDeny(int idCharityEvent, bool isDenied);
         public Task<IEnumerable<ImageDto>> GetImagesAsync(int idCharityEvent);
-        public GetCharityEventDto GetCharityEventById(int id);
-        public IEnumerable<GetCharityEventDto> GetAll();
-        public Charityevent getCharityEventByCharityEventId(int idCharityEvent);
-        public Charityevent getCharityEventByVolunteeringId(int idVolunteering);
-        public Charityevent getCharityEventByFundraisingId(int idFundraising);
+        public GetCharityEventDto GetCharityEventDtoById(int id);
+        public IEnumerable<GetCharityEventDto> GetAllCharityEventDto();
+        public Charityevent GetCharityEventByCharityEventId(int idCharityEvent);
+        public Charityevent GetCharityEventByVolunteeringId(int idVolunteering);
+        public Charityevent GetCharityEventByFundraisingId(int idFundraising);
 
 
     }

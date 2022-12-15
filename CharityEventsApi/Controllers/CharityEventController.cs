@@ -93,14 +93,14 @@ namespace CharityEventsApi.Controllers
         [HttpGet("{idCharityEvent}")]
         public ActionResult GetCharityEventById([FromRoute] int idCharityEvent)
         {
-            return Ok(charityEventService.GetCharityEventById(idCharityEvent));
+            return Ok(charityEventService.GetCharityEventDtoById(idCharityEvent));
         }
 
         [AllowAnonymous]
         [HttpGet()]
         public ActionResult GetCharityEvents()
         {
-            return Ok(charityEventService.GetAll());
+            return Ok(charityEventService.GetAllCharityEventDto());
         }
 
 

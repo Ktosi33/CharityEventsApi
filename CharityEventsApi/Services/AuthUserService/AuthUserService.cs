@@ -15,15 +15,15 @@ namespace CharityEventsApi.Services.AuthUserService
        
         public void AuthorizeIfOnePass(int? idUser, string? role)
         {
-            Authorize(isIfOnePass(idUser, role));
+            authorize(isIfOnePass(idUser, role));
         }
 
         public void AuthorizeUserIdIfRole(int idUser, string role)
         {
-            Authorize(isUserIdIfRole(idUser, role)); 
+            authorize(isUserIdIfRole(idUser, role)); 
         }
 
-        public void Authorize(bool isAuthorized)
+        private void authorize(bool isAuthorized)
         {
             if (isAuthorized)
             {
@@ -33,7 +33,7 @@ namespace CharityEventsApi.Services.AuthUserService
             throw new ForbiddenException();
         }
 
-        public bool isIfOnePass(int? idUser, string? role)
+        private bool isIfOnePass(int? idUser, string? role)
         {
             if (idUser is null && role is null)
             {
@@ -55,7 +55,7 @@ namespace CharityEventsApi.Services.AuthUserService
             return isNotForbidden;
         }
 
-        public bool isUserIdIfRole(int idUser, string role)
+        private bool isUserIdIfRole(int idUser, string role)
         {
             if (isCurrentUserInRole(role))
             {

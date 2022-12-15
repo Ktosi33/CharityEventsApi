@@ -19,7 +19,7 @@ namespace CharityEventsApi.Services.CharityEventService
             Charityevent? charityevent = null;
 
             if(idCharityEvent.HasValue) {
-                charityevent = charityEventService.getCharityEventByCharityEventId(idCharityEvent.Value);
+                charityevent = charityEventService.GetCharityEventByCharityEventId(idCharityEvent.Value);
             }
 
             authUserService.AuthorizeIfOnePass(charityevent?.OrganizerId, role);
@@ -27,7 +27,7 @@ namespace CharityEventsApi.Services.CharityEventService
 
         public void AuthorizeUserIdIfRoleWithIdCharityEvent(int idCharityEvent, string role)
         {
-            var charityevent = charityEventService.getCharityEventByCharityEventId(idCharityEvent);
+            var charityevent = charityEventService.GetCharityEventByCharityEventId(idCharityEvent);
             authUserService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
         }
     }
