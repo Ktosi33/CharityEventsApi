@@ -15,35 +15,60 @@ namespace CharityEventsApi.Services.UserAuthService
 
         public void AuthorizeIfOnePass(int? idUser, string? role)
         {
-            if (idUser is null && role is null)
+            if (isIfOnePass(idUser, role)) 
             {
                 return;
             }
 
-            bool isNotForbidden = false;
-
-            if (idUser is not null) {
-                isNotForbidden = isNotForbidden || isCurrentUserHasId(idUser.Value);
-            }
-
-            if (role is not null) {
-                isNotForbidden = isNotForbidden || isCurrentUserInRole(role);
-            }
-
-            if (!isNotForbidden) {
-                throw new ForbiddenException();
-            }
+            throw new ForbiddenException();
         }
         public void AuthorizeUserIdIfRole(int idUser, string role)
         {
-            if(isCurrentUserInRole(role)) {
-                if(isCurrentUserHasId(idUser)) { 
+            if (isUserIdIfRole(idUser, role))
+            {
                 return;
-                } else {
-                    throw new ForbiddenException();
+            }
+
+            throw new ForbiddenException();
+        }
+        public bool isIfOnePass(int? idUser, string? role)
+        {
+            if (idUser is null && role is null)
+            {
+                return true;
+            }
+
+            bool isNotForbidden = false;
+
+            if (idUser is not null)
+            {
+                isNotForbidden = isNotForbidden || isCurrentUserHasId(idUser.Value);
+            }
+
+            if (role is not null)
+            {
+                isNotForbidden = isNotForbidden || isCurrentUserInRole(role);
+            }
+
+            return isNotForbidden;
+        }
+
+        public bool isUserIdIfRole(int idUser, string role)
+        {
+            if (isCurrentUserInRole(role))
+            {
+                if (isCurrentUserHasId(idUser))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
+            return true;
         }
+
         private bool isCurrentUserHasId(int idUser)
         {
             return userContextService.getCurrentUserId() == idUser;
