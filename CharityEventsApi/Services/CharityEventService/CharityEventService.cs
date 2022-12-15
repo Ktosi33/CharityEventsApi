@@ -107,10 +107,6 @@ namespace CharityEventsApi.Services.CharityEventService
             { 
             charityevent.Description = charityEventDto.Description;
             }
-            if(charityEventDto.ImageId.HasValue)
-            { 
-            charityevent.ImageIdImages = charityEventDto.ImageId.Value;
-            }
 
             dbContext.SaveChanges();
         }

@@ -116,17 +116,16 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData("NewTitle", "Desc", 1,1)]
-        [InlineData("NewTitlea", null, 1,1)]
-        public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult(string title, string description, int organizerId, int imageId)
+        [InlineData("NewTitle", "Desc", 1)]
+        [InlineData("NewTitlea", null, 1)]
+        public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult(string title, string description, int organizerId)
         {
             //arange
             EditCharityEventDto dto = new EditCharityEventDto
             {
                 Title = title,
                 Description = description,
-                OrganizerId = organizerId,
-                ImageId = imageId
+                OrganizerId = organizerId
             };
             var load = new StringContent(JsonConvert.SerializeObject(dto), UnicodeEncoding.UTF8, "application/json");
 
