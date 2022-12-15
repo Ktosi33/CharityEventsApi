@@ -2,35 +2,37 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Services.UserContextService;
 
-namespace CharityEventsApi.Services.UserAuthService
+namespace CharityEventsApi.Services.AuthUserService
 {
-    public class UserAuthService : IUserAuthService
+    public class AuthUserService : IAuthUserService
     {
         private readonly IUserContextService userContextService;
 
-        public UserAuthService(IUserContextService userContextService)
+        public AuthUserService(IUserContextService userContextService)
         {
             this.userContextService = userContextService;
         }
-
+       
         public void AuthorizeIfOnePass(int? idUser, string? role)
         {
-            if (isIfOnePass(idUser, role)) 
-            {
-                return;
-            }
-
-            throw new ForbiddenException();
+            Authorize(isIfOnePass(idUser, role));
         }
+
         public void AuthorizeUserIdIfRole(int idUser, string role)
         {
-            if (isUserIdIfRole(idUser, role))
+            Authorize(isUserIdIfRole(idUser, role)); 
+        }
+
+        public void Authorize(bool isAuthorized)
+        {
+            if (isAuthorized)
             {
                 return;
             }
 
             throw new ForbiddenException();
         }
+
         public bool isIfOnePass(int? idUser, string? role)
         {
             if (idUser is null && role is null)

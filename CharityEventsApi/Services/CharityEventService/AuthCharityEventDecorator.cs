@@ -1,16 +1,16 @@
 ﻿using CharityEventsApi.Entities;
-using CharityEventsApi.Services.UserAuthService;
+using CharityEventsApi.Services.AuthUserService;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
     public class AuthCharityEventDecorator
     {
-        private readonly IUserAuthService userAuthService;
+        private readonly IAuthUserService authUserService;
         private readonly ICharityEventService charityEventService;
 
-        public AuthCharityEventDecorator(IUserAuthService userAuthService, ICharityEventService charityEventService)
+        public AuthCharityEventDecorator(IAuthUserService authUserService, ICharityEventService charityEventService)
         {
-            this.userAuthService = userAuthService;
+            this.authUserService = authUserService;
             this.charityEventService = charityEventService;
         }
 
@@ -22,13 +22,13 @@ namespace CharityEventsApi.Services.CharityEventService
                 charityevent = charityEventService.getCharityEventByCharityEventId(idCharityEvent.Value);
             }
 
-            userAuthService.AuthorizeIfOnePass(charityevent?.OrganizerId, role);
+            authUserService.AuthorizeIfOnePass(charityevent?.OrganizerId, role);
         }
 
         public void AuthorizeUserIdIfRoleWithIdCharityEvent(int idCharityEvent, string role)
         {
             var charityevent = charityEventService.getCharityEventByCharityEventId(idCharityEvent);
-            userAuthService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
+            authUserService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
         }
     }
 }

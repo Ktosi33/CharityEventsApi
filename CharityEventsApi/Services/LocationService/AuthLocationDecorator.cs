@@ -1,5 +1,5 @@
 ﻿using CharityEventsApi.Services.CharityEventService;
-using CharityEventsApi.Services.UserAuthService;
+using CharityEventsApi.Services.AuthUserService;
 using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +8,13 @@ namespace CharityEventsApi.Services.LocationService
 {
     public class AuthLocationDecorator
     {
-        private readonly IUserAuthService userAuthService;
+        private readonly IAuthUserService authUserService;
         private readonly CharityEventsDbContext dbContext;
         private readonly ICharityEventService charityEventService;
 
-        public AuthLocationDecorator(CharityEventsDbContext dbContext, IUserAuthService userAuthService, ICharityEventService charityEventService )
+        public AuthLocationDecorator(CharityEventsDbContext dbContext, IAuthUserService authUserService, ICharityEventService charityEventService )
         {
-            this.userAuthService = userAuthService;
+            this.authUserService = authUserService;
             this.dbContext = dbContext;
             this.charityEventService = charityEventService;
         }
@@ -26,7 +26,7 @@ namespace CharityEventsApi.Services.LocationService
 
             var charityevent = charityEventService.getCharityEventByVolunteeringId(volunteering.IdVolunteering);
 
-            userAuthService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
+            authUserService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
         }
 
         private Location getLocation(int idLocation)

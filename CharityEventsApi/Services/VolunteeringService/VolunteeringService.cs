@@ -3,7 +3,7 @@ using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.ImageService;
-using CharityEventsApi.Services.UserAuthService;
+using CharityEventsApi.Services.AuthUserService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.VolunteeringService
