@@ -1,4 +1,5 @@
-﻿using CharityEventsApi.Models.DataTransferObjects;
+﻿using CharityEventsApi.Entities;
+using CharityEventsApi.Models.DataTransferObjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CharityEventsApi.Services.SearchService
@@ -12,5 +13,6 @@ namespace CharityEventsApi.Services.SearchService
             int pageNumber, int pageSize, bool? volunteeringOrFundrasingIsActive, bool? volunteeringOrFundrasingIsVerified, bool? volunteeringOrFundraising);
         public Task<GetAllDetailsCharityEventDto> GetCharityEventsById(int charityEventId);
         public Task<List<GetAllDetailsCharityEventDto>> GetMostPopularFundraisings(int numberOfEvents);
+        public Task<GetAllDetailsCharityEventDto> getDetails(Charityevent charityEvent);
     }
 }

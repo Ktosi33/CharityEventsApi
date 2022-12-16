@@ -117,5 +117,26 @@ namespace CharityEventsApi.Services.UserStatisticsService
 
             return charityEvents;
         }
+
+        public async Task<List<GetAllDetailsCharityEventDto>> getCharityEventsByOrganizerId(int organizerId, bool? volunteeringOrFundraisingIsActive, bool? volunteeringOrFundraisingIsVerified, bool? volunteeringOrFundraisingIsDenied)
+        {
+            var charityEvents = dbContext.Charityevents
+               .Include(c => c.CharityFundraisingIdCharityFundraisingNavigation)
+               .Include(c => c.VolunteeringIdVolunteeringNavigation)
+               .Where(c => c.OrganizerId == organizerId)
+               .Where(c => volunteeringOrFundraisingIsActive == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || (c.CharityFundraisingIdCharityFundraisingNavigation != null && c.CharityFundraisingIdCharityFundraisingNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive)) || (c.VolunteeringIdVolunteeringNavigation != null && c.VolunteeringIdVolunteeringNavigation.IsActive == Convert.ToSByte(volunteeringOrFundraisingIsActive)))
+               .Where(c => volunteeringOrFundraisingIsVerified == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || (c.CharityFundraisingIdCharityFundraisingNavigation != null && c.CharityFundraisingIdCharityFundraisingNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified)) || (c.VolunteeringIdVolunteeringNavigation != null && c.VolunteeringIdVolunteeringNavigation.IsVerified == Convert.ToSByte(volunteeringOrFundraisingIsVerified)))
+               .Where(c => volunteeringOrFundraisingIsDenied == null || (c.CharityFundraisingIdCharityFundraisingNavigation == null && c.VolunteeringIdVolunteeringNavigation == null) || (c.CharityFundraisingIdCharityFundraisingNavigation != null && c.CharityFundraisingIdCharityFundraisingNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied)) || (c.VolunteeringIdVolunteeringNavigation != null && c.VolunteeringIdVolunteeringNavigation.IsDenied == Convert.ToSByte(volunteeringOrFundraisingIsDenied)));
+
+            charityEvents = charityEvents.OrderByDescending(c => c.CreatedEventDate);
+
+            var charityEventsList = await charityEvents.ToListAsync();
+            var charityEventsDetails = new List<GetAllDetailsCharityEventDto>();
+
+            foreach (Charityevent charityEvent in charityEventsList)
+                charityEventsDetails.Add(await searchService.getDetails(charityEvent));
+           
+            return charityEventsDetails;
+        }
     }
 }

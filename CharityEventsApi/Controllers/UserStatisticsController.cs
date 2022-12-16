@@ -8,11 +8,11 @@ namespace CharityEventsApi.Controllers
     [Route("/v1/[controller]")]
     [Authorize]
     [ApiController]
-    public class UserStatisticsController: ControllerBase
+    public class UserStatisticsController : ControllerBase
     {
         private readonly IUserStatisticsService userStatisticsService;
 
-        public UserStatisticsController(IUserStatisticsService userStatisticsService) 
+        public UserStatisticsController(IUserStatisticsService userStatisticsService)
         {
             this.userStatisticsService = userStatisticsService;
         }
@@ -39,6 +39,13 @@ namespace CharityEventsApi.Controllers
         public async Task<ActionResult> GetCharityEventsWithVolunteeringByUserId([FromRoute] int userId)
         {
             return Ok(await userStatisticsService.getCharityEventsWithVolunteeringByUserId(userId));
+        }
+        [Authorize]
+        [HttpGet("charityEvents/{organizerId}")]
+        public async Task<ActionResult> GetCharityEventsByOrganizerId([FromRoute] int organizerId, [FromQuery] bool? volunteeringOrFundraisingIsActive, [FromQuery] bool? volunteeringOrFundraisingIsVerified,
+            [FromQuery] bool? volunteeringOrFundraisingIsDenied)
+        {
+            return Ok(await userStatisticsService.getCharityEventsByOrganizerId(organizerId, volunteeringOrFundraisingIsActive, volunteeringOrFundraisingIsVerified, volunteeringOrFundraisingIsDenied));
         }
 
     }
