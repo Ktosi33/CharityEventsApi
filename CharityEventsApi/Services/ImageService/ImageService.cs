@@ -32,7 +32,10 @@ namespace CharityEventsApi.Services.ImageService
         }
         private async Task<int> addOneImageAsync(IFormFile image)
         {
-            
+                if(!isValidImage(image.ContentType, image.Length))
+                {
+                throw new BadRequestException("Image is not valid, bad content type or too long");
+                }
                 Image img = new() { Path = "Temporary null", ContentType = image.ContentType };
                 dbContext.Images.Add(img);
                 dbContext.SaveChanges();
@@ -47,9 +50,25 @@ namespace CharityEventsApi.Services.ImageService
                     }
                     img.Path = pathimg;
                     await dbContext.SaveChangesAsync();
-                
                 }
             return id;
+        }
+        private bool isValidImage(string contentType, long fileSize)
+        {
+            if(contentType.StartsWith("image"))
+            {
+                
+            if ((fileSize / 1048576.0) > 5)
+            {
+                return false;
+            }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         private void checkifPathExistAsync()
         {
