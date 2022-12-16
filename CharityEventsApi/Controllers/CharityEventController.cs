@@ -82,7 +82,7 @@ namespace CharityEventsApi.Controllers
                 charityEventService.SetActive(idCharityEvent, (bool)isActive);
             }
             if (isDenied != null) {
-                authCharityEvent.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");
+                authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
                 charityEventService.SetDeny(idCharityEvent, (bool)isDenied);
             }
 
