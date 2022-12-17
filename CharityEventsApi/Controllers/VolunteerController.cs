@@ -15,9 +15,9 @@ namespace CharityEventsApi.Controllers
     {
         private readonly IVolunteerService volunteerService;
         private readonly AuthVolunteeringDecorator authVolunteering;
-        private readonly AuthUserService authUser;
+        private readonly IAuthUserService authUser;
 
-        public VolunteerController(IVolunteerService volunteerService, AuthVolunteeringDecorator authVolunteering, AuthUserService authUser)
+        public VolunteerController(IVolunteerService volunteerService, AuthVolunteeringDecorator authVolunteering, IAuthUserService authUser)
         {
             this.volunteerService = volunteerService;
             this.authVolunteering = authVolunteering;
