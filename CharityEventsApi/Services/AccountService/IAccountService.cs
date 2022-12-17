@@ -6,5 +6,6 @@ namespace CharityEventsApi.Services.AccountService
     {
         void RegisterUser(RegisterUserDto dto);
         string GenerateJwt(LoginUserDto dto);
+        public void GiveRole(int idUser, string role);
     }
 }

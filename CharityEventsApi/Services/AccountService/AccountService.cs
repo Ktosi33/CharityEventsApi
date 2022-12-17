@@ -19,7 +19,8 @@ namespace CharityEventsApi.Services.AccountService
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly AuthenticationSettings authenticationSettings;
 
-        public AccountService(CharityEventsDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public AccountService(CharityEventsDbContext dbContext, IPasswordHasher<User> passwordHasher,
+            AuthenticationSettings authenticationSettings)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
@@ -29,8 +30,6 @@ namespace CharityEventsApi.Services.AccountService
  
         public string GenerateJwt(LoginUserDto dto)
         {
-            //login cant have @
-            //mail have to have @
             var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.LoginOrEmail);
             if(user == null)
             { 
@@ -109,6 +108,29 @@ namespace CharityEventsApi.Services.AccountService
             newUser.RolesNames.Add(VolunteerRole);
 
             dbContext.Users.Add(newUser);
+            dbContext.SaveChanges();
+          }
+
+          public void GiveRole(int idUser, string role)
+          {
+            var user = dbContext.Users.Include(r => r.RolesNames).FirstOrDefault(u => u.IdUser == idUser);
+            var newRole = dbContext.Roles.FirstOrDefault(r => r.Name == role);
+
+            if (newRole is null)
+            {
+                throw new NotFoundException("Role doesn't exist");
+            }
+
+            if (user is null)
+            {
+                throw new NotFoundException("User with given id dosen't exist");
+            }
+
+            if (!user.RolesNames.Contains(newRole))
+            {
+                user.RolesNames.Add(newRole);
+            }
+
             dbContext.SaveChanges();
           }
       

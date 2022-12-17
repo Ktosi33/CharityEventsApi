@@ -9,7 +9,7 @@ namespace CharityEventsApi.Services.UserContextService
         public UserContextService(IHttpContextAccessor httpContextAccessor)
         {
             this.httpContextAccessor = httpContextAccessor;
-        }
+        } 
 
         private ClaimsPrincipal? getCurrentUserOrDefault()
           => httpContextAccessor?.HttpContext?.User;

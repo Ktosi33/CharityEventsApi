@@ -17,15 +17,6 @@ namespace CharityEventsApi.Models.Validators
                         context.AddFailure("OrganizerId", "Użytkownik o podanym id nie istnieje");
                 });
             
-            RuleFor(x => x.ImageId)
-                .Custom((value, context) =>
-                {
-                    var imageExist = dbContext.Images.Any(i => i.IdImages == value);
-
-                    if (!imageExist && value != null)
-                        context.AddFailure("ImageId", "Image o podanym id nie istnieje");
-                });
-
         }
     }
 }

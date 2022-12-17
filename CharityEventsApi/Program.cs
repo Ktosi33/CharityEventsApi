@@ -21,7 +21,7 @@ using FluentValidation;
 using CharityEventsApi.Models.Validators;
 using CharityEventsApi.Models.DataTransferObjects;
 using FluentValidation.AspNetCore;
-using CharityEventsApi.Services.UserContextAuthService;
+using CharityEventsApi.Services.AuthUserService;
 using CharityEventsApi.Services.UserContextService;
 using CharityEventsApi.Seeders;
 
@@ -124,7 +124,7 @@ builder.Services.AddScoped<IUserStatisticsService, UserStatisticsService>();
 builder.Services.AddScoped<IPersonalDataService, PersonalDataService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IUserContextService, UserContextService>();
-builder.Services.AddTransient<IUserContextAuthService, UserContextAuthService>();
+builder.Services.AddTransient<IAuthUserService, AuthUserService>();
 builder.Services.AddTransient<PersonalDataFactory>();
 builder.Services.AddTransient<PersonalDataAddressFactory>();
 builder.Services.AddTransient<IPersonalDataFactoryFacade, PersonalDataFactoryFacade>();
@@ -148,6 +148,13 @@ builder.Services.AddScoped<IValidator<EditCharityEventDto>, EditCharityEventDtoV
 builder.Services.AddScoped<IValidator<EditCharityEventFundraisingDto>, EditCharityEventFundraisingDtoValidator>();
 builder.Services.AddScoped<IValidator<EditCharityEventVolunteeringDto>, EditCharityEventVolunteeringDtoValidator>();
 builder.Services.AddScoped<IValidator<EditLocationDto>, EditLocationDtoValidator>();
+builder.Services.AddScoped<AuthCharityEventDecorator>();
+builder.Services.AddScoped<AuthVolunteeringDecorator>();
+builder.Services.AddScoped<AuthFundraisingDecorator>();
+builder.Services.AddScoped<AuthLocationDecorator>();
+
+
+
 
 var app = builder.Build();
 

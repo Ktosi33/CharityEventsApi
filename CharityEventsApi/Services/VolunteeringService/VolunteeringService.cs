@@ -3,7 +3,7 @@ using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.ImageService;
-using CharityEventsApi.Services.UserContextAuthService;
+using CharityEventsApi.Services.AuthUserService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.VolunteeringService
@@ -15,20 +15,17 @@ namespace CharityEventsApi.Services.VolunteeringService
         private readonly VolunteeringActivation volunteeringActication;
         private readonly VolunteeringVerification volunteeringVerification;
         private readonly CharityEventVerification charityEventVerification;
-        private readonly IUserContextAuthService userContextService;
         private readonly VolunteeringDenial volunteeringDenial;
 
         public VolunteeringService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade,
             VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification,
-            CharityEventVerification charityEventVerification, IUserContextAuthService userContextService, 
-            VolunteeringDenial volunteeringDenial)
+            CharityEventVerification charityEventVerification, VolunteeringDenial volunteeringDenial)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.volunteeringActication = volunteeringActication;
             this.volunteeringVerification = volunteeringVerification;
             this.charityEventVerification = charityEventVerification;
-            this.userContextService = userContextService;
             this.volunteeringDenial = volunteeringDenial;
         }
 
@@ -49,27 +46,20 @@ namespace CharityEventsApi.Services.VolunteeringService
         }
         public void SetActive(int idVolunteering, bool isActive)
         {
-            AuthorizeIfUserOrganizerOrAdmin(idVolunteering);
             volunteeringActication.SetValue(idVolunteering, isActive);
         }
         public void SetVerify(int idVolunteering, bool isVerified)
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin");
             volunteeringVerification.SetValue(idVolunteering, isVerified);
         }
         public void SetDeny(int idVolunteering, bool isDenied)
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin");
             volunteeringDenial.SetValue(idVolunteering, isDenied);
         }
         public void Edit(EditCharityEventVolunteeringDto VolunteeringDto, int idVolunteering)
         {
-            AuthorizeIfUserOrganizerOrAdmin(idVolunteering);
-            var charityevent = dbContext.Volunteerings.FirstOrDefault(v => v.IdVolunteering == idVolunteering);
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
-            }
+            var charityevent = getVolunteeringByIdVolunteering(idVolunteering);
+
             if (VolunteeringDto.AmountOfNeededVolunteers != null)
             {
                 charityevent.AmountOfNeededVolunteers = (int)VolunteeringDto.AmountOfNeededVolunteers;
@@ -77,13 +67,9 @@ namespace CharityEventsApi.Services.VolunteeringService
             dbContext.SaveChanges();
         }
       
-        public GetCharityEventVolunteeringDto GetById(int id)
+        public GetCharityEventVolunteeringDto GetById(int idVolunteering)
         {
-            var c = dbContext.Volunteerings.FirstOrDefault(c => c.IdVolunteering == id);
-            if (c is null)
-            {
-                throw new NotFoundException("Given id doesn't exist");
-            }
+            var c = getVolunteeringByIdVolunteering(idVolunteering);
 
             return new GetCharityEventVolunteeringDto
             {
@@ -110,15 +96,15 @@ namespace CharityEventsApi.Services.VolunteeringService
 
             return volunteerings;
         }
-        private void AuthorizeIfUserOrganizerOrAdmin(int idVolunteering)
+        private Volunteering getVolunteeringByIdVolunteering(int idVolunteering)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.CharityFundraisingIdCharityFundraising == idVolunteering);
-            if (charityevent is null)
+            var volunteering = dbContext.Volunteerings.FirstOrDefault(c => c.IdVolunteering == idVolunteering);
+            if (volunteering is null)
             {
-                throw new InternalServerErrorException();
+                throw new NotFoundException("Charity event volunteering with given id doesn't exist");
             }
 
-            userContextService.AuthorizeIfOnePass(charityevent.OrganizerId, "Admin");
+            return volunteering;
         }
 
        

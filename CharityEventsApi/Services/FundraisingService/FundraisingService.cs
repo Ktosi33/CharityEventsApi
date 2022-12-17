@@ -2,8 +2,7 @@
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.CharityEventService;
-using CharityEventsApi.Services.UserContextAuthService;
-using Microsoft.EntityFrameworkCore;
+
 namespace CharityEventsApi.Services.FundraisingService
 {
     public class FundraisingService : IFundraisingService
@@ -13,19 +12,17 @@ namespace CharityEventsApi.Services.FundraisingService
         private readonly FundraisingActivation fundraisingActivation;
         private readonly CharityEventVerification charityEventVerification;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
-        private readonly IUserContextAuthService userContextService;
         private readonly FundraisingDenial fundraisingDenial;
 
         public FundraisingService(CharityEventsDbContext dbContext, FundraisingVerification fundraisingVerification,
             FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification,
-            ICharityEventFactoryFacade charityEventFactoryFacade, IUserContextAuthService userContextService, FundraisingDenial fundraisingDenial)
+            ICharityEventFactoryFacade charityEventFactoryFacade, FundraisingDenial fundraisingDenial)
         {
             this.dbContext = dbContext;
             this.fundraisingVerification = fundraisingVerification;
             this.fundraisingActivation = fundraisingActivation;
             this.charityEventVerification = charityEventVerification;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
-            this.userContextService = userContextService;
             this.fundraisingDenial = fundraisingDenial;
         }
 
@@ -46,15 +43,9 @@ namespace CharityEventsApi.Services.FundraisingService
             charityEventVerification.SetValue(dto.CharityEventId, false);
         }
 
-        public void Edit(EditCharityEventFundraisingDto FundraisingDto, int FundraisingId)
+        public void Edit(EditCharityEventFundraisingDto FundraisingDto, int idFundraising)
         {
-            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising is null)
-            {
-                throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
-            }
-
-            AuthorizeIfUserOrganizerOrAdmin(FundraisingId);
+            var fundraising = getFundraisingByFundraisingId(idFundraising);
 
             if (FundraisingDto.AmountOfMoneyToCollect is not null)
             {
@@ -69,31 +60,21 @@ namespace CharityEventsApi.Services.FundraisingService
 
         public void SetActive(int idFundraising, bool isActive)
         {
-            AuthorizeIfUserOrganizerOrAdmin(idFundraising);
-
             fundraisingActivation.SetValue(idFundraising, isActive);
         }
         
         public void SetVerify(int idFundraising, bool isVerified) 
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin");
-
             fundraisingVerification.SetValue(idFundraising, isVerified);
         }
         public void SetDeny(int idFundraising, bool isDenied)
         {
-            userContextService.AuthorizeIfOnePass(null, "Admin");
-
             fundraisingDenial.SetValue(idFundraising, isDenied);
         }
 
-        public GetCharityFundraisingDto GetById(int id)
+        public GetCharityFundrasingDto GetById(int idFundraising)
         {
-            var c = dbContext.Charityfundraisings.FirstOrDefault(c => c.IdCharityFundraising == id);
-            if (c is null)
-            {
-                throw new NotFoundException("Given id doesn't exist");
-            }
+            var c = getFundraisingByFundraisingId(idFundraising);
 
 
             return new GetCharityFundraisingDto
@@ -125,17 +106,17 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return fundraisings;
         }
-        private void AuthorizeIfUserOrganizerOrAdmin(int fundraisingId)
+        private Charityfundraising getFundraisingByFundraisingId(int idfundraising)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.CharityFundraisingIdCharityFundraising == fundraisingId);
-            if (charityevent is null)
+            Charityfundraising? fundraising = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
+            
+            if (fundraising == null)
             {
-                throw new InternalServerErrorException();
+                throw new NotFoundException("Charity event fundraising with given id doesn't exist");
             }
 
-            userContextService.AuthorizeIfOnePass(charityevent.OrganizerId, "Admin");
+            return fundraising;
         }
 
-        
     }
 }
