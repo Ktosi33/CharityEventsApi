@@ -25,7 +25,7 @@ namespace CharityEventsApi.Services.AuthUserService
 
         private void authorize(bool isAuthorized)
         {
-            if (isAuthorized)
+            if (isAuthorized || isCurrentUserInRole("Admin"))
             {
                 return;
             }
