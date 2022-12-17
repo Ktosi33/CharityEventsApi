@@ -49,7 +49,7 @@ namespace CharityEventsApi.Controllers
                 FundraisingService.SetActive(idFundraising, (bool)isActive);
             }
             if (isDenied != null) {
-                authFundraising.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
+                authFundraising.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
                 FundraisingService.SetDeny(idFundraising, (bool)isDenied);
             }
 

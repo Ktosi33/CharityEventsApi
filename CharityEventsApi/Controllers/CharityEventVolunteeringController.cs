@@ -48,7 +48,7 @@ namespace CharityEventsApi.Controllers
                 VolunteeringService.SetActive(idVolunteering, (bool)isActive);
             }
             if (isDenied != null) {
-                authVolunteering.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
+                authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(idVolunteering, "Organizer");
                 VolunteeringService.SetDeny(idVolunteering, (bool)isDenied);
             }
 
