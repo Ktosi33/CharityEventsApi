@@ -35,7 +35,7 @@ namespace CharityEventsApi.Models.Validators
                 .Custom((value, context) =>
                 {
                     if (value.IsVolunteering == false && value.IsFundraising == false)
-                        context.AddFailure("IsVolunteering & IsFundraising", "Wydarzenie musi być zbiórką pieniędzy lub akcją wolontariacką");
+                        context.AddFailure("IsVolunteeringOrIsFundraising", "Wydarzenie musi być zbiórką pieniędzy lub akcją wolontariacką");
 
                     if (value.IsVolunteering == true)
                     {

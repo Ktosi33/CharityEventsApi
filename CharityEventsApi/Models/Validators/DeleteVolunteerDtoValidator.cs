@@ -40,7 +40,7 @@ namespace CharityEventsApi.Models.Validators
 
                     if (volunteering != null && user != null)
                         if (!volunteering.UserIdUsers.Contains(user))
-                            context.AddFailure("IdUser & IdVolunteering", "Użytkownik o podanym ID nie jest przypisany do akcji o podanym ID");
+                            context.AddFailure("IdUser&IdVolunteering", "Użytkownik o podanym ID nie jest przypisany do akcji o podanym ID");
 
                 });
         }
