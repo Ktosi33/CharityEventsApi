@@ -72,7 +72,7 @@ namespace CharityEventsApi.Services.FundraisingService
             fundraisingDenial.SetValue(idFundraising, isDenied);
         }
 
-        public GetCharityFundrasingDto GetById(int idFundraising)
+        public GetCharityFundraisingDto GetById(int idFundraising)
         {
             var c = getFundraisingByFundraisingId(idFundraising);
 
