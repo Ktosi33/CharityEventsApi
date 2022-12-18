@@ -1,4 +1,6 @@
 ﻿using CharityEventsApi.Entities;
+using CharityEventsApi.Exceptions;
+using CharityEventsApi.Seeders;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,10 +11,12 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
     public class SeedTestData
     {
         private readonly CharityEventsDbContext dbContext;
+        private readonly RoleSeeder roleSeeder;
 
-        public SeedTestData(CharityEventsDbContext dbContext)
+        public SeedTestData(CharityEventsDbContext dbContext, RoleSeeder roleSeeder)
         {
             this.dbContext = dbContext;
+            this.roleSeeder = roleSeeder;
         }
 
         public void Seed()
@@ -21,13 +25,17 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
             {
                 dbContext.Database.EnsureDeleted();
                 dbContext.Database.EnsureCreated();
-                var role = new Role { Name = "Volunteer" };
+                
                 if (!dbContext.Roles.Any())
                 {
-                    dbContext.Roles.Add(role);
-                    dbContext.SaveChanges();
+                    roleSeeder.Seed();
                 }
-                var img = new Image { IdImages = 1, Path = "aaa", ContentType = "images/jpeg" };
+                var role = dbContext.Roles.FirstOrDefault(r => r.Name == "Volunteer");
+                if(role is null)
+                {
+                    throw new NotFoundException("Role Volunteer doesn't exist");
+                }
+                var img = new Image { IdImages = 1, Path = "aaa", ContentType = "image/jpeg" };
                 if (!dbContext.Images.Any())
                 {
                     dbContext.Images.Add(img);
@@ -43,12 +51,12 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
 
                 if (!dbContext.Charityevents.Any())
                 {
-                    var ce = new Charityevent { IdCharityEvent = 1, Title = "test", IsActive = 1, IsVerified = 1, Description = "Aaa", 
+                    var ce = new Charityevent { IdCharityEvent = 1, Title = "test", IsActive = 1, IsVerified = 1, IsDenied =0, Description = "Aaa", 
                         OrganizerId = 1, CreatedEventDate = DateTime.Now, ImageIdImagesNavigation = img, ImageIdImages1 = new List<Image>() { img } };
                     var cf = new Charityfundraising { IdCharityFundraising = 1, FundTarget = "Test", AmountOfMoneyToCollect = 1000, 
-                        CreatedEventDate = DateTime.Now, IsActive = 1, IsVerified = 1 };
+                        CreatedEventDate = DateTime.Now, IsActive = 1, IsVerified = 1, IsDenied = 0, AmountOfAlreadyCollectedMoney = 0 };
                     var cv = new Volunteering { IdVolunteering = 1, CreatedEventDate = DateTime.Now, AmountOfNeededVolunteers = 3, 
-                        AmountOfAttendedVolunteers = 0,  IsVerified = 1, IsActive = 1 };
+                        AmountOfAttendedVolunteers = 0,  IsVerified = 1, IsActive = 1, IsDenied = 0 };
                     ce.CharityFundraisingIdCharityFundraising = 1;
                     ce.VolunteeringIdVolunteering = 1;
                     ce.CharityFundraisingIdCharityFundraisingNavigation = cf;

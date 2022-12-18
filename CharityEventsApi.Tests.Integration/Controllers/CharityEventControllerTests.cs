@@ -34,7 +34,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
         
         [Theory]
-        [InlineData("Aaa", "bbb", "ccc", 2.1, 2, 1, true, true)]
+        [InlineData("New Title", "New Description", "Fund Target", 5555.55, 40, 1, true, true)]
         [InlineData("TF", "bbb", "ccc", 2.1, 2, 1, true, false)]
         [InlineData("FT", "bbb", "ccc", 2.1, 2, 1, false, true)]
         public async Task AddAllCharityEventDtoByForm_CreateAllCharityEvents_ReturnsOkResult
@@ -45,7 +45,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             //arrange
             var httpContent = new MultipartFormDataContent();
             var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("test content"));
-            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
             
             httpContent.Add(new StringContent(title), "Title");
             httpContent.Add(new StringContent(description), "Description");
@@ -55,7 +55,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             httpContent.Add(new StringContent(organizerId.ToString()), "OrganizerId");
             httpContent.Add(new StringContent(isFundraising.ToString()), "IsFundraising");
             httpContent.Add(new StringContent(isVolunteering.ToString()), "IsVolunteering");
-            httpContent.Add(fileContent, "ImageCharityEvent", "image.jpeg");
+            httpContent.Add(fileContent, "ImageCharityEvent", "newImage.jpeg");
           
             //act
             var response = await client.PostAsync("/v1/CharityEvent", httpContent);
@@ -66,7 +66,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData("Aaa", "bbb", "ccc", 2.1, 1, 0, true, true)]
+        [InlineData("New Title", "New Description", "Fund Target", 5555.55, 40, 0, true, true)]
         [InlineData("All null", "ccc", "aaa", 1.1, 3, 1, false, false)]
         [InlineData("", "", "", 0.0, 1, 1, false, false)] 
         public async Task AddAllCharityEventDtoByForm_whenCreateAllCharityEvents_ReturnsBadRequest
@@ -76,7 +76,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             //arrange
             var httpContent = new MultipartFormDataContent();
             var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("test content"));
-            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
 
             httpContent.Add(new StringContent(title), "Title");
             httpContent.Add(new StringContent(description), "Description");
@@ -86,7 +86,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             httpContent.Add(new StringContent(organizerId.ToString()), "OrganizerId");
             httpContent.Add(new StringContent(isFundraising.ToString()), "IsFundraising");
             httpContent.Add(new StringContent(isVolunteering.ToString()), "IsVolunteering");
-            httpContent.Add(fileContent, "ImageCharityEvent", "image.jpeg");
+            httpContent.Add(fileContent, "ImageCharityEvent", "newImage.jpeg");
 
             //act
             var response = await client.PostAsync("/v1/CharityEvent", httpContent);
@@ -116,8 +116,8 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData("NewTitle", "Desc", 1)]
-        [InlineData("NewTitlea", null, 1)]
+        [InlineData("New Title", "Example of descripption", 1)]
+        [InlineData("Second New Title ", null, 1)]
         public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult(string title, string description, int organizerId)
         {
             //arange
@@ -149,7 +149,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
 
         [Theory]
         [InlineData("false", "true")]
-        [InlineData("asd", "asd")]
+        [InlineData("randomData", "randomData")]
         [InlineData("null", "null")]
         public async Task IsVerifiedIsActive_ChangeVerifyAndActive_ReturnsBadRequest(string isVerified, string isActive)
         {
