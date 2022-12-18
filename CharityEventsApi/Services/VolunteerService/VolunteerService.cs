@@ -68,6 +68,7 @@ namespace CharityEventsApi.Services.VolunteerService
             GetVolunteerDto getVolunteerDto = new GetVolunteerDto
             {
                 IdUser = volunteer.IdUser,
+                Login = volunteer.Login,
                 Email = volunteer.Email
                
             };
