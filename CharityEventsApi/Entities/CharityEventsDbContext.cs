@@ -52,11 +52,11 @@ namespace CharityEventsApi.Entities
                     .HasColumnName("idAddress");
 
                 entity.Property(e => e.FlatNumber)
-                    .HasColumnType("int(11)")
+                    .HasMaxLength(10)
                     .HasColumnName("flat_number");
 
                 entity.Property(e => e.HouseNumber)
-                    .HasColumnType("int(11)")
+                    .HasMaxLength(10)
                     .HasColumnName("house_number");
 
                 entity.Property(e => e.PostalCode)
@@ -466,10 +466,6 @@ namespace CharityEventsApi.Entities
                 entity.Property(e => e.IdVolunteering)
                     .HasColumnType("int(11)")
                     .HasColumnName("idVolunteering");
-
-                entity.Property(e => e.AmountOfAttendedVolunteers)
-                    .HasColumnType("int(11)")
-                    .HasColumnName("amount_of_attended_volunteers");
 
                 entity.Property(e => e.AmountOfNeededVolunteers)
                     .HasColumnType("int(11)")

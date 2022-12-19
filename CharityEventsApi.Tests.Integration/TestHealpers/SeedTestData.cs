@@ -55,8 +55,7 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                         OrganizerId = 1, CreatedEventDate = DateTime.Now, ImageIdImagesNavigation = img, ImageIdImages1 = new List<Image>() { img } };
                     var cf = new Charityfundraising { IdCharityFundraising = 1, FundTarget = "Test", AmountOfMoneyToCollect = 1000, 
                         CreatedEventDate = DateTime.Now, IsActive = 1, IsVerified = 1, IsDenied = 0, AmountOfAlreadyCollectedMoney = 0 };
-                    var cv = new Volunteering { IdVolunteering = 1, CreatedEventDate = DateTime.Now, AmountOfNeededVolunteers = 3, 
-                        AmountOfAttendedVolunteers = 0,  IsVerified = 1, IsActive = 1, IsDenied = 0 };
+                    var cv = new Volunteering { IdVolunteering = 1, CreatedEventDate = DateTime.Now, AmountOfNeededVolunteers = 3,  IsVerified = 1, IsActive = 1, IsDenied = 0 };
                     ce.CharityFundraisingIdCharityFundraising = 1;
                     ce.VolunteeringIdVolunteering = 1;
                     ce.CharityFundraisingIdCharityFundraisingNavigation = cf;
