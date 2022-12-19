@@ -9,10 +9,12 @@ namespace CharityEventsApi.Models.Validators
         public EditAllPersonalDataDtoValidator(CharityEventsDbContext dbContext)
         {
             RuleFor(x => x.Name)
-                .NotEmpty();
+               .NotEmpty()
+               .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
 
             RuleFor(x => x.Surname)
-                .NotEmpty();
+                .NotEmpty()
+                .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
 
             RuleFor(x => x.Email)
                 .NotEmpty()
@@ -30,18 +32,22 @@ namespace CharityEventsApi.Models.Validators
                 .Matches("^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$");
 
             RuleFor(x => x.PostalCode)
-                .NotEmpty();
+                .NotEmpty()
+                .MaximumLength(6);
 
             RuleFor(x => x.Town)
-                .NotEmpty();
+                .NotEmpty()
+                .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
 
             RuleFor(x => x.Street)
                 .NotEmpty();
 
             RuleFor(x => x.HouseNumber)
+                .MaximumLength(10)
                 .NotEmpty();
 
-            RuleFor(x => x.FlatNumber);
+            RuleFor(x => x.FlatNumber)
+                .MaximumLength(10);
         }
     }
 }
