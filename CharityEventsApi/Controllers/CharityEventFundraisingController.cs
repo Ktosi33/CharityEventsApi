@@ -41,9 +41,17 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
             if (isVerified != null) {
-                authFundraising.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
+
+                if(isVerified == false) {
+                    authFundraising.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
+                }
+                else {
+                    authFundraising.AuthorizeIfOnePassWithIdFundraising(null, "Admin");
+                }
+                
                 FundraisingService.SetVerify(idFundraising, (bool)isVerified);
             }
+
             if (isActive != null) {
                 authFundraising.AuthorizeUserIdIfRoleWithIdFundraising(idFundraising, "Organizer");
                 FundraisingService.SetActive(idFundraising, (bool)isActive);

@@ -40,6 +40,12 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
             if (isVerified != null) {
+                if (isVerified == false) {
+                    authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(idVolunteering, "Organizer");
+                }
+                else {
+                    authVolunteering.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
+                }
                 authVolunteering.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
                 VolunteeringService.SetVerify(idVolunteering, (bool)isVerified);
             }
