@@ -60,8 +60,10 @@ namespace CharityEventsApi.Services.DonationService
                 Description = donation.Description,
                 CharityFundraisingIdCharityFundraising = donation.CharityFundraisingIdCharityFundraising,
                 DonationDate = donation.DonationDate,
-                UserIdUser = (int)donation.UserIdUser!,
             };
+
+            if (donation.UserIdUser != null)
+                don.UserIdUser = (int)donation.UserIdUser;
 
             if (user != null)
                 don.User = new GetUserDto
