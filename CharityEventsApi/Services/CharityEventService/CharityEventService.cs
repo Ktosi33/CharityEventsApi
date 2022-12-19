@@ -62,7 +62,7 @@ namespace CharityEventsApi.Services.CharityEventService
         }
         public async Task DeleteImage(int idImage, int idCharityEvent)
         {
-            using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            using var transaction = await dbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
             var ce = GetCharityEventByCharityEventId(idCharityEvent);
      
 
@@ -146,15 +146,15 @@ namespace CharityEventsApi.Services.CharityEventService
         }
         public async Task ChangeImage(IFormFile image, int idCharityEvent)
         {
-            using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            using var transaction = await dbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
             var ce = GetCharityEventByCharityEventId(idCharityEvent);
-            await imageService.DeleteImageByIdAsync(ce.ImageIdImages);
-
+            int oldImageId = ce.ImageIdImages;
             ce.ImageIdImages = await imageService.SaveImageAsync(image);
+
+            await imageService.DeleteImageByIdAsync(oldImageId);
 
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
-
         }
 
         public void SetActive(int idCharityEvent, bool isActive)
