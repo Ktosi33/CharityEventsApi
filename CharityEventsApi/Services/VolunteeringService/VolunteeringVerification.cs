@@ -24,7 +24,7 @@ namespace CharityEventsApi.Services.VolunteeringService
         protected override void setTrue(int idVolunteering)
         {
             var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == idVolunteering);
-            if (volunteering == null)
+            if (volunteering is null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }
@@ -38,7 +38,7 @@ namespace CharityEventsApi.Services.VolunteeringService
         protected override void setFalse(int VolunteeringId)
         {
             var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == VolunteeringId);
-            if (volunteering == null)
+            if (volunteering is null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }

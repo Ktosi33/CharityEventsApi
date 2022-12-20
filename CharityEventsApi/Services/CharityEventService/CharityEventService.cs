@@ -108,7 +108,6 @@ namespace CharityEventsApi.Services.CharityEventService
             charityevent.Description = charityEventDto.Description;
             }
 
-            charityEventVerification.SetValue(idCharityEvent, false);
 
             dbContext.SaveChanges();
         }

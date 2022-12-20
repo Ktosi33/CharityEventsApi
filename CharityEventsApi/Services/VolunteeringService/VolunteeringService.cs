@@ -64,8 +64,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             {
                 charityevent.AmountOfNeededVolunteers = (int)VolunteeringDto.AmountOfNeededVolunteers;
             }
-            charityEventVerification.SetValue(idVolunteering, false);
-
+            
             dbContext.SaveChanges();
         }
       
