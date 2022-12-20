@@ -46,7 +46,6 @@ namespace CharityEventsApi.Controllers
                 else {
                     authVolunteering.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
                 }
-                authVolunteering.AuthorizeIfOnePassWithIdVolunteering(null, "Admin");
                 VolunteeringService.SetVerify(idVolunteering, (bool)isVerified);
             }
             if (isActive != null) {
