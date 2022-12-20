@@ -56,7 +56,6 @@ namespace CharityEventsApi.Services.FundraisingService
             fundraising.FundTarget = FundraisingDto.FundTarget;
             }
 
-            fundraisingVerification.SetValue(idFundraising, false);
           
             dbContext.SaveChanges();
         }

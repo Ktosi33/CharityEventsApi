@@ -22,7 +22,7 @@ namespace CharityEventsApi.Services.CharityEventService
         protected override void setTrue(int charityEventId)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
-            if (charityevent == null)
+            if (charityevent is null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }
@@ -36,7 +36,7 @@ namespace CharityEventsApi.Services.CharityEventService
         protected override void setFalse(int charityEventId)
         {
             var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
-            if (charityevent == null)
+            if (charityevent is null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }

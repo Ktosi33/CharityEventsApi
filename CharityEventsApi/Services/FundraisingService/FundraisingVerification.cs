@@ -38,7 +38,7 @@ namespace CharityEventsApi.Services.FundraisingService
         protected override void setFalse(int FundraisingId)
         {
             var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising == null)
+            if (fundraising is null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
