@@ -25,7 +25,8 @@ namespace CharityEventsApi.Models.Validators
 
             RuleFor(x => x.ConfirmPassword)
                 .NotEmpty()
-                .Equal(e => e.Password);
+                .Equal(e => e.Password)
+                .WithMessage("Hasła muszą być takie same");
 
             RuleFor(x => x.Login)
                 .NotEmpty()
