@@ -28,13 +28,13 @@ namespace CharityEventsApi.Services.FundraisingService
 
         public async Task Add(AddCharityEventFundraisingDto dto)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
 
             if (charityevent is null) {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
 
-            if (charityevent.CharityFundraisingIdCharityFundraising is not null) {
+            if (charityevent.IdCharityFundraising is not null) {
                 throw new BadRequestException("Can't add charity event fundraising, because another one already exists in this charity event");
             }
 
@@ -93,7 +93,7 @@ namespace CharityEventsApi.Services.FundraisingService
         }
         public IEnumerable<GetCharityFundraisingDto> GetAll()
         {
-            var fundraisings = dbContext.Charityfundraisings.Select(c => new GetCharityFundraisingDto
+            var fundraisings = dbContext.CharityFundraisings.Select(c => new GetCharityFundraisingDto
             {
                 Id = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
@@ -108,9 +108,9 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return fundraisings;
         }
-        private Charityfundraising getFundraisingByFundraisingId(int idfundraising)
+        private CharityFundraising getFundraisingByFundraisingId(int idfundraising)
         {
-            Charityfundraising? fundraising = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
+            CharityFundraising? fundraising = dbContext.CharityFundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
             
             if (fundraising == null)
             {

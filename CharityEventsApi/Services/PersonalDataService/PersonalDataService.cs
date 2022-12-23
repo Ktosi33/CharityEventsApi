@@ -20,7 +20,7 @@ namespace CharityEventsApi.Services.PersonalDataService
         {
             var d = dbContext
                 .PersonalData
-                .FirstOrDefault(d => d.UserIdUser == id);
+                .FirstOrDefault(d => d.IdUser == id);
 
             if (d == null)
                 return false;
@@ -30,7 +30,7 @@ namespace CharityEventsApi.Services.PersonalDataService
 
         public void addAllPersonalData(AddAllPersonalDataDto personalDataDto, int userId)
         {
-            if((dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == userId)) == null)
+            if((dbContext.PersonalData.FirstOrDefault(p => p.IdUser == userId)) == null)
                 personalDataFactoryFacade.addPersonalData(personalDataDto, userId);
             else
                 throw new BadRequestException("User with the given id has data");        
@@ -38,11 +38,11 @@ namespace CharityEventsApi.Services.PersonalDataService
 
         public void editAllPersonalData(EditAllPersonalDataDto personalDataDto, int idPersonalData)
         {
-            var personalData = dbContext.PersonalData.FirstOrDefault(p => p.UserIdUser == idPersonalData);
+            var personalData = dbContext.PersonalData.FirstOrDefault(p => p.IdUser == idPersonalData);
             if (personalData == null)
                 throw new NotFoundException("Personal data with given id doesn't exist");
          
-            var address = dbContext.Addresses.FirstOrDefault(a => a.IdAddress == personalData.AddressIdAddress);
+            var address = dbContext.Addresses.FirstOrDefault(a => a.IdAddress == personalData.IdAddress);
             if (address == null)
                 throw new NotFoundException("Address with given id doesn't exist");
 
@@ -64,8 +64,8 @@ namespace CharityEventsApi.Services.PersonalDataService
         {
             var d = dbContext
                 .PersonalData
-                .Include(d => d.AddressIdAddressNavigation)
-                .FirstOrDefault(d => d.UserIdUser == userId);
+                .Include(d => d.IdAddressNavigation)
+                .FirstOrDefault(d => d.IdUser == userId);
 
             if (d is null)
                 throw new NotFoundException("PersonalData for this user id doesn't exist");
@@ -82,8 +82,8 @@ namespace CharityEventsApi.Services.PersonalDataService
         {
             var d = dbContext
                 .PersonalData
-                .Include(d => d.AddressIdAddressNavigation)
-                .FirstOrDefault(d => d.UserIdUser == id);
+                .Include(d => d.IdAddressNavigation)
+                .FirstOrDefault(d => d.IdUser == id);
                 
             if (d is null)
                 throw new NotFoundException("PersonalData for this user id doesn't exist");
@@ -95,11 +95,11 @@ namespace CharityEventsApi.Services.PersonalDataService
                 Surname = d.Surname,
                 Email = d.Email,
                 PhoneNumber = d.PhoneNumber,
-                Town = d.AddressIdAddressNavigation.Town,
-                PostalCode = d.AddressIdAddressNavigation.PostalCode,
-                Street = d.AddressIdAddressNavigation.Street,
-                HouseNumber = d.AddressIdAddressNavigation.HouseNumber,
-                FlatNumber = d.AddressIdAddressNavigation.FlatNumber
+                Town = d.IdAddressNavigation.Town,
+                PostalCode = d.IdAddressNavigation.PostalCode,
+                Street = d.IdAddressNavigation.Street,
+                HouseNumber = d.IdAddressNavigation.HouseNumber,
+                FlatNumber = d.IdAddressNavigation.FlatNumber
                 
             };
         }

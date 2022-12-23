@@ -6,9 +6,9 @@ namespace CharityEventsApi.Services.VolunteeringService
     public class VolunteeringFactory 
     {
 
-        public Volunteering CreateCharityEvent(AddAllCharityEventsDto charityEventDto)
+        public CharityVolunteering CreateCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
-            Volunteering volunteering = new Volunteering
+            CharityVolunteering volunteering = new CharityVolunteering
             {
                 AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers != null ? (int)charityEventDto.AmountOfNeededVolunteers : 0, 
                 CreatedEventDate = DateTime.Now,
@@ -20,9 +20,9 @@ namespace CharityEventsApi.Services.VolunteeringService
             return volunteering;
         }
 
-        public Volunteering CreateCharityEvent(AddCharityEventVolunteeringDto charityEventDto)
+        public CharityVolunteering CreateCharityEvent(AddCharityEventVolunteeringDto charityEventDto)
         {
-            Volunteering volunteering = new Volunteering
+            CharityVolunteering volunteering = new CharityVolunteering
             {
                 AmountOfNeededVolunteers = charityEventDto.AmountOfNeededVolunteers, 
                 CreatedEventDate = DateTime.Now,

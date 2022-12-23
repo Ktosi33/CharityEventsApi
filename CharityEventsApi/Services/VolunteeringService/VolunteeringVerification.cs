@@ -23,21 +23,21 @@ namespace CharityEventsApi.Services.VolunteeringService
         }
         protected override void setTrue(int idVolunteering)
         {
-            var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == idVolunteering);
+            var volunteering = dbContext.CharityVolunteerings.Include(ce => ce.CharityEvents).FirstOrDefault(v => v.IdCharityVolunteering == idVolunteering);
             if (volunteering is null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }
 
             accountService.GiveRole(charityEventService
-                .GetCharityEventByVolunteeringId(idVolunteering).OrganizerId, "Organizer");
+                .GetCharityEventByVolunteeringId(idVolunteering).IdOrganizer, "Organizer");
 
             volunteering.IsVerified = 1;
             dbContext.SaveChanges();
         }
         protected override void setFalse(int VolunteeringId)
         {
-            var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == VolunteeringId);
+            var volunteering = dbContext.CharityVolunteerings.Include(ce => ce.CharityEvents).FirstOrDefault(v => v.IdCharityVolunteering == VolunteeringId);
             if (volunteering is null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");

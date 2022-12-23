@@ -16,7 +16,7 @@ namespace CharityEventsApi.Services.VolunteeringService
 
         protected override void setTrue(int VolunteeringId)
         {
-            var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == VolunteeringId);
+            var volunteering = dbContext.CharityVolunteerings.Include(ce => ce.CharityEvents).FirstOrDefault(v => v.IdCharityVolunteering == VolunteeringId);
             if (volunteering == null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
@@ -32,7 +32,7 @@ namespace CharityEventsApi.Services.VolunteeringService
 
         protected override void setFalse(int VolunteeringId)
         {
-            var volunteering = dbContext.Volunteerings.Include(ce => ce.Charityevents).FirstOrDefault(v => v.IdVolunteering == VolunteeringId);
+            var volunteering = dbContext.CharityVolunteerings.Include(ce => ce.CharityEvents).FirstOrDefault(v => v.IdCharityVolunteering == VolunteeringId);
             if (volunteering == null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
@@ -40,19 +40,19 @@ namespace CharityEventsApi.Services.VolunteeringService
             volunteering.EndEventDate = DateTime.Now;
             volunteering.IsActive = 0;
 
-            var charityevent = volunteering.Charityevents.FirstOrDefault();
+            var charityevent = volunteering.CharityEvents.FirstOrDefault();
             if (charityevent == null)
             {
                 throw new BadRequestException("CharityEventVolunteering dont have charity event.");
             }
 
-            if (charityevent.CharityFundraisingIdCharityFundraising == null)
+            if (charityevent.IdCharityFundraising == null)
             {
                 charityevent.IsActive = 0;
             }
             else
             {
-                var cf = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == charityevent.CharityFundraisingIdCharityFundraising);
+                var cf = dbContext.CharityFundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == charityevent.IdCharityFundraising);
                 if (cf != null)
                 {
                     if (cf.EndEventDate != null)

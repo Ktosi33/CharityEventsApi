@@ -40,23 +40,23 @@ namespace CharityEventsApi.Services.CharityEventService
 
 
             int imageId = await imageService.SaveImageAsync(image);
-            var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == imageId);
+            var img = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImage == imageId);
             if (img is null)
             {
                 throw new BadRequestException("something went wrong");
             }
-            ce.ImageIdImages1.Add(img);
+            ce.IdImages.Add(img);
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
         public async Task<IEnumerable<ImageDto>> GetImagesAsync(int idCharityEvent)
         {
-            var ce = await dbContext.Charityevents.Include(c => c.ImageIdImages1).FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
+            var ce = await dbContext.CharityEvents.Include(c => c.IdImages).FirstOrDefaultAsync(c => c.IdCharityEvent == idCharityEvent);
             if (ce is null)
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
-            IEnumerable<ImageDto> imageDtos = await imageService.GetImagesDtoByImages(ce.ImageIdImages1);
+            IEnumerable<ImageDto> imageDtos = await imageService.GetImagesDtoByImages(ce.IdImages);
 
             return imageDtos;
         }
@@ -66,13 +66,13 @@ namespace CharityEventsApi.Services.CharityEventService
             var ce = GetCharityEventByCharityEventId(idCharityEvent);
      
 
-            var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
+            var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImage == idImage);
             if (image is null)
             {
                 throw new NotFoundException("Image with given id doesn't exist");
             }
 
-            ce.ImageIdImages1.Remove(image);
+            ce.IdImages.Remove(image);
             await imageService.DeleteImageByObjectAsync(image);
 
             await dbContext.SaveChangesAsync();
@@ -81,15 +81,15 @@ namespace CharityEventsApi.Services.CharityEventService
        
         public IEnumerable<GetCharityEventDto> GetAllCharityEventDto()
         {
-            var charityevents = dbContext.Charityevents.Select(ce => new GetCharityEventDto
+            var charityevents = dbContext.CharityEvents.Select(ce => new GetCharityEventDto
                 { 
                 Id = ce.IdCharityEvent,
                 IsActive = ce.IsActive,
                 Description = ce.Description,
-                FundraisingId = ce.CharityFundraisingIdCharityFundraising,
+                FundraisingId = ce.IdCharityFundraising,
                 IsVerified = ce.IsVerified,
                 Title = ce.Title,
-                VolunteeringId = ce.VolunteeringIdVolunteering
+                VolunteeringId = ce.IdCharityVolunteering
              }
             );
 
@@ -111,9 +111,9 @@ namespace CharityEventsApi.Services.CharityEventService
 
             dbContext.SaveChanges();
         }
-        public Charityevent GetCharityEventByCharityEventId(int idCharityEvent)
+        public CharityEvent GetCharityEventByCharityEventId(int idCharityEvent)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == idCharityEvent);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(ce => ce.IdCharityEvent == idCharityEvent);
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
@@ -121,9 +121,9 @@ namespace CharityEventsApi.Services.CharityEventService
 
             return charityevent;
         }
-        public Charityevent GetCharityEventByFundraisingId(int idFundraising)
+        public CharityEvent GetCharityEventByFundraisingId(int idFundraising)
         {
-            Charityevent? charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.CharityFundraisingIdCharityFundraising == idFundraising);
+            CharityEvent? charityevent = dbContext.CharityEvents.FirstOrDefault(ce => ce.IdCharityFundraising == idFundraising);
 
             if (charityevent is null)
             {
@@ -132,9 +132,9 @@ namespace CharityEventsApi.Services.CharityEventService
 
             return charityevent;
         }
-        public Charityevent GetCharityEventByVolunteeringId(int idVolunteering)
+        public CharityEvent GetCharityEventByVolunteeringId(int idVolunteering)
         {
-            Charityevent? charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.VolunteeringIdVolunteering == idVolunteering);
+            CharityEvent? charityevent = dbContext.CharityEvents.FirstOrDefault(ce => ce.IdCharityVolunteering == idVolunteering);
 
             if (charityevent is null)
             {
@@ -147,8 +147,8 @@ namespace CharityEventsApi.Services.CharityEventService
         {
             using var transaction = await dbContext.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable);
             var ce = GetCharityEventByCharityEventId(idCharityEvent);
-            int oldImageId = ce.ImageIdImages;
-            ce.ImageIdImages = await imageService.SaveImageAsync(image);
+            int oldImageId = ce.IdImage;
+            ce.IdImage = await imageService.SaveImageAsync(image);
 
             await imageService.DeleteImageByIdAsync(oldImageId);
 
@@ -178,8 +178,8 @@ namespace CharityEventsApi.Services.CharityEventService
                 Description = c.Description,
                 IsActive = c.IsActive,
                 Title = c.Title,
-                VolunteeringId = c?.VolunteeringIdVolunteering,
-                FundraisingId = c?.CharityFundraisingIdCharityFundraising,
+                VolunteeringId = c?.IdCharityVolunteering,
+                FundraisingId = c?.IdCharityFundraising,
                 IsVerified = c!.IsVerified
             };
         }

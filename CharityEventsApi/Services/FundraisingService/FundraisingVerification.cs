@@ -24,20 +24,20 @@ namespace CharityEventsApi.Services.FundraisingService
 
         protected override void setTrue(int idFundraising)
         {
-            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == idFundraising);
+            var fundraising = dbContext.CharityFundraisings.FirstOrDefault(f => f.IdCharityFundraising == idFundraising);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
             accountService.GiveRole(charityEventService
-                .GetCharityEventByFundraisingId(idFundraising).OrganizerId, "Organizer");
+                .GetCharityEventByFundraisingId(idFundraising).IdOrganizer, "Organizer");
 
             fundraising.IsVerified = 1;
             dbContext.SaveChanges();
         }
         protected override void setFalse(int FundraisingId)
         {
-            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            var fundraising = dbContext.CharityFundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising is null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");

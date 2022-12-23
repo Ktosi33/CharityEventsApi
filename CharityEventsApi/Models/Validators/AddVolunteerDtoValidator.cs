@@ -22,12 +22,12 @@ namespace CharityEventsApi.Models.Validators
                .NotEmpty()
                .Custom((value, context) =>
                {
-                   var volunteeringExist = dbContext.Volunteerings.Any(v => v.IdVolunteering == value);
+                   var volunteeringExist = dbContext.CharityVolunteerings.Any(v => v.IdCharityVolunteering == value);
 
                    if (!volunteeringExist)
                        context.AddFailure("IdVolunteering", "Akcja wolontariacka o podanym ID nie istnieje");
 
-                   var volunteering = dbContext.Volunteerings.FirstOrDefault(v => v.IdVolunteering == value);
+                   var volunteering = dbContext.CharityVolunteerings.FirstOrDefault(v => v.IdCharityVolunteering == value);
 
                    if (volunteering != null && (volunteering.IsVerified == 0 || volunteering.IsActive == 0))
                        context.AddFailure("IdVolunteering", "Akcja wolontariacka musi być aktywna i zweryfikowana");

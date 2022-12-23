@@ -22,19 +22,19 @@ namespace CharityEventsApi.Services.LocationService
         public void AuthorizeUserIdIfRoleWithLocationId(int idLocation, string role)
         {
 
-            var volunteering = getLocation(idLocation).VolunteeringIdVolunteerings.FirstOrDefault();
+            var volunteering = getLocation(idLocation).IdCharityVolunteerings.FirstOrDefault();
             if(volunteering is null)
             {
                 throw new NotFoundException("Volunteering with given location doesnt exist");
             }
-            var charityevent = charityEventService.GetCharityEventByVolunteeringId(volunteering.IdVolunteering);
+            var charityevent = charityEventService.GetCharityEventByVolunteeringId(volunteering.IdCharityVolunteering);
 
-            authUserService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
+            authUserService.AuthorizeUserIdIfRole(charityevent.IdOrganizer, role);
         }
 
         private Location getLocation(int idLocation)
         {
-            var location = dbContext.Locations.Include(v => v.VolunteeringIdVolunteerings).SingleOrDefault(l => l.IdLocation == idLocation);
+            var location = dbContext.Locations.Include(v => v.IdCharityVolunteerings).SingleOrDefault(l => l.IdLocation == idLocation);
             if (location is null)
             {
                 throw new NotFoundException("Location with given id doesn't exist");

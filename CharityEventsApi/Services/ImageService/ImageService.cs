@@ -39,7 +39,7 @@ namespace CharityEventsApi.Services.ImageService
                 Image img = new() { Path = "Temporary null", ContentType = image.ContentType };
                 dbContext.Images.Add(img);
                 dbContext.SaveChanges();
-                int id = img.IdImages;
+                int id = img.IdImage;
                 var pathimg = Path.Combine(path, id.ToString());
 
                 if (image.Length > 0)
@@ -80,7 +80,7 @@ namespace CharityEventsApi.Services.ImageService
      
         public async Task<ImageDto> GetImageAsync(int id)
         {
-            var img = dbContext.Images.SingleOrDefault(i => i.IdImages == id);
+            var img = dbContext.Images.SingleOrDefault(i => i.IdImage == id);
             if (img is null)
             {
                 throw new NotFoundException("Image with given id doesn't exist");
@@ -91,11 +91,11 @@ namespace CharityEventsApi.Services.ImageService
         private async Task<ImageDto> createImageDtoByObjectAsync(Image img)
         {
             Byte[] content;
-            var pathimg = Path.Combine(path, img.IdImages.ToString());
+            var pathimg = Path.Combine(path, img.IdImage.ToString());
             content = await File.ReadAllBytesAsync(pathimg);
             var image = new ImageDto
             {
-                IdImages = img.IdImages,
+                IdImages = img.IdImage,
                 Content = Convert.ToBase64String(content),
                 ContentType = img.ContentType
             };
@@ -116,19 +116,19 @@ namespace CharityEventsApi.Services.ImageService
             List<ImageDto> imagesDto = new();
             foreach (var image in images)
             {
-                imagesDto.Add(await GetImageAsync(image.IdImages));
+                imagesDto.Add(await GetImageAsync(image.IdImage));
             }
 
             return imagesDto;
         }
         public List<Image> getImageObjectsByIds(List<int> ids)
         {
-             return dbContext.Images.Where(img => ids.Contains(img.IdImages)).ToList();
+             return dbContext.Images.Where(img => ids.Contains(img.IdImage)).ToList();
            
         }
         public async Task DeleteImageByIdAsync(int idImage)
         {
-            var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImages == idImage);
+            var image = await dbContext.Images.FirstOrDefaultAsync(i => i.IdImage == idImage);
             if(image is null)
             {
                 throw new NotFoundException("Image with given id doesn't exist");

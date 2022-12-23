@@ -23,7 +23,7 @@ namespace CharityEventsApi.Models.Validators
                .NotEmpty()
                .Custom((value, context) =>
                {
-                   var volunteeringExist = dbContext.Volunteerings.Any(v => v.IdVolunteering == value);
+                   var volunteeringExist = dbContext.CharityVolunteerings.Any(v => v.IdCharityVolunteering == value);
 
                    if (!volunteeringExist)
                        context.AddFailure("IdVolunteering", "Akcja wolontariacka o podanym ID nie istnieje");
@@ -32,14 +32,14 @@ namespace CharityEventsApi.Models.Validators
             RuleFor(x => x)
                 .Custom((value, context) =>
                 {
-                    var volunteering = dbContext.Volunteerings
-                    .Include(v => v.UserIdUsers)
-                    .FirstOrDefault(v => v.IdVolunteering == value.IdVolunteering);
+                    var volunteering = dbContext.CharityVolunteerings
+                    .Include(v => v.IdUsers)
+                    .FirstOrDefault(v => v.IdCharityVolunteering == value.IdVolunteering);
                    
                     var user = dbContext.Users.FirstOrDefault(u => u.IdUser == value.IdUser);
 
                     if (volunteering != null && user != null)
-                        if (!volunteering.UserIdUsers.Contains(user))
+                        if (!volunteering.IdUsers.Contains(user))
                             context.AddFailure("IdUser&IdVolunteering", "Użytkownik o podanym ID nie jest przypisany do akcji o podanym ID");
 
                 });

@@ -21,12 +21,12 @@ namespace CharityEventsApi.Services.CharityEventService
 
         protected override void setTrue(int charityEventId)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent is null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }
-            accountService.GiveRole(charityevent.OrganizerId, "Organizer");
+            accountService.GiveRole(charityevent.IdOrganizer, "Organizer");
 
 
             charityevent.IsVerified = 1;
@@ -35,7 +35,7 @@ namespace CharityEventsApi.Services.CharityEventService
 
         protected override void setFalse(int charityEventId)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(ce => ce.IdCharityEvent == charityEventId);
             if (charityevent is null)
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");

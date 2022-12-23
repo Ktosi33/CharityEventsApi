@@ -6,9 +6,9 @@ namespace CharityEventsApi.Services.FundraisingService
 {
     public class FundraisingFactory 
     {
-        public Charityfundraising CreateCharityEvent(AddAllCharityEventsDto charityEventDto)
+        public CharityFundraising CreateCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
-            Charityfundraising charityfundraising = new ()
+            CharityFundraising charityfundraising = new ()
             {
                 AmountOfMoneyToCollect = charityEventDto.AmountOfMoneyToCollect != null ? (decimal)charityEventDto.AmountOfMoneyToCollect : 0, //TODO: can make problems
                 FundTarget = charityEventDto.FundTarget ?? "",
@@ -20,9 +20,9 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return charityfundraising;
         }
-        public Charityfundraising CreateCharityEvent(AddCharityEventFundraisingDto charityEventDto)
+        public CharityFundraising CreateCharityEvent(AddCharityEventFundraisingDto charityEventDto)
         {
-            Charityfundraising charityfundraising = new ()
+            CharityFundraising charityfundraising = new ()
             {
                 AmountOfMoneyToCollect =  charityEventDto.AmountOfMoneyToCollect,
                 FundTarget = charityEventDto.FundTarget ?? "",

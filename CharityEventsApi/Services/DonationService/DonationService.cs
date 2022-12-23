@@ -20,8 +20,8 @@ namespace CharityEventsApi.Services.DonationService
             var donation = new Donation
             {
                 AmountOfDonation = addDonationDto.AmountOfDonation,
-                CharityFundraisingIdCharityFundraising = addDonationDto.CharityFundraisingIdCharityFundraising,
-                UserIdUser = addDonationDto.UserIdUser,
+                IdCharityFundraising = addDonationDto.CharityFundraisingIdCharityFundraising,
+                IdUser = addDonationDto.UserIdUser,
                 Description = addDonationDto.Description,
                 DonationDate = DateTime.Now
             };
@@ -31,7 +31,7 @@ namespace CharityEventsApi.Services.DonationService
                 dbContext.Donations.Add(donation);
                 dbContext.SaveChanges();
 
-                var charityFundrasing = dbContext.Charityfundraisings.FirstOrDefault(a => a.IdCharityFundraising == donation.CharityFundraisingIdCharityFundraising);
+                var charityFundrasing = dbContext.CharityFundraisings.FirstOrDefault(a => a.IdCharityFundraising == donation.IdCharityFundraising);
 
                 if (charityFundrasing != null)
                     charityFundrasing.AmountOfAlreadyCollectedMoney += addDonationDto.AmountOfDonation;
@@ -45,25 +45,25 @@ namespace CharityEventsApi.Services.DonationService
 
         public GetDonationDto getDonationById(int donationId)
         {
-            var donation = dbContext.Donations.FirstOrDefault(d => d.IdDonations == donationId);
+            var donation = dbContext.Donations.FirstOrDefault(d => d.IdDonation == donationId);
             
 
             if (donation is null)
                 throw new NotFoundException("Donation about this id does not exist");
 
-            var user = dbContext.Users.FirstOrDefault(u => u.IdUser == donation.UserIdUser);
+            var user = dbContext.Users.FirstOrDefault(u => u.IdUser == donation.IdUser);
 
             var don = new GetDonationDto
             {
                 DonationId = donationId,
                 AmountOfDonation = donation.AmountOfDonation,
                 Description = donation.Description,
-                CharityFundraisingIdCharityFundraising = donation.CharityFundraisingIdCharityFundraising,
+                CharityFundraisingIdCharityFundraising = donation.IdCharityFundraising,
                 DonationDate = donation.DonationDate,
             };
 
-            if (donation.UserIdUser != null)
-                don.UserIdUser = (int)donation.UserIdUser;
+            if (donation.IdUser != null)
+                don.UserIdUser = (int)donation.IdUser;
 
             if (user != null)
                 don.User = new GetUserDto
@@ -78,7 +78,7 @@ namespace CharityEventsApi.Services.DonationService
 
         public List<GetDonationDto> getDonationsByCharityFundraisingId(int fundraisingId)
         {
-            var charityFundraising = dbContext.Charityfundraisings
+            var charityFundraising = dbContext.CharityFundraisings
                 .Include(c => c.Donations)
                 .FirstOrDefault(c => c.IdCharityFundraising == fundraisingId);
             
@@ -91,7 +91,7 @@ namespace CharityEventsApi.Services.DonationService
 
             foreach (var donation in donations)
             {
-                donationsList.Add(getDonationById(donation.IdDonations));
+                donationsList.Add(getDonationById(donation.IdDonation));
             }
 
             return donationsList;

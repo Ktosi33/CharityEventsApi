@@ -17,20 +17,20 @@ namespace CharityEventsApi.Services.VolunteeringService
 
         public void AuthorizeIfOnePassWithIdVolunteering(int? idVolunteering, string? role)
         {
-            Charityevent? charityevent = null;
+            CharityEvent? charityevent = null;
 
             if (idVolunteering.HasValue)
             {
                 charityevent = charityEventService.GetCharityEventByVolunteeringId(idVolunteering.Value);
             }
 
-            authUserService.AuthorizeIfOnePass(charityevent?.OrganizerId, role);
+            authUserService.AuthorizeIfOnePass(charityevent?.IdOrganizer, role);
         }
 
         public void AuthorizeUserIdIfRoleWithIdVolunteering(int idVolunteering, string role)
         {
             var charityevent = charityEventService.GetCharityEventByVolunteeringId(idVolunteering);
-            authUserService.AuthorizeUserIdIfRole(charityevent.OrganizerId, role);
+            authUserService.AuthorizeUserIdIfRole(charityevent.IdOrganizer, role);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace CharityEventsApi.Services.LocationService
 
         public void addLocation(AddLocationDto locationDto)
         {
-            var volunteering = dbContext.Volunteerings.FirstOrDefault(v => v.IdVolunteering == locationDto.IdVolunteering);
+            var volunteering = dbContext.CharityVolunteerings.FirstOrDefault(v => v.IdCharityVolunteering == locationDto.IdVolunteering);
             if (volunteering == null)
             {
                 throw new BadRequestException("Volunteering ID doesnt exist");
@@ -32,7 +32,7 @@ namespace CharityEventsApi.Services.LocationService
                 Town = locationDto.Town,      
             };
 
-            location.VolunteeringIdVolunteerings.Add(volunteering);
+            location.IdCharityVolunteerings.Add(volunteering);
             dbContext.Locations.Add(location);
             dbContext.SaveChanges();
 
@@ -84,14 +84,14 @@ namespace CharityEventsApi.Services.LocationService
 
         public List<GetLocationDto> getLocationsByVolunteeringId(int volunteeringId)
         {
-            var volunteering = dbContext.Volunteerings
-                .Include(v => v.LocationIdLocations)
-                .FirstOrDefault(v => v.IdVolunteering == volunteeringId);
+            var volunteering = dbContext.CharityVolunteerings
+                .Include(v => v.IdLocations)
+                .FirstOrDefault(v => v.IdCharityVolunteering == volunteeringId);
 
             if (volunteering == null)
                 throw new NotFoundException("Volunteering about this id does not exist");
 
-            var locations = volunteering.LocationIdLocations;
+            var locations = volunteering.IdLocations;
             List<GetLocationDto> locationsList = new List<GetLocationDto>();
 
             foreach (var location in locations)

@@ -13,8 +13,8 @@ namespace CharityEventsApi.Services.PersonalDataService
                 Name = addAllPersonalDataDto.Name,
                 PhoneNumber = addAllPersonalDataDto.PhoneNumber,
                 Surname = addAllPersonalDataDto.Surname,
-                AddressIdAddress = addressId,
-                UserIdUser = userId
+                IdAddress = addressId,
+                IdUser = userId
            
             };
 

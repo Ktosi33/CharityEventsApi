@@ -20,9 +20,9 @@ namespace CharityEventsApi.Services.VolunteerService
         public void addVolunteer(AddVolunteerDto addVolunteerDto)
         {
             var volunteer = dbContext.Users.FirstOrDefault(u => u.IdUser == addVolunteerDto.IdUser);
-            var volunteering = dbContext.Volunteerings
-                .Include(v => v.UserIdUsers)
-                .FirstOrDefault(v => v.IdVolunteering == addVolunteerDto.IdVolunteering);
+            var volunteering = dbContext.CharityVolunteerings
+                .Include(v => v.IdUsers)
+                .FirstOrDefault(v => v.IdCharityVolunteering == addVolunteerDto.IdVolunteering);
             
             if (volunteer == null)
                 throw new NotFoundException("User about this id does not exist");
@@ -32,10 +32,10 @@ namespace CharityEventsApi.Services.VolunteerService
                 if (volunteering.IsVerified == 0 || volunteering.IsActive == 0)
                     throw new BadRequestException("Action must be verified and active");
 
-                if (volunteering.UserIdUsers.Contains(volunteer))
+                if (volunteering.IdUsers.Contains(volunteer))
                     throw new BadRequestException("This volunteer has already been assigned to this action");
 
-                volunteering.UserIdUsers.Add(volunteer);
+                volunteering.IdUsers.Add(volunteer);
                 dbContext.SaveChanges();
             }
             else
@@ -44,15 +44,15 @@ namespace CharityEventsApi.Services.VolunteerService
 
         public List<GetVolunteerDto> getVolunteersByVolunteeringId(int volunteeringId)
         {
-            var volunteering = dbContext.Volunteerings
-                .Include(v => v.UserIdUsers)
+            var volunteering = dbContext.CharityVolunteerings
+                .Include(v => v.IdUsers)
                 .ThenInclude(u => u.PersonalData)
-                .FirstOrDefault(v => v.IdVolunteering == volunteeringId);
+                .FirstOrDefault(v => v.IdCharityVolunteering == volunteeringId);
             
             if (volunteering == null)
                 throw new NotFoundException("Volunteering about this id does not exist");
 
-            var volunteers = volunteering.UserIdUsers;
+            var volunteers = volunteering.IdUsers;
             List<GetVolunteerDto> volunteersList = new List<GetVolunteerDto>();
 
             foreach (var volunteer in volunteers)
@@ -82,9 +82,9 @@ namespace CharityEventsApi.Services.VolunteerService
         public void deleteVolunteer(DeleteVolunteerDto deleteVolunteerDto)
         {
             var volunteer = dbContext.Users.FirstOrDefault(u => u.IdUser == deleteVolunteerDto.IdUser);
-            var volunteering = dbContext.Volunteerings
-                .Include(v => v.UserIdUsers)
-                .FirstOrDefault(v => v.IdVolunteering == deleteVolunteerDto.IdVolunteering);
+            var volunteering = dbContext.CharityVolunteerings
+                .Include(v => v.IdUsers)
+                .FirstOrDefault(v => v.IdCharityVolunteering == deleteVolunteerDto.IdVolunteering);
 
             if (volunteer == null)
                 throw new NotFoundException("User about this id does not exist");
@@ -92,19 +92,19 @@ namespace CharityEventsApi.Services.VolunteerService
             if (volunteering == null)
                 throw new NotFoundException("Volunteering about this id does not exist");
 
-            if (!volunteering.UserIdUsers.Contains(volunteer))
+            if (!volunteering.IdUsers.Contains(volunteer))
                 throw new BadRequestException("This volunteer is not assigned to this action");
 
-            volunteering.UserIdUsers.Remove(volunteer);
+            volunteering.IdUsers.Remove(volunteer);
             dbContext.SaveChanges();
         }
 
         public bool isVolunteer(int idUser, int idVolunteering)
         {
             var volunteer = dbContext.Users.FirstOrDefault(u => u.IdUser == idUser);
-            var volunteering = dbContext.Volunteerings
-                .Include(v => v.UserIdUsers)
-                .FirstOrDefault(v => v.IdVolunteering == idVolunteering);
+            var volunteering = dbContext.CharityVolunteerings
+                .Include(v => v.IdUsers)
+                .FirstOrDefault(v => v.IdCharityVolunteering == idVolunteering);
 
             if (volunteer == null)
                 throw new NotFoundException("User about this id does not exist");
@@ -112,7 +112,7 @@ namespace CharityEventsApi.Services.VolunteerService
             if (volunteering == null)
                 throw new NotFoundException("Volunteering about this id does not exist");
 
-            if (volunteering.UserIdUsers.Contains(volunteer))
+            if (volunteering.IdUsers.Contains(volunteer))
                 return true;
             else
                 return false;

@@ -15,7 +15,7 @@ namespace CharityEventsApi.Services.FundraisingService
         }
         protected override void setTrue(int idfundraising)
         {
-            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
+            var fundraising = dbContext.CharityFundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
@@ -25,7 +25,7 @@ namespace CharityEventsApi.Services.FundraisingService
         }
         protected override void setFalse(int idfundraising)
         {
-            var fundraising = dbContext.Charityfundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
+            var fundraising = dbContext.CharityFundraisings.FirstOrDefault(cf => cf.IdCharityFundraising == idfundraising);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");

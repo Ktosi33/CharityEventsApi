@@ -16,9 +16,9 @@ namespace CharityEventsApi.Services.CharityEventService
         public Task<IEnumerable<ImageDto>> GetImagesAsync(int idCharityEvent);
         public GetCharityEventDto GetCharityEventDtoById(int id);
         public IEnumerable<GetCharityEventDto> GetAllCharityEventDto();
-        public Charityevent GetCharityEventByCharityEventId(int idCharityEvent);
-        public Charityevent GetCharityEventByVolunteeringId(int idVolunteering);
-        public Charityevent GetCharityEventByFundraisingId(int idFundraising);
+        public CharityEvent GetCharityEventByCharityEventId(int idCharityEvent);
+        public CharityEvent GetCharityEventByVolunteeringId(int idVolunteering);
+        public CharityEvent GetCharityEventByFundraisingId(int idFundraising);
 
 
     }

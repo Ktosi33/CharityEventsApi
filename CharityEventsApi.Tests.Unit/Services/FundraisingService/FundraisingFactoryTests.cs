@@ -37,7 +37,7 @@ namespace CharityEventsApi.Tests.Unit.Services.FundraisingService
                 ImageCharityEvent = formFile.Object
             };
             //act
-            Charityfundraising result = ff.CreateCharityEvent(dto);
+            CharityFundraising result = ff.CreateCharityEvent(dto);
 
             //assert
             result.IsActive.Should().Be(0);

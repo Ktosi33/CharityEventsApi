@@ -52,10 +52,10 @@ namespace CharityEventsApi.Services.AccountService
         public string WriteToken(string LoginOrEmail)
         {
            
-            var user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Email == LoginOrEmail);
+            var user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Email == LoginOrEmail);
             if (user == null)
             {
-                user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Login == LoginOrEmail);
+                user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Login == LoginOrEmail);
             }
 
             if (user is null)
@@ -66,12 +66,12 @@ namespace CharityEventsApi.Services.AccountService
             var claims = new List<Claim>()
             {
                 new Claim("Id", user.IdUser.ToString()),
-                new Claim("Roles", String.Join(",", user.RolesNames.Select(rn => rn.Name))),
+                new Claim("Roles", String.Join(",", user.RoleNames.Select(rn => rn.Name))),
                 new Claim("Login", user.Login),
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
             };
-            foreach(Role r in user.RolesNames)
+            foreach(Role r in user.RoleNames)
             {
                 claims.Add(new Claim(ClaimTypes.Role, r.Name));
             }
@@ -105,7 +105,7 @@ namespace CharityEventsApi.Services.AccountService
             {
                 throw new NotFoundException("Volunteer Role doesn't exsist in database");
             }
-            newUser.RolesNames.Add(VolunteerRole);
+            newUser.RoleNames.Add(VolunteerRole);
 
             dbContext.Users.Add(newUser);
             dbContext.SaveChanges();
@@ -113,7 +113,7 @@ namespace CharityEventsApi.Services.AccountService
 
           public void GiveRole(int idUser, string role)
           {
-            var user = dbContext.Users.Include(r => r.RolesNames).FirstOrDefault(u => u.IdUser == idUser);
+            var user = dbContext.Users.Include(r => r.RoleNames).FirstOrDefault(u => u.IdUser == idUser);
             var newRole = dbContext.Roles.FirstOrDefault(r => r.Name == role);
 
             if (newRole is null)
@@ -126,9 +126,9 @@ namespace CharityEventsApi.Services.AccountService
                 throw new NotFoundException("User with given id dosen't exist");
             }
 
-            if (!user.RolesNames.Contains(newRole))
+            if (!user.RoleNames.Contains(newRole))
             {
-                user.RolesNames.Add(newRole);
+                user.RoleNames.Add(newRole);
             }
 
             dbContext.SaveChanges();

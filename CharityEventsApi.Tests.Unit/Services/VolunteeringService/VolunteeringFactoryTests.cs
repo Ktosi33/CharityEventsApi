@@ -41,13 +41,12 @@ namespace CharityEventsApi.Tests.Unit.Services.VolunteeringService
                 ImageCharityEvent = formFile.Object
             };
             //act
-            Volunteering result = vf.CreateCharityEvent(dto);
+            CharityVolunteering result = vf.CreateCharityEvent(dto);
 
             //assert
             result.IsActive.Should().Be(0);
             result.IsVerified.Should().Be(0);
             result.AmountOfNeededVolunteers.Should().Be(amountOfNeededVolunteers);
-            result.AmountOfAttendedVolunteers.Should().Be(0);
         }
     }
 }

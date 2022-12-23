@@ -18,7 +18,7 @@ namespace CharityEventsApi.Models.Validators
                 .NotEmpty()
                 .Custom((value, context) =>
                 {
-                    var fundrasingExist = dbContext.Charityfundraisings.Any(c => c.IdCharityFundraising == value);
+                    var fundrasingExist = dbContext.CharityFundraisings.Any(c => c.IdCharityFundraising == value);
 
                     if (!fundrasingExist)
                         context.AddFailure("CharityFundraisingIdCharityFundraising", "Nie istnieje zbiórka pieniędzy o podanym ID");

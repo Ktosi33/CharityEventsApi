@@ -3,18 +3,17 @@ using System.Collections.Generic;
 
 namespace CharityEventsApi.Entities
 {
-    public partial class CharityFundraising
+    public partial class CharityVolunteering
     {
-        public CharityFundraising()
+        public CharityVolunteering()
         {
             CharityEvents = new HashSet<CharityEvent>();
-            Donations = new HashSet<Donation>();
+            IdLocations = new HashSet<Location>();
+            IdUsers = new HashSet<User>();
         }
 
-        public int IdCharityFundraising { get; set; }
-        public string FundTarget { get; set; } = null!;
-        public decimal AmountOfMoneyToCollect { get; set; }
-        public decimal AmountOfAlreadyCollectedMoney { get; set; }
+        public int IdCharityVolunteering { get; set; }
+        public int AmountOfNeededVolunteers { get; set; }
         public DateTime CreatedEventDate { get; set; }
         public DateTime? EndEventDate { get; set; }
         public sbyte IsActive { get; set; }
@@ -22,6 +21,8 @@ namespace CharityEventsApi.Entities
         public sbyte IsDenied { get; set; }
 
         public virtual ICollection<CharityEvent> CharityEvents { get; set; }
-        public virtual ICollection<Donation> Donations { get; set; }
+
+        public virtual ICollection<Location> IdLocations { get; set; }
+        public virtual ICollection<User> IdUsers { get; set; }
     }
 }

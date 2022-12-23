@@ -51,15 +51,15 @@ namespace CharityEventsApi.Tests.Unit.Services.CharityEventService
 
             };
             //act
-            Charityevent result = await cef.CreateCharityEvent(dto, organizer.Object);
+            CharityEvent result = await cef.CreateCharityEvent(dto, organizer.Object);
 
             //assert
             result.Title.Should().Be(title);
             result.Description.Should().Be(description);
             result.IsActive.Should().Be(0);
             result.IsVerified.Should().Be(0);
-            result.OrganizerId.Should().Be(organizerId);
-            result.ImageIdImages.Should().Be(1);
+            result.IdOrganizer.Should().Be(organizerId);
+            result.IdImage.Should().Be(1);
         }
     }
 }

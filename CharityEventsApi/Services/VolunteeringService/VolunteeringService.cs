@@ -31,12 +31,12 @@ namespace CharityEventsApi.Services.VolunteeringService
 
         public async Task Add(AddCharityEventVolunteeringDto dto)
         {
-            var charityevent = dbContext.Charityevents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
             if (charityevent is null) 
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
             }
-            if(charityevent.VolunteeringIdVolunteering is not null)
+            if(charityevent.IdCharityVolunteering is not null)
             {
                 throw new BadRequestException("Can't add charity event volunteering, because another one already exists in this charity event");
             }
@@ -74,7 +74,7 @@ namespace CharityEventsApi.Services.VolunteeringService
 
             return new GetCharityEventVolunteeringDto
             {
-                Id = c.IdVolunteering,
+                Id = c.IdCharityVolunteering,
                 AmountOfNeededVolunteers = c.AmountOfNeededVolunteers,
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
@@ -84,9 +84,9 @@ namespace CharityEventsApi.Services.VolunteeringService
         }
         public IEnumerable<GetCharityEventVolunteeringDto> GetAll()
         {
-            var volunteerings = dbContext.Volunteerings.Select(c => new GetCharityEventVolunteeringDto
+            var volunteerings = dbContext.CharityVolunteerings.Select(c => new GetCharityEventVolunteeringDto
             {
-                Id = c.IdVolunteering,
+                Id = c.IdCharityVolunteering,
                 AmountOfNeededVolunteers = c.AmountOfNeededVolunteers,
                 CreatedEventDate = c.CreatedEventDate,
                 EndEventDate = c.EndEventDate,
@@ -97,9 +97,9 @@ namespace CharityEventsApi.Services.VolunteeringService
 
             return volunteerings;
         }
-        private Volunteering getVolunteeringByIdVolunteering(int idVolunteering)
+        private CharityVolunteering getVolunteeringByIdVolunteering(int idVolunteering)
         {
-            var volunteering = dbContext.Volunteerings.FirstOrDefault(c => c.IdVolunteering == idVolunteering);
+            var volunteering = dbContext.CharityVolunteerings.FirstOrDefault(c => c.IdCharityVolunteering == idVolunteering);
             if (volunteering is null)
             {
                 throw new NotFoundException("Charity event volunteering with given id doesn't exist");

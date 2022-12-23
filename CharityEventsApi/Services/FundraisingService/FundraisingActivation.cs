@@ -15,7 +15,7 @@ namespace CharityEventsApi.Services.FundraisingService
         }
         protected override void setTrue(int FundraisingId)
         {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            var fundraising = dbContext.CharityFundraisings.Include(ce => ce.CharityEvents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
@@ -31,26 +31,26 @@ namespace CharityEventsApi.Services.FundraisingService
 
         protected override void setFalse(int FundraisingId)
         {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            var fundraising = dbContext.CharityFundraisings.Include(ce => ce.CharityEvents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
             fundraising.EndEventDate = DateTime.Now;
             fundraising.IsActive = 0;
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
+            var charityevent = fundraising.CharityEvents.FirstOrDefault();
             if (charityevent == null)
             {
                 throw new NotFoundException("CharityEventFundraising dont have charity event.");
             }
 
-            if (charityevent.VolunteeringIdVolunteering == null)
+            if (charityevent.IdCharityVolunteering == null)
             {
                 charityevent.IsActive = 0;
             }
             else
             {
-                var cv = dbContext.Volunteerings.FirstOrDefault(cv => cv.IdVolunteering == charityevent.VolunteeringIdVolunteering);
+                var cv = dbContext.CharityVolunteerings.FirstOrDefault(cv => cv.IdCharityVolunteering == charityevent.IdCharityVolunteering);
                 if (cv != null)
                 {
                     if (cv.EndEventDate != null)

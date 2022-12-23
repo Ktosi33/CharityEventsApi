@@ -13,7 +13,7 @@ namespace CharityEventsApi.Models.Validators
                .NotEmpty()
                .Custom((value, context) =>
                {
-                   var charityEventExist = dbContext.Charityevents.Any(c => c.IdCharityEvent == value);
+                   var charityEventExist = dbContext.CharityEvents.Any(c => c.IdCharityEvent == value);
 
                    if (!charityEventExist)
                        context.AddFailure("CharityEventId", "Nie istnieje wydarzenie o podanym id");
