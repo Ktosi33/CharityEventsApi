@@ -74,7 +74,8 @@ namespace CharityEventsApi.Controllers
             [FromQuery] bool? isActive, [FromQuery] bool? isDenied)
         {
             if (isVerified != null) {
-                if(isVerified == true) {
+
+                if(isVerified == false) {
                     authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
                 } else {
                     authCharityEvent.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");

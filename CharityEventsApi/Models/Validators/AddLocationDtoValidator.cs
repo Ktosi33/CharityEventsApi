@@ -19,10 +19,12 @@ namespace CharityEventsApi.Models.Validators
                 });
 
             RuleFor(x => x.PostalCode)
+                .MaximumLength(10)
                 .NotEmpty();
 
             RuleFor(x => x.Town)
-                .NotEmpty();
+                .NotEmpty()
+                .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
 
             RuleFor(x => x.Street)
                 .NotEmpty();

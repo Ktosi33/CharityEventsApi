@@ -8,10 +8,12 @@ namespace CharityEventsApi.Models.Validators
         public EditLocationDtoValidator()
         {
             RuleFor(x => x.PostalCode)
-                .NotEmpty();
+               .MaximumLength(10)
+               .NotEmpty();
 
             RuleFor(x => x.Town)
-                .NotEmpty();
+                .NotEmpty()
+                .Matches("^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$");
 
             RuleFor(x => x.Street)
                 .NotEmpty();
