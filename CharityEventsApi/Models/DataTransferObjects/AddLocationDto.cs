@@ -2,7 +2,7 @@
 {
     public class AddLocationDto
     {
-        public int IdVolunteering { get; set; }
+        public int IdCharityVolunteering { get; set; }
         public string PostalCode { get; set; } = null!;
         public string Town { get; set; } = null!;
         public string Street { get; set; } = null!;

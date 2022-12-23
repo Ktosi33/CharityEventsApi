@@ -8,7 +8,7 @@ namespace CharityEventsApi.Models.Validators
     {
         public EditCharityEventDtoValidator(CharityEventsDbContext dbContext)
         {
-            RuleFor(x => x.OrganizerId)
+            RuleFor(x => x.IdOrganizer)
                 .Custom((value, context) =>
                 {
                     var userExist = dbContext.Users.Any(u => u.IdUser == value);

@@ -22,7 +22,7 @@ namespace CharityEventsApi.Services.VolunteerService
             var volunteer = dbContext.Users.FirstOrDefault(u => u.IdUser == addVolunteerDto.IdUser);
             var volunteering = dbContext.CharityVolunteerings
                 .Include(v => v.IdUsers)
-                .FirstOrDefault(v => v.IdCharityVolunteering == addVolunteerDto.IdVolunteering);
+                .FirstOrDefault(v => v.IdCharityVolunteering == addVolunteerDto.IdCharityVolunteering);
             
             if (volunteer == null)
                 throw new NotFoundException("User about this id does not exist");
@@ -84,7 +84,7 @@ namespace CharityEventsApi.Services.VolunteerService
             var volunteer = dbContext.Users.FirstOrDefault(u => u.IdUser == deleteVolunteerDto.IdUser);
             var volunteering = dbContext.CharityVolunteerings
                 .Include(v => v.IdUsers)
-                .FirstOrDefault(v => v.IdCharityVolunteering == deleteVolunteerDto.IdVolunteering);
+                .FirstOrDefault(v => v.IdCharityVolunteering == deleteVolunteerDto.IdCharityVolunteering);
 
             if (volunteer == null)
                 throw new NotFoundException("User about this id does not exist");

@@ -37,7 +37,7 @@ namespace CharityEventsApi.Tests.Unit.Services.VolunteeringService
                 FundTarget = fundTarget,
                 AmountOfMoneyToCollect = amountOfMoneyToCollect,
                 AmountOfNeededVolunteers = amountOfNeededVolunteers,
-                OrganizerId = organizerId,
+                IdOrganizer = organizerId,
                 ImageCharityEvent = formFile.Object
             };
             //act

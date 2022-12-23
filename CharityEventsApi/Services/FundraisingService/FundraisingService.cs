@@ -28,7 +28,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
         public async Task Add(AddCharityEventFundraisingDto dto)
         {
-            var charityevent = dbContext.CharityEvents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(f => f.IdCharityEvent == dto.IdCharityEvent);
 
             if (charityevent is null) {
                 throw new NotFoundException("Charity event with given id doesn't exist");
@@ -40,7 +40,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
             await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
 
-            charityEventVerification.SetValue(dto.CharityEventId, false);
+            charityEventVerification.SetValue(dto.IdCharityEvent, false);
         }
 
         public void Edit(EditCharityEventFundraisingDto FundraisingDto, int idFundraising)
@@ -81,7 +81,7 @@ namespace CharityEventsApi.Services.FundraisingService
 
             return new GetCharityFundraisingDto
             {
-                Id = c.IdCharityFundraising,
+                IdCharityFundraising = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
                 AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
                 CreatedEventDate = c.CreatedEventDate,
@@ -95,7 +95,7 @@ namespace CharityEventsApi.Services.FundraisingService
         {
             var fundraisings = dbContext.CharityFundraisings.Select(c => new GetCharityFundraisingDto
             {
-                Id = c.IdCharityFundraising,
+                IdCharityFundraising = c.IdCharityFundraising,
                 AmountOfAlreadyCollectedMoney = c.AmountOfAlreadyCollectedMoney,
                 AmountOfMoneyToCollect = c.AmountOfMoneyToCollect,
                 CreatedEventDate = c.CreatedEventDate,

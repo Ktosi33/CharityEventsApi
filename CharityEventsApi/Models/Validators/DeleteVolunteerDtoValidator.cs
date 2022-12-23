@@ -19,7 +19,7 @@ namespace CharityEventsApi.Models.Validators
                         context.AddFailure("IdUser", "Użytkownik o podanym ID nie istnieje");
                 });
 
-            RuleFor(x => x.IdVolunteering)
+            RuleFor(x => x.IdCharityVolunteering)
                .NotEmpty()
                .Custom((value, context) =>
                {
@@ -34,7 +34,7 @@ namespace CharityEventsApi.Models.Validators
                 {
                     var volunteering = dbContext.CharityVolunteerings
                     .Include(v => v.IdUsers)
-                    .FirstOrDefault(v => v.IdCharityVolunteering == value.IdVolunteering);
+                    .FirstOrDefault(v => v.IdCharityVolunteering == value.IdCharityVolunteering);
                    
                     var user = dbContext.Users.FirstOrDefault(u => u.IdUser == value.IdUser);
 

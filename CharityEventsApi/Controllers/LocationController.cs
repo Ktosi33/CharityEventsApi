@@ -29,7 +29,7 @@ namespace CharityEventsApi.Controllers
         [HttpPost()]
         public ActionResult AddLocation([FromBody] AddLocationDto addLocationDto)
         {
-            authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(addLocationDto.IdVolunteering, "Organizer");
+            authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(addLocationDto.IdCharityVolunteering, "Organizer");
             locationService.addLocation(addLocationDto);
             return Ok();
         }

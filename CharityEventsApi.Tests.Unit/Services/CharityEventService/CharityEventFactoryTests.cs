@@ -45,7 +45,7 @@ namespace CharityEventsApi.Tests.Unit.Services.CharityEventService
                 FundTarget = fundTarget,
                 AmountOfMoneyToCollect = amountOfMoneyToCollect,
                 AmountOfNeededVolunteers = amountOfNeededVolunteers,
-                OrganizerId = organizerId,
+                IdOrganizer = organizerId,
                 ImageCharityEvent = formFile.Object,
                 ImagesCharityEvent = new List<IFormFile>() { formFile.Object }
 

@@ -8,7 +8,7 @@ namespace CharityEventsApi.Models.Validators
     {
         public AddLocationDtoValidator(CharityEventsDbContext dbContext)
         {
-            RuleFor(x => x.IdVolunteering)
+            RuleFor(x => x.IdCharityVolunteering)
                 .NotEmpty()
                 .Custom((value, context) =>
                 {

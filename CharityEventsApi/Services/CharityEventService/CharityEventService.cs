@@ -86,10 +86,10 @@ namespace CharityEventsApi.Services.CharityEventService
                 Id = ce.IdCharityEvent,
                 IsActive = ce.IsActive,
                 Description = ce.Description,
-                FundraisingId = ce.IdCharityFundraising,
+                IdCharityFundraising = ce.IdCharityFundraising,
                 IsVerified = ce.IsVerified,
                 Title = ce.Title,
-                VolunteeringId = ce.IdCharityVolunteering
+                IdCharityVolunteering = ce.IdCharityVolunteering
              }
             );
 
@@ -178,8 +178,8 @@ namespace CharityEventsApi.Services.CharityEventService
                 Description = c.Description,
                 IsActive = c.IsActive,
                 Title = c.Title,
-                VolunteeringId = c?.IdCharityVolunteering,
-                FundraisingId = c?.IdCharityFundraising,
+                IdCharityVolunteering = c?.IdCharityVolunteering,
+                IdCharityFundraising = c?.IdCharityFundraising,
                 IsVerified = c!.IsVerified
             };
         }

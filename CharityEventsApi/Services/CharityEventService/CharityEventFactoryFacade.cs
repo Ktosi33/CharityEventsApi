@@ -27,7 +27,7 @@ namespace CharityEventsApi.Services.CharityEventService
         public async Task AddCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var organizer = await dbContext.Users.FirstOrDefaultAsync(u => u.IdUser == charityEventDto.OrganizerId);
+            var organizer = await dbContext.Users.FirstOrDefaultAsync(u => u.IdUser == charityEventDto.IdOrganizer);
             if (organizer is null)
             {
                 throw new BadRequestException("Organizer ID can't match with any user");

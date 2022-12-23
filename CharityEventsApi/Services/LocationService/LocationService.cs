@@ -19,7 +19,7 @@ namespace CharityEventsApi.Services.LocationService
 
         public void addLocation(AddLocationDto locationDto)
         {
-            var volunteering = dbContext.CharityVolunteerings.FirstOrDefault(v => v.IdCharityVolunteering == locationDto.IdVolunteering);
+            var volunteering = dbContext.CharityVolunteerings.FirstOrDefault(v => v.IdCharityVolunteering == locationDto.IdCharityVolunteering);
             if (volunteering == null)
             {
                 throw new BadRequestException("Volunteering ID doesnt exist");

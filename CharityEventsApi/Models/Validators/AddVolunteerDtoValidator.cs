@@ -18,7 +18,7 @@ namespace CharityEventsApi.Models.Validators
                         context.AddFailure("IdUser", "Użytkownik o podanym ID nie istnieje");
                 });
 
-            RuleFor(x => x.IdVolunteering)
+            RuleFor(x => x.IdCharityVolunteering)
                .NotEmpty()
                .Custom((value, context) =>
                {

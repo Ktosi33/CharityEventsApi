@@ -4,6 +4,6 @@
     {
         public string? Title { get; set; } 
         public string? Description { get; set; }
-        public int? OrganizerId { get; set; }
+        public int? IdOrganizer { get; set; }
     }
 }

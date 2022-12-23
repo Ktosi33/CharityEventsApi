@@ -2,7 +2,7 @@
 {
     public class GetCharityFundraisingDto
     {
-        public int Id { get; set; }
+        public int IdCharityFundraising { get; set; }
         public string FundTarget { get; set; } = null!;
         public decimal AmountOfMoneyToCollect { get; set; }
         public decimal AmountOfAlreadyCollectedMoney { get; set; }

@@ -12,7 +12,7 @@ namespace CharityEventsApi.Models.Validators
             RuleFor(x => x.Title)
                 .NotEmpty();
 
-            RuleFor(x => x.OrganizerId)
+            RuleFor(x => x.IdOrganizer)
                 .NotEmpty()
                 .Custom((value, context) =>
                 {

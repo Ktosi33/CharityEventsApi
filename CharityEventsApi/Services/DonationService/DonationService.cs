@@ -20,8 +20,8 @@ namespace CharityEventsApi.Services.DonationService
             var donation = new Donation
             {
                 AmountOfDonation = addDonationDto.AmountOfDonation,
-                IdCharityFundraising = addDonationDto.CharityFundraisingIdCharityFundraising,
-                IdUser = addDonationDto.UserIdUser,
+                IdCharityFundraising = addDonationDto.IdCharityFundraising,
+                IdUser = addDonationDto.IdUser,
                 Description = addDonationDto.Description,
                 DonationDate = DateTime.Now
             };
@@ -55,15 +55,15 @@ namespace CharityEventsApi.Services.DonationService
 
             var don = new GetDonationDto
             {
-                DonationId = donationId,
+                IdDonation = donationId,
                 AmountOfDonation = donation.AmountOfDonation,
                 Description = donation.Description,
-                CharityFundraisingIdCharityFundraising = donation.IdCharityFundraising,
+                IdCharityFundraisingNavigation = donation.IdCharityFundraising,
                 DonationDate = donation.DonationDate,
             };
 
             if (donation.IdUser != null)
-                don.UserIdUser = (int)donation.IdUser;
+                don.IdUser = (int)donation.IdUser;
 
             if (user != null)
                 don.User = new GetUserDto

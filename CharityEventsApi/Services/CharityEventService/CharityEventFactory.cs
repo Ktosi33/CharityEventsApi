@@ -19,7 +19,7 @@ namespace CharityEventsApi.Services.CharityEventService
             {
                 Title = charityEventDto.Title,
                 Description = charityEventDto.Description ?? "",
-                IdOrganizer = charityEventDto.OrganizerId,
+                IdOrganizer = charityEventDto.IdOrganizer,
                 IsActive = 0,
                 IsVerified = 0,
                 IsDenied = 0,
@@ -42,7 +42,7 @@ namespace CharityEventsApi.Services.CharityEventService
             {
                 Title = charityEventDto.Title,
                 Description = charityEventDto.Description ?? "",
-                IdOrganizer = charityEventDto.OrganizerId,
+                IdOrganizer = charityEventDto.IdOrganizer,
                 IsActive = 0,
                 IsVerified = 0,
                 IsDenied = 0,

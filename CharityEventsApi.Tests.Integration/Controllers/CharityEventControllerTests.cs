@@ -125,7 +125,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             {
                 Title = title,
                 Description = description,
-                OrganizerId = organizerId
+                IdOrganizer = organizerId
             };
             var load = new StringContent(JsonConvert.SerializeObject(dto), UnicodeEncoding.UTF8, "application/json");
 

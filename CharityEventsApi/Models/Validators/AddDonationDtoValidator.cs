@@ -14,7 +14,7 @@ namespace CharityEventsApi.Models.Validators
                 .NotEmpty()
                 .GreaterThan(0);
 
-            RuleFor(x => x.CharityFundraisingIdCharityFundraising)
+            RuleFor(x => x.IdCharityFundraising)
                 .NotEmpty()
                 .Custom((value, context) =>
                 {

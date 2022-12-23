@@ -31,7 +31,7 @@ namespace CharityEventsApi.Services.VolunteeringService
 
         public async Task Add(AddCharityEventVolunteeringDto dto)
         {
-            var charityevent = dbContext.CharityEvents.FirstOrDefault(f => f.IdCharityEvent == dto.CharityEventId);
+            var charityevent = dbContext.CharityEvents.FirstOrDefault(f => f.IdCharityEvent == dto.IdCharityEvent);
             if (charityevent is null) 
             {
                 throw new NotFoundException("Charity event with given id doesn't exist");
@@ -42,7 +42,7 @@ namespace CharityEventsApi.Services.VolunteeringService
             }
             await charityEventFactoryFacade.AddCharityEventVolunteering(dto, charityevent);
 
-            charityEventVerification.SetValue(dto.CharityEventId, false);
+            charityEventVerification.SetValue(dto.IdCharityEvent, false);
         }
         public void SetActive(int idVolunteering, bool isActive)
         {

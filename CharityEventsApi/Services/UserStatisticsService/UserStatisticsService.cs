@@ -31,8 +31,8 @@ namespace CharityEventsApi.Services.UserStatisticsService
 
             foreach (Entities.Donation d in donation)
             {
-                donations.Add(new DonationDto { IdDonations = d.IdDonation, AmountOfDonation = d.AmountOfDonation, 
-                CharityFundraisingIdCharityFundraising = d.IdCharityFundraising, 
+                donations.Add(new DonationDto { IdDonation = d.IdDonation, AmountOfDonation = d.AmountOfDonation, 
+                IdCharityFundraising = d.IdCharityFundraising, 
                 Description = d.Description, DonationDate = d.DonationDate});
             }
 
@@ -53,7 +53,7 @@ namespace CharityEventsApi.Services.UserStatisticsService
             {
                 volunteerings.Add(new VolunteeringDto
                 {
-                    IdVolunteering = v.IdCharityVolunteering,
+                    IdCharityVolunteering = v.IdCharityVolunteering,
                     AmountOfNeededVolunteers = v.AmountOfNeededVolunteers,
                     CreatedEventDate = v.CreatedEventDate,
                     EndEventDate = v.EndEventDate,

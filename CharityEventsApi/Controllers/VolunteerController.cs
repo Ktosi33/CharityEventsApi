@@ -46,7 +46,7 @@ namespace CharityEventsApi.Controllers
         public ActionResult DeleteVolunteer([FromBody] DeleteVolunteerDto deleteVolunteerDto)
         {
             authUser.AuthorizeUserIdIfRole(deleteVolunteerDto.IdUser, "Volunteer");
-            authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(deleteVolunteerDto.IdVolunteering, "Organizer");
+            authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(deleteVolunteerDto.IdCharityVolunteering, "Organizer");
 
             volunteerService.deleteVolunteer(deleteVolunteerDto);
             return Ok();

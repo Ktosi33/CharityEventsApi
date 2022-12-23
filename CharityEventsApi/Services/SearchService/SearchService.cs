@@ -132,12 +132,12 @@ namespace CharityEventsApi.Services.SearchService
                 IdCharityEvent = charityEvent.IdCharityEvent,
                 IsActive = charityEvent.IsActive,
                 Description = charityEvent.Description,
-                FundraisingId = charityEvent.IdCharityFundraising,
+                IdCharityFundraising = charityEvent.IdCharityFundraising,
                 IsVerified = charityEvent.IsVerified,
                 IsDenied = charityEvent.IsDenied,
                 Title = charityEvent.Title,
                 imageDto = await imageService.GetImageAsync(charityEvent.IdImage),
-                VolunteeringId = charityEvent.IdCharityVolunteering
+                IdCharityVolunteering = charityEvent.IdCharityVolunteering
             };
 
             if (charityEvent.IdCharityVolunteeringNavigation != null)
@@ -167,7 +167,7 @@ namespace CharityEventsApi.Services.SearchService
                     IsActive = charityEvent.IdCharityFundraisingNavigation.IsActive,
                     isVerified = charityEvent.IdCharityFundraisingNavigation.IsVerified,
                     IsDenied = charityEvent.IdCharityFundraisingNavigation.IsDenied,
-                    Id = charityEvent.IdCharityFundraisingNavigation.IdCharityFundraising
+                    IdCharityFundraising = charityEvent.IdCharityFundraisingNavigation.IdCharityFundraising
                 };
             }
 

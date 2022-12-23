@@ -8,7 +8,7 @@ namespace CharityEventsApi.Models.Validators
     {
         public AddCharityEventFundraisingDtoValidator(CharityEventsDbContext dbContext)
         {
-            RuleFor(x => x.CharityEventId)
+            RuleFor(x => x.IdCharityEvent)
                 .NotEmpty()
                 .Custom((value, context) =>
                 {
