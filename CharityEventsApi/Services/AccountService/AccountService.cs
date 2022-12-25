@@ -28,41 +28,29 @@ namespace CharityEventsApi.Services.AccountService
         }
 
  
-        public string GenerateJwt(LoginUserDto dto)
+        public string LoginUser(LoginUserDto dto)
         {
-            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.LoginOrEmail);
+            var user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Email == dto.LoginOrEmail);
             if(user == null)
             { 
-             user = dbContext.Users.FirstOrDefault(u => u.Login == dto.LoginOrEmail);
+             user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Login == dto.LoginOrEmail);
             }
 
             if (user is null)
             {
-                throw new BadRequestException("Zły adres email, login lub hasło");
+                throw new BadRequestException("Bad mail, login or password");
             }
             var result = passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Zły adres email, login lub hasło");
+                throw new BadRequestException("Bad mail, login or password");
             }
-            return WriteToken(dto.LoginOrEmail);
+            return WriteToken(user);
         }
        
         
-        public string WriteToken(string LoginOrEmail)
+        public string WriteToken(User user)
         {
-           
-            var user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Email == LoginOrEmail);
-            if (user == null)
-            {
-                user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Login == LoginOrEmail);
-            }
-
-            if (user is null)
-            {
-                throw new BadRequestException("Zły adres email, login lub hasło");
-            }
-         
             var claims = new List<Claim>()
             {
                 new Claim("Id", user.IdUser.ToString()),
@@ -88,6 +76,7 @@ namespace CharityEventsApi.Services.AccountService
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
+
           public void RegisterUser(RegisterUserDto dto)
           {
               var newUser = new User()
