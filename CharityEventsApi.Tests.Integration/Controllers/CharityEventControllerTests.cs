@@ -52,7 +52,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             httpContent.Add(new StringContent(fundTarget), "FundTarget");
             httpContent.Add(new StringContent(amountOfMoneyToCollect.ToString()), "AmountOfMoneyToCollect");
             httpContent.Add(new StringContent(amountOfNeededVolunteers.ToString()), "AmountOfNeededVolunteers");
-            httpContent.Add(new StringContent(organizerId.ToString()), "OrganizerId");
+            httpContent.Add(new StringContent(organizerId.ToString()), "idOrganizer");
             httpContent.Add(new StringContent(isFundraising.ToString()), "IsFundraising");
             httpContent.Add(new StringContent(isVolunteering.ToString()), "IsVolunteering");
             httpContent.Add(fileContent, "ImageCharityEvent", "newImage.jpeg");

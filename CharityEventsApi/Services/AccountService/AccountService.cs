@@ -31,6 +31,7 @@ namespace CharityEventsApi.Services.AccountService
         public string LoginUser(LoginUserDto dto)
         {
             var user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Email == dto.LoginOrEmail);
+
             if(user == null)
             { 
              user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Login == dto.LoginOrEmail);
@@ -40,16 +41,18 @@ namespace CharityEventsApi.Services.AccountService
             {
                 throw new BadRequestException("Bad mail, login or password");
             }
+
             var result = passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
                 throw new BadRequestException("Bad mail, login or password");
             }
+
             return WriteToken(user);
         }
        
         
-        public string WriteToken(User user)
+        private string WriteToken(User user)
         {
             var claims = new List<Claim>()
             {
@@ -84,10 +87,7 @@ namespace CharityEventsApi.Services.AccountService
                   Login = dto.Login,
                   Email = dto.Email
               };
-            
-            var hashedPassword = passwordHasher.HashPassword(newUser, dto.Password);
-
-            newUser.Password = hashedPassword;
+            newUser.Password = passwordHasher.HashPassword(newUser, dto.Password);
 
             var VolunteerRole = dbContext.Roles.FirstOrDefault(r => r.Name == "Volunteer");
             if(VolunteerRole == null)

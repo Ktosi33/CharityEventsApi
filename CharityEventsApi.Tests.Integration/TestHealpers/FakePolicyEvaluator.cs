@@ -11,26 +11,14 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
     {
         public Task<AuthenticateResult> AuthenticateAsync(AuthorizationPolicy policy, HttpContext context)
         {
-            var claimsPrincipal = new ClaimsPrincipal();
+            var ticket = new AuthenticationTicket(new ClaimsPrincipal(), "Test");
 
-            claimsPrincipal.AddIdentity(new ClaimsIdentity(
-                new[]
-                {
-                    new Claim(ClaimTypes.NameIdentifier, "1"),
-                    new Claim(ClaimTypes.Role, "Administrator")
-                }
-                )); 
-
-            var ticket = new AuthenticationTicket(claimsPrincipal, "Test");
-
-            var result = AuthenticateResult.Success(ticket);
-            return Task.FromResult(result);
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
 
         public Task<PolicyAuthorizationResult> AuthorizeAsync(AuthorizationPolicy policy, AuthenticateResult authenticationResult, HttpContext context, object? resource)
         {
-            var result = PolicyAuthorizationResult.Success();
-            return Task.FromResult(result);
+            return Task.FromResult(PolicyAuthorizationResult.Success());
         }
     }
 }
