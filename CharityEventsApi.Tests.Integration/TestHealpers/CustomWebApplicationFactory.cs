@@ -25,11 +25,11 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
 
                     string _dbName = Guid.NewGuid().ToString();
                     services.AddDbContext<CharityEventsDbContext>(options => options.UseInMemoryDatabase(databaseName: _dbName)
-                  .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
+                    .ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
 
                     services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
 
-                    services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
+                   //services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
 
                     services.AddTransient<SeedTestData>();
 
