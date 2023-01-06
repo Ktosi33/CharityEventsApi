@@ -28,7 +28,7 @@ namespace CharityEventsApi.Services.CharityEventService
             this.charityEventDenial = charityEventDenial;
         }
 
-        public async Task Add(AddAllCharityEventsDto charityEventDto)
+        public async Task AddAllCharityEvents(AddAllCharityEventsDto charityEventDto)
         {
           await charityEventFactoryFacade.AddCharityEvent(charityEventDto);
         }

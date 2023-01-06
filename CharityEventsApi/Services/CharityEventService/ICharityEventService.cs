@@ -5,7 +5,7 @@ namespace CharityEventsApi.Services.CharityEventService
 {
     public interface ICharityEventService
     {
-        public Task Add(AddAllCharityEventsDto charityEventDto);
+        public Task AddAllCharityEvents(AddAllCharityEventsDto charityEventDto);
         public Task ChangeImage(IFormFile image, int idCharityEvent);
         public Task AddOneImage(IFormFile image, int idCharityEvent);
         public Task DeleteImage(int idImage, int idCharityEvent);

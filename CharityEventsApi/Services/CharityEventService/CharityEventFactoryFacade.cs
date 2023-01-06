@@ -61,6 +61,16 @@ namespace CharityEventsApi.Services.CharityEventService
 
             await dbContext.SaveChangesAsync();
         }
+        private async Task addCharityEventFundraising(AddAllCharityEventsDto charityEventDto, CharityEvent charityEvent)
+        {           
+            CharityFundraising charityfundraising = fundraisingFactory.CreateCharityEvent(charityEventDto);
+            await dbContext.CharityFundraisings.AddAsync(charityfundraising);
+
+            charityEvent.IdCharityFundraisingNavigation = charityfundraising;
+
+            await dbContext.SaveChangesAsync();
+        }
+        
         public async Task AddCharityEventVolunteering(AddCharityEventVolunteeringDto charityEventDto, CharityEvent charityevent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
@@ -72,15 +82,7 @@ namespace CharityEventsApi.Services.CharityEventService
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        private async Task addCharityEventFundraising(AddAllCharityEventsDto charityEventDto, CharityEvent charityEvent)
-        {           
-            CharityFundraising charityfundraising = fundraisingFactory.CreateCharityEvent(charityEventDto);
-            await dbContext.CharityFundraisings.AddAsync(charityfundraising);
-
-            charityEvent.IdCharityFundraisingNavigation = charityfundraising;
-
-            await dbContext.SaveChangesAsync();
-        }
+    
         public async Task AddCharityEventFundraising(AddCharityEventFundraisingDto charityEventDto, CharityEvent charityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);

@@ -24,9 +24,10 @@ namespace CharityEventsApi.Controllers
         [HttpPost()]
         public async Task<ActionResult> AddCharityEvent([FromForm] AddAllCharityEventsDto charityEventDto)
         {
-            await charityEventService.Add(charityEventDto);
+            await charityEventService.AddAllCharityEvents(charityEventDto);
             return Ok();
         }
+
         [Authorize(Roles = "Organizer,Admin")]
         [HttpPost("image/{idCharityEvent}")]
         public async Task<ActionResult> AddOneImageAsync(IFormFile image, [FromRoute] int idCharityEvent)
@@ -80,15 +81,18 @@ namespace CharityEventsApi.Controllers
                 } else {
                     authCharityEvent.AuthorizeIfOnePassWithIdCharityEvent(null, "Admin");
                 }
-                
                 charityEventService.SetVerify(idCharityEvent, (bool)isVerified);
             }
+
             if (isActive != null) {
                 authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+
                 charityEventService.SetActive(idCharityEvent, (bool)isActive);
             }
+            
             if (isDenied != null) {
                 authCharityEvent.AuthorizeUserIdIfRoleWithIdCharityEvent(idCharityEvent, "Organizer");
+
                 charityEventService.SetDeny(idCharityEvent, (bool)isDenied);
             }
 
