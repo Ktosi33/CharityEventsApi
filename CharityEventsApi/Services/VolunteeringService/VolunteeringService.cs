@@ -5,6 +5,7 @@ using CharityEventsApi.Services.CharityEventService;
 using CharityEventsApi.Services.ImageService;
 using CharityEventsApi.Services.AuthUserService;
 using Microsoft.EntityFrameworkCore;
+using CharityEventsApi.Services.AccountService;
 
 namespace CharityEventsApi.Services.VolunteeringService
 {
@@ -16,10 +17,13 @@ namespace CharityEventsApi.Services.VolunteeringService
         private readonly VolunteeringVerification volunteeringVerification;
         private readonly CharityEventVerification charityEventVerification;
         private readonly VolunteeringDenial volunteeringDenial;
+        private readonly IAccountService accountService;
+        private readonly ICharityEventService charityEventService;
 
         public VolunteeringService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade,
             VolunteeringActivation volunteeringActication, VolunteeringVerification volunteeringVerification,
-            CharityEventVerification charityEventVerification, VolunteeringDenial volunteeringDenial)
+            CharityEventVerification charityEventVerification, VolunteeringDenial volunteeringDenial, IAccountService accountService,
+            ICharityEventService charityEventService)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
@@ -27,6 +31,8 @@ namespace CharityEventsApi.Services.VolunteeringService
             this.volunteeringVerification = volunteeringVerification;
             this.charityEventVerification = charityEventVerification;
             this.volunteeringDenial = volunteeringDenial;
+            this.accountService = accountService;
+            this.charityEventService = charityEventService;
         }
 
         public async Task Add(AddCharityEventVolunteeringDto dto)
@@ -41,7 +47,8 @@ namespace CharityEventsApi.Services.VolunteeringService
                 throw new BadRequestException("Can't add charity event volunteering, because another one already exists in this charity event");
             }
             await charityEventFactoryFacade.AddCharityEventVolunteering(dto, charityevent);
-
+            accountService.GiveRole(charityEventService
+        .GetCharityEventByCharityEventId(dto.IdCharityEvent).IdOrganizer, "Organizer");
             charityEventVerification.SetValue(dto.IdCharityEvent, false);
         }
         public void SetActive(int idVolunteering, bool isActive)

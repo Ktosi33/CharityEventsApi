@@ -4,6 +4,7 @@ using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.ImageService;
 using CharityEventsApi.Services.AuthUserService;
 using Microsoft.EntityFrameworkCore;
+using CharityEventsApi.Services.AccountService;
 
 namespace CharityEventsApi.Services.CharityEventService
 {
@@ -15,10 +16,11 @@ namespace CharityEventsApi.Services.CharityEventService
         private readonly CharityEventActivation charityEventActivation;
         private readonly IImageService imageService;
         private readonly CharityEventDenial charityEventDenial;
+        private readonly IAccountService accountService;
 
         public CharityEventService(CharityEventsDbContext dbContext, ICharityEventFactoryFacade charityEventFactoryFacade, 
             CharityEventVerification charityEventVerification, CharityEventActivation charityEventActivation,
-            IImageService imageService, CharityEventDenial charityEventDenial)
+            IImageService imageService, CharityEventDenial charityEventDenial, IAccountService accountService)
         {
             this.dbContext = dbContext;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
@@ -26,11 +28,14 @@ namespace CharityEventsApi.Services.CharityEventService
             this.charityEventActivation = charityEventActivation;
             this.imageService = imageService;
             this.charityEventDenial = charityEventDenial;
+            this.accountService = accountService;
         }
 
         public async Task AddAllCharityEvents(AddAllCharityEventsDto charityEventDto)
         {
-          await charityEventFactoryFacade.AddCharityEvent(charityEventDto);
+            await charityEventFactoryFacade.AddCharityEvent(charityEventDto);
+            accountService.GiveRole(charityEventDto.IdOrganizer, "Organizer");
+
         }
         
         public async Task AddOneImage(IFormFile image, int idCharityEvent)

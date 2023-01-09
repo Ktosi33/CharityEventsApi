@@ -1,6 +1,7 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
 using CharityEventsApi.Models.DataTransferObjects;
+using CharityEventsApi.Services.AccountService;
 using CharityEventsApi.Services.CharityEventService;
 
 namespace CharityEventsApi.Services.FundraisingService
@@ -13,10 +14,13 @@ namespace CharityEventsApi.Services.FundraisingService
         private readonly CharityEventVerification charityEventVerification;
         private readonly ICharityEventFactoryFacade charityEventFactoryFacade;
         private readonly FundraisingDenial fundraisingDenial;
+        private readonly IAccountService accountService;
+        private readonly ICharityEventService charityEventService;
 
         public FundraisingService(CharityEventsDbContext dbContext, FundraisingVerification fundraisingVerification,
             FundraisingActivation fundraisingActivation, CharityEventVerification charityEventVerification,
-            ICharityEventFactoryFacade charityEventFactoryFacade, FundraisingDenial fundraisingDenial)
+            ICharityEventFactoryFacade charityEventFactoryFacade, FundraisingDenial fundraisingDenial, IAccountService accountService,
+            ICharityEventService charityEventService)
         {
             this.dbContext = dbContext;
             this.fundraisingVerification = fundraisingVerification;
@@ -24,6 +28,8 @@ namespace CharityEventsApi.Services.FundraisingService
             this.charityEventVerification = charityEventVerification;
             this.charityEventFactoryFacade = charityEventFactoryFacade;
             this.fundraisingDenial = fundraisingDenial;
+            this.accountService = accountService;
+            this.charityEventService = charityEventService;
         }
 
         public async Task Add(AddCharityEventFundraisingDto dto)
@@ -39,7 +45,7 @@ namespace CharityEventsApi.Services.FundraisingService
             }
 
             await charityEventFactoryFacade.AddCharityEventFundraising(dto, charityevent);
-
+            accountService.GiveRole(charityEventService.GetCharityEventByCharityEventId(dto.IdCharityEvent).IdOrganizer, "Organizer");
             charityEventVerification.SetValue(dto.IdCharityEvent, false);
         }
 

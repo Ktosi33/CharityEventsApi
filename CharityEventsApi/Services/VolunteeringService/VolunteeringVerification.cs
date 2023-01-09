@@ -29,9 +29,6 @@ namespace CharityEventsApi.Services.VolunteeringService
                 throw new NotFoundException("CharityEventVolunteering with given id doesn't exist");
             }
 
-            accountService.GiveRole(charityEventService
-                .GetCharityEventByVolunteeringId(idVolunteering).IdOrganizer, "Organizer");
-
             volunteering.IsVerified = 1;
             dbContext.SaveChanges();
         }

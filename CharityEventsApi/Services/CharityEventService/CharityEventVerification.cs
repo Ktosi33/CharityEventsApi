@@ -26,8 +26,6 @@ namespace CharityEventsApi.Services.CharityEventService
             {
                 throw new NotFoundException("CharityEvent with given id doesn't exist");
             }
-            accountService.GiveRole(charityevent.IdOrganizer, "Organizer");
-
 
             charityevent.IsVerified = 1;
             dbContext.SaveChanges();
