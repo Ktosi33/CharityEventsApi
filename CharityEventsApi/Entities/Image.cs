@@ -7,16 +7,16 @@ namespace CharityEventsApi.Entities
     {
         public Image()
         {
-            Charityevents = new HashSet<Charityevent>();
-            CharityEventIdCharityEvents = new HashSet<Charityevent>();
+            CharityEvents = new HashSet<CharityEvent>();
+            IdCharityEvents = new HashSet<CharityEvent>();
         }
 
-        public int IdImages { get; set; }
+        public int IdImage { get; set; }
         public string Path { get; set; } = null!;
         public string ContentType { get; set; } = null!;
 
-        public virtual ICollection<Charityevent> Charityevents { get; set; }
+        public virtual ICollection<CharityEvent> CharityEvents { get; set; }
 
-        public virtual ICollection<Charityevent> CharityEventIdCharityEvents { get; set; }
+        public virtual ICollection<CharityEvent> IdCharityEvents { get; set; }
     }
 }

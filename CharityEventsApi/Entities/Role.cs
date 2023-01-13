@@ -7,11 +7,11 @@ namespace CharityEventsApi.Entities
     {
         public Role()
         {
-            UserIdUsers = new HashSet<User>();
+            IdUsers = new HashSet<User>();
         }
 
         public string Name { get; set; } = null!;
 
-        public virtual ICollection<User> UserIdUsers { get; set; }
+        public virtual ICollection<User> IdUsers { get; set; }
     }
 }

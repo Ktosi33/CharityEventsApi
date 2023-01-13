@@ -7,10 +7,10 @@ namespace CharityEventsApi.Entities
     {
         public User()
         {
-            Charityevents = new HashSet<Charityevent>();
+            CharityEvents = new HashSet<CharityEvent>();
             Donations = new HashSet<Donation>();
-            RolesNames = new HashSet<Role>();
-            VolunteeringIdVolunteerings = new HashSet<Volunteering>();
+            RoleNames = new HashSet<Role>();
+            IdCharityVolunteerings = new HashSet<CharityVolunteering>();
         }
 
         public int IdUser { get; set; }
@@ -19,10 +19,10 @@ namespace CharityEventsApi.Entities
         public string Email { get; set; } = null!;
 
         public virtual PersonalData PersonalData { get; set; } = null!;
-        public virtual ICollection<Charityevent> Charityevents { get; set; }
+        public virtual ICollection<CharityEvent> CharityEvents { get; set; }
         public virtual ICollection<Donation> Donations { get; set; }
 
-        public virtual ICollection<Role> RolesNames { get; set; }
-        public virtual ICollection<Volunteering> VolunteeringIdVolunteerings { get; set; }
+        public virtual ICollection<Role> RoleNames { get; set; }
+        public virtual ICollection<CharityVolunteering> IdCharityVolunteerings { get; set; }
     }
 }

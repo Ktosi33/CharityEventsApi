@@ -1,48 +1,46 @@
 ﻿using CharityEventsApi.Entities;
 using CharityEventsApi.Exceptions;
+using CharityEventsApi.Services.AccountService;
 using CharityEventsApi.Services.CharityEventService;
 using Microsoft.EntityFrameworkCore;
 
 namespace CharityEventsApi.Services.FundraisingService
 {
-    public class FundraisingVerification : VerificationBase
+    public class FundraisingVerification : BooleanCharityEventQueryBase
     {
         private readonly CharityEventsDbContext dbContext;
         private readonly FundraisingActivation fundraisingActivation;
+        private readonly IAccountService accountService;
+        private readonly ICharityEventService charityEventService;
 
-        public FundraisingVerification(CharityEventsDbContext dbContext, FundraisingActivation fundraisingActivation)
+        public FundraisingVerification(CharityEventsDbContext dbContext, FundraisingActivation fundraisingActivation,
+            IAccountService accountService, ICharityEventService charityEventService)
         {
             this.dbContext = dbContext;
             this.fundraisingActivation = fundraisingActivation;
+            this.accountService = accountService;
+            this.charityEventService = charityEventService;
         }
 
-        protected override void verify(int FundraisingId)
+        protected override void setTrue(int idFundraising)
         {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            var fundraising = dbContext.CharityFundraisings.FirstOrDefault(f => f.IdCharityFundraising == idFundraising);
             if (fundraising == null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            var charityevent = fundraising.Charityevents.FirstOrDefault();
-            if (charityevent == null)
-            {
-                throw new NotFoundException("CharityEventFundraising doesn't have charity event.");
-            }
-            if (charityevent.IsVerified == 0)
-            {
-                throw new BadRequestException("Firstly verify charityevent");
-            }
+
             fundraising.IsVerified = 1;
             dbContext.SaveChanges();
         }
-        protected override void unverify(int FundraisingId)
+        protected override void setFalse(int FundraisingId)
         {
-            var fundraising = dbContext.Charityfundraisings.Include(ce => ce.Charityevents).FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
-            if (fundraising == null)
+            var fundraising = dbContext.CharityFundraisings.FirstOrDefault(f => f.IdCharityFundraising == FundraisingId);
+            if (fundraising is null)
             {
                 throw new NotFoundException("CharityEventFundraising with given id doesn't exist");
             }
-            fundraisingActivation.SetActive(FundraisingId,false);
+            fundraisingActivation.SetValue(FundraisingId,false);
             fundraising.IsVerified = 0;
             dbContext.SaveChanges();
         }

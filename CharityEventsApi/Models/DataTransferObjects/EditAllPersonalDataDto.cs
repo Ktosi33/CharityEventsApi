@@ -1,6 +1,6 @@
 ﻿namespace CharityEventsApi.Models.DataTransferObjects
 {
-    public class EditAllPesonalDataDto
+    public class EditAllPersonalDataDto
     {
         public string Name { get; set; } = null!;
         public string Surname { get; set; } = null!;
@@ -9,7 +9,7 @@
         public string PostalCode { get; set; } = null!;
         public string Town { get; set; } = null!;
         public string Street { get; set; } = null!;
-        public int HouseNumber { get; set; }
-        public int? FlatNumber { get; set; }
+        public string HouseNumber { get; set; }
+        public string? FlatNumber { get; set; }
     }
 }

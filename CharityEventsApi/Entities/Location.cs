@@ -7,7 +7,7 @@ namespace CharityEventsApi.Entities
     {
         public Location()
         {
-            VolunteeringIdVolunteerings = new HashSet<Volunteering>();
+            IdCharityVolunteerings = new HashSet<CharityVolunteering>();
         }
 
         public int IdLocation { get; set; }
@@ -15,6 +15,6 @@ namespace CharityEventsApi.Entities
         public string Town { get; set; } = null!;
         public string Street { get; set; } = null!;
 
-        public virtual ICollection<Volunteering> VolunteeringIdVolunteerings { get; set; }
+        public virtual ICollection<CharityVolunteering> IdCharityVolunteerings { get; set; }
     }
 }

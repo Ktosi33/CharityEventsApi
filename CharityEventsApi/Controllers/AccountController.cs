@@ -29,11 +29,11 @@ namespace CharityEventsApi.Controllers
         [HttpPost("login")]
         public ActionResult Login([FromBody] LoginUserDto dto)
         {
-            string token = accountService.GenerateJwt(dto);
+            string token = accountService.LoginUser(dto);
             return Ok(token);
         }
 
-        [Authorize(Roles = "Volunteer")]
+        [Authorize()]
         [HttpGet("isLogged")]
         public ActionResult IsLogged()
         {

@@ -4,17 +4,16 @@
     {
         public bool IsVolunteering { get; set; }
         public bool IsFundraising { get; set; }
-        //CharityEventDto
+        //CharityEvent
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
-        public int OrganizerId { get; set; }
+        public int IdOrganizer { get; set; }
         public IFormFile ImageCharityEvent { get; set; } = null!;
         public List<IFormFile>? ImagesCharityEvent { get; set; }
-        //CharityEventFundraisingDto
+        //CharityEventFundraising
         public string? FundTarget { get; set; } = null!;
         public decimal? AmountOfMoneyToCollect { get; set; }
-        //CharityEventVolunteeringDto
+        //CharityEventVolunteering
         public int? AmountOfNeededVolunteers { get; set; }
-        
     }
 }

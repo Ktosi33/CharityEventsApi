@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace CharityEventsApi.Entities
 {
-    public partial class Charityfundraising
+    public partial class CharityFundraising
     {
-        public Charityfundraising()
+        public CharityFundraising()
         {
-            Charityevents = new HashSet<Charityevent>();
+            CharityEvents = new HashSet<CharityEvent>();
             Donations = new HashSet<Donation>();
         }
 
@@ -19,8 +19,9 @@ namespace CharityEventsApi.Entities
         public DateTime? EndEventDate { get; set; }
         public sbyte IsActive { get; set; }
         public sbyte IsVerified { get; set; }
+        public sbyte IsDenied { get; set; }
 
-        public virtual ICollection<Charityevent> Charityevents { get; set; }
+        public virtual ICollection<CharityEvent> CharityEvents { get; set; }
         public virtual ICollection<Donation> Donations { get; set; }
     }
 }

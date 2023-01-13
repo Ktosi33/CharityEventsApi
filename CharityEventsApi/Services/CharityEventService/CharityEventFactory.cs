@@ -13,45 +13,47 @@ namespace CharityEventsApi.Services.CharityEventService
         {
             this.imageService = imageService;
         }
-        public async Task<Charityevent> CreateCharityEvent(AddAllCharityEventsDto charityEventDto, User organizer)
+        public async Task<CharityEvent> CreateCharityEvent(AddAllCharityEventsDto charityEventDto, User organizer)
         {
-            Charityevent charityevent = new()
+            CharityEvent charityevent = new()
             {
                 Title = charityEventDto.Title,
                 Description = charityEventDto.Description ?? "",
-                OrganizerId = charityEventDto.OrganizerId,
+                IdOrganizer = charityEventDto.IdOrganizer,
                 IsActive = 0,
                 IsVerified = 0,
-                Organizer = organizer,
-                ImageIdImages = await imageService.SaveImageAsync(charityEventDto.ImageCharityEvent),
+                IsDenied = 0,
+                IdOrganizerNavigation = organizer,
+                IdImage = await imageService.SaveImageAsync(charityEventDto.ImageCharityEvent),
                 CreatedEventDate = DateTime.Now
-               
+
             };
             if (charityEventDto.ImagesCharityEvent != null)
             {
-               charityevent.ImageIdImages1 = imageService.getImageObjectsByIds(await imageService.SaveImagesAsync(charityEventDto.ImagesCharityEvent));
+               charityevent.IdImages = imageService.getImageObjectsByIds(await imageService.SaveImagesAsync(charityEventDto.ImagesCharityEvent));
             }
 
             return charityevent;
         }
 
-        public async Task<Charityevent> CreateCharityEvent(AddCharityEventDto charityEventDto, User organizer)
+        public async Task<CharityEvent> CreateCharityEvent(AddCharityEventDto charityEventDto, User organizer)
         {
-            Charityevent charityevent = new ()
+            CharityEvent charityevent = new ()
             {
                 Title = charityEventDto.Title,
                 Description = charityEventDto.Description ?? "",
-                OrganizerId = charityEventDto.OrganizerId,
+                IdOrganizer = charityEventDto.IdOrganizer,
                 IsActive = 0,
                 IsVerified = 0,
-                Organizer = organizer,
+                IsDenied = 0,
+                IdOrganizerNavigation = organizer,
                 CreatedEventDate = DateTime.Now,
-                ImageIdImages = await imageService.SaveImageAsync(charityEventDto.Image)
+                IdImage = await imageService.SaveImageAsync(charityEventDto.Image)
             };
 
             if (charityEventDto.Images != null)
             {
-                charityevent.ImageIdImages1 = imageService.getImageObjectsByIds(await imageService.SaveImagesAsync(charityEventDto.Images));
+                charityevent.IdImages = imageService.getImageObjectsByIds(await imageService.SaveImagesAsync(charityEventDto.Images));
             }
 
             return charityevent;

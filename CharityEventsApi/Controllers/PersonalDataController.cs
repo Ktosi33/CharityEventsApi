@@ -19,7 +19,7 @@ namespace CharityEventsApi.Controllers
         }
 
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("{userId}")]
         public ActionResult AddAllPersonalData([FromBody] AddAllPersonalDataDto personalDataDto, [FromRoute] int userId)
         {
@@ -27,19 +27,33 @@ namespace CharityEventsApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPut("{userId}")]
-        public ActionResult EditAllPersonalData([FromBody] EditAllPesonalDataDto personalDataDto, [FromRoute] int userId)
+        public ActionResult EditAllPersonalData([FromBody] EditAllPersonalDataDto personalDataDto, [FromRoute] int userId)
         {
             personalDataService.editAllPersonalData(personalDataDto, userId);
             return Ok();
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("{userId}")]
         public ActionResult GetAllPersonalDataById([FromRoute] int userId)
         {
             return Ok(personalDataService.getPersonalDataById(userId));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("some/{userId}")]
+        public ActionResult GetSomePersonalDataById([FromRoute] int userId)
+        {
+            return Ok(personalDataService.getSomePersonalDataById(userId));
+        }
+
+        [AllowAnonymous]
+        [HttpGet("exists/{userId}")]
+        public ActionResult PersonalDataExists([FromRoute] int userId)
+        {
+            return Ok(personalDataService.doesPersonalDataExists(userId));
         }
     }
 }

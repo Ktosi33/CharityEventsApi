@@ -8,6 +8,7 @@ namespace CharityEventsApi.Services.VolunteeringService
         public void Edit(EditCharityEventVolunteeringDto VolunteeringDto, int VolunteeringId);
         public void SetActive(int VolunteeringId, bool isActive);
         public void SetVerify(int VolunteeringId, bool isVerified);
+        public void SetDeny(int idCharityEvent, bool isDenied);
         public GetCharityEventVolunteeringDto GetById(int id);
         public IEnumerable<GetCharityEventVolunteeringDto> GetAll();
     }

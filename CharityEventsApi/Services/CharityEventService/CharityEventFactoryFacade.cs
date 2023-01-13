@@ -27,15 +27,15 @@ namespace CharityEventsApi.Services.CharityEventService
         public async Task AddCharityEvent(AddAllCharityEventsDto charityEventDto)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            var organizer = await dbContext.Users.FirstOrDefaultAsync(u => u.IdUser == charityEventDto.OrganizerId);
+            var organizer = await dbContext.Users.FirstOrDefaultAsync(u => u.IdUser == charityEventDto.IdOrganizer);
             if (organizer is null)
             {
                 throw new BadRequestException("Organizer ID can't match with any user");
             }
 
-            Charityevent charityevent = await charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
+            CharityEvent charityevent = await charityEventFactory.CreateCharityEvent(charityEventDto, organizer);
 
-            await dbContext.Charityevents.AddAsync(charityevent);
+            await dbContext.CharityEvents.AddAsync(charityevent);
 
             await dbContext.SaveChangesAsync();
 
@@ -52,43 +52,45 @@ namespace CharityEventsApi.Services.CharityEventService
             await transaction.CommitAsync();
         }
         
-        private async Task addCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
+        private async Task addCharityEventVolunteering(AddAllCharityEventsDto charityEventDto, CharityEvent charityEvent)
         {
-            Volunteering volunteering = volunteeringFactory.CreateCharityEvent(charityEventDto);
-            await dbContext.Volunteerings.AddAsync(volunteering);
+            CharityVolunteering volunteering = volunteeringFactory.CreateCharityEvent(charityEventDto);
+            await dbContext.CharityVolunteerings.AddAsync(volunteering);
 
-            charityEvent.VolunteeringIdVolunteeringNavigation = volunteering;
+            charityEvent.IdCharityVolunteeringNavigation = volunteering;
 
             await dbContext.SaveChangesAsync();
         }
-        public async Task AddCharityEventVolunteering(AddCharityEventVolunteeringDto charityEventDto, Charityevent charityevent)
+        private async Task addCharityEventFundraising(AddAllCharityEventsDto charityEventDto, CharityEvent charityEvent)
+        {           
+            CharityFundraising charityfundraising = fundraisingFactory.CreateCharityEvent(charityEventDto);
+            await dbContext.CharityFundraisings.AddAsync(charityfundraising);
+
+            charityEvent.IdCharityFundraisingNavigation = charityfundraising;
+
+            await dbContext.SaveChangesAsync();
+        }
+        
+        public async Task AddCharityEventVolunteering(AddCharityEventVolunteeringDto charityEventDto, CharityEvent charityevent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
-            Volunteering cv = volunteeringFactory.CreateCharityEvent(charityEventDto);
-            await dbContext.Volunteerings.AddAsync(cv);
+            CharityVolunteering cv = volunteeringFactory.CreateCharityEvent(charityEventDto);
+            await dbContext.CharityVolunteerings.AddAsync(cv);
 
-            charityevent.VolunteeringIdVolunteeringNavigation = cv;
+            charityevent.IdCharityVolunteeringNavigation = cv;
 
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
         }
-        private async Task addCharityEventFundraising(AddAllCharityEventsDto charityEventDto, Charityevent charityEvent)
-        {           
-            Charityfundraising charityfundraising = fundraisingFactory.CreateCharityEvent(charityEventDto);
-            await dbContext.Charityfundraisings.AddAsync(charityfundraising);
-
-            charityEvent.CharityFundraisingIdCharityFundraisingNavigation = charityfundraising;
-
-            await dbContext.SaveChangesAsync();
-        }
-        public async Task AddCharityEventFundraising(AddCharityEventFundraisingDto charityEventDto, Charityevent charityEvent)
+    
+        public async Task AddCharityEventFundraising(AddCharityEventFundraisingDto charityEventDto, CharityEvent charityEvent)
         {
             using var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable);
 
-            Charityfundraising cf = fundraisingFactory.CreateCharityEvent(charityEventDto);
-            await dbContext.Charityfundraisings.AddAsync(cf);
+            CharityFundraising cf = fundraisingFactory.CreateCharityEvent(charityEventDto);
+            await dbContext.CharityFundraisings.AddAsync(cf);
 
-            charityEvent.CharityFundraisingIdCharityFundraisingNavigation = cf;
+            charityEvent.IdCharityFundraisingNavigation = cf;
 
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();

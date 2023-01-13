@@ -18,7 +18,7 @@ namespace CharityEventsApi.Tests.Unit.Services.VolunteeringService
         [Theory]
         [InlineData("FT", "bbb", "ccc", 1, 2, 1, true, true)]
         [InlineData("Test", "asd", "asd", 1, 0, 1, false, true)]
-        public void givenAddAllCharityEventsDto_whenCreateNewObject_thenReturnsVolunteering
+        public void AddAllCharityEventsDto_CreateNewObject_ReturnsVolunteering
             (string title, string description, string fundTarget,
             decimal amountOfMoneyToCollect, int amountOfNeededVolunteers,
             int organizerId, bool isFundraising, bool isVolunteering)
@@ -37,17 +37,16 @@ namespace CharityEventsApi.Tests.Unit.Services.VolunteeringService
                 FundTarget = fundTarget,
                 AmountOfMoneyToCollect = amountOfMoneyToCollect,
                 AmountOfNeededVolunteers = amountOfNeededVolunteers,
-                OrganizerId = organizerId,
+                IdOrganizer = organizerId,
                 ImageCharityEvent = formFile.Object
             };
             //act
-            Volunteering result = vf.CreateCharityEvent(dto);
+            CharityVolunteering result = vf.CreateCharityEvent(dto);
 
             //assert
             result.IsActive.Should().Be(0);
             result.IsVerified.Should().Be(0);
             result.AmountOfNeededVolunteers.Should().Be(amountOfNeededVolunteers);
-            result.AmountOfAttendedVolunteers.Should().Be(0);
         }
     }
 }

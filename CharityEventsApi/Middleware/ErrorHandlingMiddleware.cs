@@ -27,6 +27,11 @@ namespace CharityEventsApi.Middleware
                             context.Response.StatusCode = NotFoundException.StatusCode;
                             break;
                         }
+                    case UnauthorizedException:
+                        {
+                            context.Response.StatusCode = UnauthorizedException.StatusCode;
+                            break;
+                        }
                     default:
                         {
                             context.Response.StatusCode = 500;

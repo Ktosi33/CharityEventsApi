@@ -19,7 +19,8 @@ namespace CharityEventsApi.Services.AccountService
         private readonly IPasswordHasher<User> passwordHasher;
         private readonly AuthenticationSettings authenticationSettings;
 
-        public AccountService(CharityEventsDbContext dbContext, IPasswordHasher<User> passwordHasher, AuthenticationSettings authenticationSettings)
+        public AccountService(CharityEventsDbContext dbContext, IPasswordHasher<User> passwordHasher,
+            AuthenticationSettings authenticationSettings)
         {
             this.dbContext = dbContext;
             this.passwordHasher = passwordHasher;
@@ -27,52 +28,44 @@ namespace CharityEventsApi.Services.AccountService
         }
 
  
-        public string GenerateJwt(LoginUserDto dto)
+        public string LoginUser(LoginUserDto dto)
         {
-            //login cant have @
-            //mail have to have @
-            var user = dbContext.Users.FirstOrDefault(u => u.Email == dto.LoginOrEmail);
+            var user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Email == dto.LoginOrEmail);
+
             if(user == null)
             { 
-             user = dbContext.Users.FirstOrDefault(u => u.Login == dto.LoginOrEmail);
+             user = dbContext.Users.Include(u => u.RoleNames).FirstOrDefault(u => u.Login == dto.LoginOrEmail);
             }
 
             if (user is null)
             {
-                throw new BadRequestException("Zły adres email, login lub hasło");
+                throw new BadRequestException("Bad mail, login or password");
             }
+
             var result = passwordHasher.VerifyHashedPassword(user, user.Password, dto.Password);
             if (result == PasswordVerificationResult.Failed)
             {
-                throw new BadRequestException("Zły adres email, login lub hasło");
+                throw new BadRequestException("Bad mail, login or password");
             }
-            return WriteToken(dto.LoginOrEmail);
+
+            return WriteToken(user);
         }
        
         
-        public string WriteToken(string LoginOrEmail)
+        private string WriteToken(User user)
         {
-           
-            var user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Email == LoginOrEmail);
-            if (user == null)
-            {
-                user = dbContext.Users.Include(u => u.RolesNames).FirstOrDefault(u => u.Login == LoginOrEmail);
-            }
-
-            if (user is null)
-            {
-                throw new BadRequestException("Zły adres email, login lub hasło");
-            }
-         
             var claims = new List<Claim>()
             {
                 new Claim("Id", user.IdUser.ToString()),
-                new Claim("Roles", String.Join(",", user.RolesNames.Select(rn => rn.Name))),
+                new Claim("Roles", String.Join(",", user.RoleNames.Select(rn => rn.Name))),
                 new Claim("Login", user.Login),
                 new Claim(ClaimTypes.NameIdentifier, user.IdUser.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.ToString()),
-                new Claim(ClaimTypes.Role, String.Join(",", user.RolesNames.Select(rn => rn.Name)))
             };
+            foreach(Role r in user.RoleNames)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, r.Name));
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(Double.Parse(authenticationSettings.JwtExpireDays));
@@ -86,6 +79,7 @@ namespace CharityEventsApi.Services.AccountService
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
+
           public void RegisterUser(RegisterUserDto dto)
           {
               var newUser = new User()
@@ -93,19 +87,39 @@ namespace CharityEventsApi.Services.AccountService
                   Login = dto.Login,
                   Email = dto.Email
               };
-            
-            var hashedPassword = passwordHasher.HashPassword(newUser, dto.Password);
-
-            newUser.Password = hashedPassword;
+            newUser.Password = passwordHasher.HashPassword(newUser, dto.Password);
 
             var VolunteerRole = dbContext.Roles.FirstOrDefault(r => r.Name == "Volunteer");
             if(VolunteerRole == null)
             {
                 throw new NotFoundException("Volunteer Role doesn't exsist in database");
             }
-            newUser.RolesNames.Add(VolunteerRole);
+            newUser.RoleNames.Add(VolunteerRole);
 
             dbContext.Users.Add(newUser);
+            dbContext.SaveChanges();
+          }
+
+          public void GiveRole(int idUser, string role)
+          {
+            var user = dbContext.Users.Include(r => r.RoleNames).FirstOrDefault(u => u.IdUser == idUser);
+            var newRole = dbContext.Roles.FirstOrDefault(r => r.Name == role);
+
+            if (newRole is null)
+            {
+                throw new NotFoundException("Role doesn't exist");
+            }
+
+            if (user is null)
+            {
+                throw new NotFoundException("User with given id dosen't exist");
+            }
+
+            if (!user.RoleNames.Contains(newRole))
+            {
+                user.RoleNames.Add(newRole);
+            }
+
             dbContext.SaveChanges();
           }
       

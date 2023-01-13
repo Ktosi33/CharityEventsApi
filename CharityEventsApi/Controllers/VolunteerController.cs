@@ -1,6 +1,7 @@
 ﻿using CharityEventsApi.Models.DataTransferObjects;
 using CharityEventsApi.Services.DonationService;
-using CharityEventsApi.Services.LocationService;
+using CharityEventsApi.Services.AuthUserService;
+using CharityEventsApi.Services.VolunteeringService;
 using CharityEventsApi.Services.VolunteerService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,16 +14,22 @@ namespace CharityEventsApi.Controllers
     public class VolunteerController: ControllerBase
     {
         private readonly IVolunteerService volunteerService;
+        private readonly AuthVolunteeringDecorator authVolunteering;
+        private readonly IAuthUserService authUser;
 
-        public VolunteerController(IVolunteerService volunteerService)
+        public VolunteerController(IVolunteerService volunteerService, AuthVolunteeringDecorator authVolunteering, IAuthUserService authUser)
         {
             this.volunteerService = volunteerService;
+            this.authVolunteering = authVolunteering;
+            this.authUser = authUser;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Volunteer,Admin")]
         [HttpPost()]
         public ActionResult AddVolunteer([FromBody] AddVolunteerDto addVolunteerDto)
         {
+            authUser.AuthorizeUserIdIfRole(addVolunteerDto.IdUser, "Volunteer");
+
             volunteerService.addVolunteer(addVolunteerDto);
             return Ok();
         }
@@ -34,12 +41,22 @@ namespace CharityEventsApi.Controllers
             return Ok(volunteerService.getVolunteersByVolunteeringId(volunteeringId));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = "Volunteer,Organizer,Admin")]
         [HttpDelete()]
         public ActionResult DeleteVolunteer([FromBody] DeleteVolunteerDto deleteVolunteerDto)
         {
+            authUser.AuthorizeUserIdIfRole(deleteVolunteerDto.IdUser, "Volunteer");
+            authVolunteering.AuthorizeUserIdIfRoleWithIdVolunteering(deleteVolunteerDto.IdCharityVolunteering, "Organizer");
+
             volunteerService.deleteVolunteer(deleteVolunteerDto);
             return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpGet("exist")]
+        public ActionResult UserIsVolunteer([FromQuery] int idUser, [FromQuery] int idVolunteering)
+        {
+            return Ok(volunteerService.isVolunteer(idUser, idVolunteering));        
         }
     }
 }

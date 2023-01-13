@@ -20,10 +20,10 @@ namespace CharityEventsApi.Services.DonationService
             var donation = new Donation
             {
                 AmountOfDonation = addDonationDto.AmountOfDonation,
-                CharityFundraisingIdCharityFundraising = addDonationDto.CharityFundraisingIdCharityFundraising,
-                UserIdUser = addDonationDto.UserIdUser,
+                IdCharityFundraising = addDonationDto.IdCharityFundraising,
+                IdUser = addDonationDto.IdUser,
                 Description = addDonationDto.Description,
-                DonationDate = addDonationDto.DonationDate
+                DonationDate = DateTime.Now
             };
 
             using (var transaction = dbContext.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
@@ -31,7 +31,7 @@ namespace CharityEventsApi.Services.DonationService
                 dbContext.Donations.Add(donation);
                 dbContext.SaveChanges();
 
-                var charityFundrasing = dbContext.Charityfundraisings.FirstOrDefault(a => a.IdCharityFundraising == donation.CharityFundraisingIdCharityFundraising);
+                var charityFundrasing = dbContext.CharityFundraisings.FirstOrDefault(a => a.IdCharityFundraising == donation.IdCharityFundraising);
 
                 if (charityFundrasing != null)
                     charityFundrasing.AmountOfAlreadyCollectedMoney += addDonationDto.AmountOfDonation;
@@ -45,20 +45,57 @@ namespace CharityEventsApi.Services.DonationService
 
         public GetDonationDto getDonationById(int donationId)
         {
-            var donation = dbContext.Donations.FirstOrDefault(d => d.IdDonations == donationId);
+            var donation = dbContext.Donations.FirstOrDefault(d => d.IdDonation == donationId);
+            
 
             if (donation is null)
                 throw new NotFoundException("Donation about this id does not exist");
 
+            var user = dbContext.Users.FirstOrDefault(u => u.IdUser == donation.IdUser);
 
-            return new GetDonationDto
+            var don = new GetDonationDto
             {
+                IdDonation = donationId,
                 AmountOfDonation = donation.AmountOfDonation,
                 Description = donation.Description,
-                CharityFundraisingIdCharityFundraising = donation.CharityFundraisingIdCharityFundraising,
+                IdCharityFundraisingNavigation = donation.IdCharityFundraising,
                 DonationDate = donation.DonationDate,
-                UserIdUser = donation.UserIdUser
             };
+
+            if (donation.IdUser != null)
+                don.IdUser = (int)donation.IdUser;
+
+            if (user != null)
+                don.User = new GetUserDto
+                {
+                    IdUser = user.IdUser,
+                    Email = user.Email,
+                    Login = user.Login
+                };
+
+            return don;         
+        }
+
+        public List<GetDonationDto> getDonationsByCharityFundraisingId(int fundraisingId)
+        {
+            var charityFundraising = dbContext.CharityFundraisings
+                .Include(c => c.Donations)
+                .FirstOrDefault(c => c.IdCharityFundraising == fundraisingId);
+            
+            if(charityFundraising is null)
+                throw new NotFoundException("Charity Fundraising about this id does not exist");
+
+            var donations = charityFundraising.Donations; 
+
+            List<GetDonationDto> donationsList = new List<GetDonationDto>();
+
+            foreach (var donation in donations)
+            {
+                donationsList.Add(getDonationById(donation.IdDonation));
+            }
+
+            return donationsList;
+
         }
     }
 }

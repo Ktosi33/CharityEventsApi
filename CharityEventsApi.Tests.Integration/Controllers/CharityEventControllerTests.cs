@@ -23,20 +23,21 @@ using System.Net.Http.Headers;
 
 namespace CharityEventsApi.Tests.Integration.Controllers
 {
-    public class CharityEventControllerTests 
+    public class CharityEventControllerTests  : IClassFixture<CustomWebApplicationFactory<Program>>
     {
         private readonly HttpClient client;
-        public CharityEventControllerTests()
+
+        public CharityEventControllerTests(CustomWebApplicationFactory<Program> factory)
         {
-            client = new ClientInit().Client;           
+            client = factory.CreateClient();
+
         }
         
         [Theory]
-        [InlineData("Aaa", "bbb", "ccc", 2.1, 2, 1, true, true)]
+        [InlineData("New Title", "New Description", "Fund Target", 5555.55, 40, 1, true, true)]
         [InlineData("TF", "bbb", "ccc", 2.1, 2, 1, true, false)]
         [InlineData("FT", "bbb", "ccc", 2.1, 2, 1, false, true)]
-        [InlineData("All null", "ccc", "aaa", 0, 0, 1, false, false)]
-        public async Task givenAddAllCharityEventDtoByForm_whenCreateAllCharityEvents_thenReturnsOkResult
+        public async Task AddAllCharityEventDtoByForm_CreateAllCharityEvents_ReturnsOkResult
             (string title, string description, string fundTarget,
             decimal amountOfMoneyToCollect, int amountOfNeededVolunteers,
             int organizerId, bool isFundraising, bool isVolunteering)
@@ -44,17 +45,17 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             //arrange
             var httpContent = new MultipartFormDataContent();
             var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("test content"));
-            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
             
             httpContent.Add(new StringContent(title), "Title");
             httpContent.Add(new StringContent(description), "Description");
             httpContent.Add(new StringContent(fundTarget), "FundTarget");
             httpContent.Add(new StringContent(amountOfMoneyToCollect.ToString()), "AmountOfMoneyToCollect");
             httpContent.Add(new StringContent(amountOfNeededVolunteers.ToString()), "AmountOfNeededVolunteers");
-            httpContent.Add(new StringContent(organizerId.ToString()), "OrganizerId");
+            httpContent.Add(new StringContent(organizerId.ToString()), "idOrganizer");
             httpContent.Add(new StringContent(isFundraising.ToString()), "IsFundraising");
             httpContent.Add(new StringContent(isVolunteering.ToString()), "IsVolunteering");
-            httpContent.Add(fileContent, "ImageCharityEvent", "image.jpeg");
+            httpContent.Add(fileContent, "ImageCharityEvent", "newImage.jpeg");
           
             //act
             var response = await client.PostAsync("/v1/CharityEvent", httpContent);
@@ -65,16 +66,17 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData("Aaa", "bbb", "ccc", 2.1, 1, 0, true, true)]
-        //[InlineData("", null, null, null, null, 1, false, false)] //that test wouldnt pass when validators are added
-        public async Task givenAddAllCharityEventDtoByForm_whenCreateAllCharityEvents_thenReturnsBadRequest
+        [InlineData("New Title", "New Description", "Fund Target", 5555.55, 40, 0, true, true)]
+        [InlineData("All null", "ccc", "aaa", 1.1, 3, 1, false, false)]
+        [InlineData("", "", "", 0.0, 1, 1, false, false)] 
+        public async Task AddAllCharityEventDtoByForm_whenCreateAllCharityEvents_ReturnsBadRequest
        (string title, string description, string fundTarget, decimal amountOfMoneyToCollect, 
             int amountOfNeededVolunteers, int organizerId, bool isFundraising, bool isVolunteering)
         {
             //arrange
             var httpContent = new MultipartFormDataContent();
             var fileContent = new ByteArrayContent(Encoding.UTF8.GetBytes("test content"));
-            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("multipart/form-data");
+            fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
 
             httpContent.Add(new StringContent(title), "Title");
             httpContent.Add(new StringContent(description), "Description");
@@ -84,7 +86,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             httpContent.Add(new StringContent(organizerId.ToString()), "OrganizerId");
             httpContent.Add(new StringContent(isFundraising.ToString()), "IsFundraising");
             httpContent.Add(new StringContent(isVolunteering.ToString()), "IsVolunteering");
-            httpContent.Add(fileContent, "ImageCharityEvent", "image.jpeg");
+            httpContent.Add(fileContent, "ImageCharityEvent", "newImage.jpeg");
 
             //act
             var response = await client.PostAsync("/v1/CharityEvent", httpContent);
@@ -94,7 +96,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Fact]
-        public async Task givenIsActive_whenDisactiveBySettingfalse_thenReturnsOkResult()
+        public async Task IsActive_DisactiveBySettingfalse_ReturnsOkResult()
         {       
             //act
             var response = await client.PatchAsync("/v1/CharityEvent/1?isActive=false", null);
@@ -104,7 +106,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
      
         [Fact]
-        public async Task givenIdCharityEvent_whenGetCharityEvent_thenReturnsOkResult()
+        public async Task IdCharityEvent_GetCharityEvent_ReturnsOkResult()
         {
             //act
             var response = await client.GetAsync("/v1/CharityEvent/1");
@@ -114,17 +116,16 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData("NewTitle", "Desc", 1,1)]
-        [InlineData("NewTitlea", null, 1,1)]
-        public async Task givenEditCharityEventDto_whenEditCharityEvent_thenReturnsOkResult(string title, string description, int organizerId, int imageId)
+        [InlineData("New Title", "Example of descripption", 1)]
+        [InlineData("Second New Title ", null, 1)]
+        public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult(string title, string description, int organizerId)
         {
             //arange
             EditCharityEventDto dto = new EditCharityEventDto
             {
                 Title = title,
                 Description = description,
-                OrganizerId = organizerId,
-                ImageId = imageId
+                IdOrganizer = organizerId
             };
             var load = new StringContent(JsonConvert.SerializeObject(dto), UnicodeEncoding.UTF8, "application/json");
 
@@ -137,7 +138,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
-        public async Task givenIsVerifiedIsActive_whenChangeVerifyAndActive_thenReturnsOkResult(string isVerified, string isActive)
+        public async Task IsVerifiedIsActive_ChangeVerifyAndActive_ReturnsOkResult(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
@@ -148,9 +149,9 @@ namespace CharityEventsApi.Tests.Integration.Controllers
 
         [Theory]
         [InlineData("false", "true")]
-        [InlineData("asd", "asd")]
+        [InlineData("randomData", "randomData")]
         [InlineData("null", "null")]
-        public async Task givenIsVerifiedIsActive_whenChangeVerifyAndActive_thenReturnsBadRequest(string isVerified, string isActive)
+        public async Task IsVerifiedIsActive_ChangeVerifyAndActive_ReturnsBadRequest(string isVerified, string isActive)
         {
             //act
             var response = await client.PatchAsync($"/v1/CharityEvent/1?isVerified={isVerified}&isActive={isActive}", null);
