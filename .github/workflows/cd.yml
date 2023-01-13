@@ -47,5 +47,5 @@ jobs:
         id: deploy-to-azure
         uses:  Azure/webapps-deploy@v2.2.4
         with:
-          app-name: 'charityeventsapi'
+          app-name: 'charityevents-api'
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
