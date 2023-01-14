@@ -61,5 +61,44 @@ namespace CharityEventsApi.Tests.Unit.Services.CharityEventService
             result.IdOrganizer.Should().Be(organizerId);
             result.IdImage.Should().Be(1);
         }
+
+        [Theory]
+        [InlineData("Example of Title", "Example of description", 1)]
+        [InlineData("Example of Title", "", 1)]
+        public async Task AddAllCharityEventsDtoOnlyCharityPart_CreateNewObject_ReturnsCharityevent
+          (string title, string description, int idOrganizer)
+        {
+
+            //arange
+            var organizer = new User(); 
+            organizer.IdUser = idOrganizer;
+            var imageService = new Mock<IImageService>();
+            var formFile = new Mock<IFormFile>();
+            imageService.Setup(m => m.SaveImageAsync(formFile.Object)).Returns(Task.FromResult(1));
+            imageService.Setup(m => m.SaveImagesAsync(new List<IFormFile>() { formFile.Object }))
+            .Returns(Task.FromResult(new List<int>() { 1, 2 }));
+
+            CharityEventFactory cef = new CharityEventFactory(imageService.Object);
+
+            var dto = new AddAllCharityEventsDto()
+            {
+                Title = title,
+                Description = description,
+                IdOrganizer = idOrganizer,
+                ImageCharityEvent = formFile.Object,
+                ImagesCharityEvent = new List<IFormFile>() { formFile.Object }
+            };
+
+            //act
+            CharityEvent result = await cef.CreateCharityEvent(dto, organizer);
+
+            //assert
+            result.Title.Should().Be(title);
+            result.Description.Should().Be(description);
+            result.IsActive.Should().Be(0);
+            result.IsVerified.Should().Be(0);
+            result.IdOrganizer.Should().Be(idOrganizer);
+            result.IdImage.Should().Be(1);
+        }
     }
 }

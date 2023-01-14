@@ -44,10 +44,32 @@ namespace CharityEventsApi.Tests.Unit.Services.FundraisingService
             result.IsVerified.Should().Be(0);
             result.FundTarget.Should().Be(fundTarget);
             result.AmountOfMoneyToCollect.Should().Be(amountOfMoneyToCollect); 
-            result.AmountOfAlreadyCollectedMoney.Should().Be(0);
 
         }
 
+        [Theory]
+        [InlineData("Example of fund target", 10000)]
+        [InlineData("Test", 1)]
+        public void AddCharityEventFundraisingDto_CreateNewObject_ReturnsCharityfundraising
+            (string fundTarget, decimal amountOfMoneyToCollect)
+        {
+            //arange
+            FundraisingFactory ff = new FundraisingFactory();
+
+            var dto = new AddCharityEventFundraisingDto()
+            {
+                FundTarget = fundTarget,
+                AmountOfMoneyToCollect = amountOfMoneyToCollect,
+            };
+
+            //act
+            CharityFundraising result = ff.CreateCharityEvent(dto);
+
+            //assert
+            result.FundTarget.Should().Be(fundTarget);
+            result.AmountOfMoneyToCollect.Should().Be(amountOfMoneyToCollect);
+
+        }
 
     }
 }

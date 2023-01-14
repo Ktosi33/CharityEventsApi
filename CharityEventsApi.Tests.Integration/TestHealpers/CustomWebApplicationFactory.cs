@@ -29,7 +29,7 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
 
                     services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
 
-                   //services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
+                    services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
 
                     services.AddTransient<SeedTestData>();
 
@@ -40,10 +40,7 @@ namespace CharityEventsApi.Tests.Integration.TestHealpers
                         var seedTestData = scope.ServiceProvider.GetRequiredService<SeedTestData>();
                         seedTestData.Seed();
                     }
-
                 });
-
-         
         }
     }
 }

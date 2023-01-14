@@ -35,8 +35,9 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         
         [Theory]
         [InlineData("New Title", "New Description", "Fund Target", 5555.55, 40, 1, true, true)]
-        [InlineData("TF", "bbb", "ccc", 2.1, 2, 1, true, false)]
-        [InlineData("FT", "bbb", "ccc", 2.1, 2, 1, false, true)]
+        [InlineData("Lorem ipsum dolor sit amet.", "Fusce maximus sapien eget ipsum pulvinar egestas",
+                                        "Sed elementum iaculis condimentum.", 2.1, 2, 1, true, false)]
+        [InlineData("null", "false", "true", 2.1, 2, 1, false, true)]
         public async Task AddAllCharityEventDtoByForm_CreateAllCharityEvents_ReturnsOkResult
             (string title, string description, string fundTarget,
             decimal amountOfMoneyToCollect, int amountOfNeededVolunteers,
@@ -56,10 +57,9 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             httpContent.Add(new StringContent(isFundraising.ToString()), "IsFundraising");
             httpContent.Add(new StringContent(isVolunteering.ToString()), "IsVolunteering");
             httpContent.Add(fileContent, "ImageCharityEvent", "newImage.jpeg");
-          
+
             //act
             var response = await client.PostAsync("/v1/CharityEvent", httpContent);
-
 
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -116,9 +116,10 @@ namespace CharityEventsApi.Tests.Integration.Controllers
         }
 
         [Theory]
-        [InlineData("New Title", "Example of descripption", 1)]
-        [InlineData("Second New Title ", null, 1)]
-        public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult(string title, string description, int organizerId)
+        [InlineData("New title", "Example of description", 1)]
+        [InlineData("Second new title ", null, 1)]
+        public async Task EditCharityEventDto_EditCharityEvent_ReturnsOkResult
+                                (string title, string description, int organizerId)
         {
             //arange
             EditCharityEventDto dto = new EditCharityEventDto
@@ -135,6 +136,7 @@ namespace CharityEventsApi.Tests.Integration.Controllers
             //assert
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
+
         [Theory]
         [InlineData("true", "true")]
         [InlineData("true", "false")]
