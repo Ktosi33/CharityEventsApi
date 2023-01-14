@@ -48,5 +48,25 @@ namespace CharityEventsApi.Tests.Unit.Services.VolunteeringService
             result.IsVerified.Should().Be(0);
             result.AmountOfNeededVolunteers.Should().Be(amountOfNeededVolunteers);
         }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(90)]
+        public void AddCharityEventVolunteeringDto_CreateNewObject_ReturnsVolunteering(int amountOfNeededVolunteers )
+        {
+            //arange
+            VolunteeringFactory vf = new VolunteeringFactory();
+
+            var dto = new AddCharityEventVolunteeringDto()
+            {
+                AmountOfNeededVolunteers = amountOfNeededVolunteers
+            };
+
+            //act
+            CharityVolunteering result = vf.CreateCharityEvent(dto);
+
+            //assert
+            result.AmountOfNeededVolunteers.Should().Be(amountOfNeededVolunteers);
+        }
     }
 }
